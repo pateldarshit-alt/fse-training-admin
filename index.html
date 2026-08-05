@@ -45,7 +45,9 @@
   .topbar{background:#1a1a2e;color:#fff;padding:0 24px;display:flex;align-items:center;gap:26px;height:56px}
   :root[data-theme="dark"] .topbar{background:#0d1017}
   .topbar .brand{font-size:15px;font-weight:700}
-  .topbar .nav{font-size:14px;color:#aab4c8;padding:18px 0;border-bottom:2px solid transparent}
+  .topbar .nav{font-size:14px;color:#aab4c8;padding:18px 0;border-bottom:2px solid transparent;text-decoration:none}
+  .topbar .nav:hover{color:#fff}
+  .topbar .nav:focus-visible{outline:2px solid #00baf2;outline-offset:3px}
   .topbar .nav.on{color:#fff;border-bottom-color:#fff;font-weight:600}
   .topbar .sp{flex:1}
   .topbar .demo{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#7fd8ff;
@@ -141,8 +143,9 @@
 
 <div class="topbar">
   <span class="brand">GGApp Training Videos</span>
-  <span class="nav on">Admin Panel</span>
-  <span class="nav">Viewer UI</span>
+  <a class="nav on" href="index.html">Admin Panel</a>
+  <a class="nav" href="viewer.html">Viewer UI</a>
+  <a class="nav" href="prd.html">PRD</a>
   <span class="sp"></span>
   <span class="demo">Shareable prototype</span>
 </div>

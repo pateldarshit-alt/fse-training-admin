@@ -33,6 +33,15 @@
       --cyan:#0089c4; --flag:#c9302c; --good:#0a7a42;
     }
   }
+  .topbar{background:#12161f;color:#fff;padding:0 24px;display:flex;align-items:center;gap:24px;height:54px;border-bottom:1px solid var(--line)}
+  .topbar .brand{font-size:14.5px;font-weight:700}
+  .topbar .nav{font-size:13.5px;color:#93a2ba;padding:17px 0;border-bottom:2px solid transparent;text-decoration:none}
+  .topbar .nav:hover{color:#fff}
+  .topbar .nav.on{color:#fff;border-bottom-color:#00baf2;font-weight:600}
+  .topbar .nav:focus-visible{outline:2px solid #00baf2;outline-offset:3px}
+  .topbar .sp{flex:1}
+  .topbar .demo{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#7fd8ff;background:rgba(0,186,242,.14);padding:4px 10px;border-radius:99px}
+  @media (max-width:640px){.topbar{gap:14px;padding:0 14px;overflow-x:auto}.topbar .demo{display:none}}
   *{box-sizing:border-box}
   body{
     margin:0; background:var(--bg); color:var(--ink);
@@ -64,7 +73,7 @@
 
   .lab{
     display:grid; grid-template-columns:250px minmax(0,1fr) 300px;
-    gap:0; min-height:calc(100vh - 108px); align-items:stretch;
+    gap:0; min-height:calc(100vh - 162px); align-items:stretch;
   }
   @media (max-width:1120px){ .lab{grid-template-columns:1fr} }
 
@@ -168,6 +177,15 @@
   .chip.mand{background:color-mix(in srgb,var(--flag) 18%,transparent); border-color:transparent; color:var(--flag)}
   .divide{height:1px;background:var(--line);margin:0 20px 16px}
 </style>
+
+<div class="topbar">
+  <span class="brand">GGApp Training Videos</span>
+  <a class="nav" href="index.html">Admin Panel</a>
+  <a class="nav on" href="viewer.html">Viewer UI</a>
+  <a class="nav" href="prd.html">PRD</a>
+  <span class="sp"></span>
+  <span class="demo">Shareable prototype</span>
+</div>
 
 <header class="top">
   <div>

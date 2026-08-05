@@ -47,6 +47,15 @@
     --shadow: 0 1px 2px rgba(14,23,38,.06), 0 8px 28px rgba(14,23,38,.06);
   }
 
+  .sitebar{background:#12161f;color:#fff;padding:0 24px;display:flex;align-items:center;gap:24px;height:54px;
+    margin:0 -20px;position:relative;z-index:30}
+  .sitebar .brand{font-size:14.5px;font-weight:700}
+  .sitebar .nav{font-size:13.5px;color:#93a2ba;padding:17px 0;border-bottom:2px solid transparent;text-decoration:none}
+  .sitebar .nav:hover{color:#fff}
+  .sitebar .nav.on{color:#fff;border-bottom-color:#4cc9f0;font-weight:600}
+  .sitebar .nav:focus-visible{outline:2px solid #4cc9f0;outline-offset:3px}
+  @media (max-width:640px){.sitebar{gap:14px;padding:0 14px;overflow-x:auto}}
+  .bar{top:0}
   body {
     background: var(--wash);
     color: var(--ink);
@@ -153,6 +162,13 @@
   .end { font-size: 13px; color: var(--muted); font-style: italic; }
   ::selection { background: color-mix(in srgb, var(--cyan) 26%, transparent); }
 </style>
+
+<div class="sitebar">
+  <span class="brand">GGApp Training Videos</span>
+  <a class="nav" href="index.html">Admin Panel</a>
+  <a class="nav" href="viewer.html">Viewer UI</a>
+  <a class="nav on" href="prd.html">PRD</a>
+</div>
 
 <div class="bar">
   <span class="who">PRD · Contextual Video Coaching</span>
