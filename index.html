@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin Panel — Contextual Video Coaching</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0}
+  img,video{max-width:100%}
+  button,input,select,textarea{font:inherit;color:inherit}
+</style>
+</head>
+<body>
+
+<style>
+  :root{
+    --bg:#f5f6fa; --card:#fff; --line:#e2e8f0; --hair:#f0f0f0;
+    --ink:#1a1a2e; --mid:#4a5568; --dim:#718096; --faint:#a0aec0;
+    --indigo:#667eea; --navy:#004299; --blue-bg:#ebf4ff; --blue-fg:#3182ce;
+    --green-bg:#f0fff4; --green-fg:#276749; --red-bg:#fff0f0; --red-fg:#c53030;
+    --amber-bg:#fef3e2; --amber-fg:#9c4221; --head:#f7fafc;
+  }
+  :root[data-theme="dark"]{
+    --bg:#12151d; --card:#1a1f2b; --line:#2c3444; --hair:#242c3a;
+    --ink:#e8edf6; --mid:#b4c0d4; --dim:#8b99b0; --faint:#6c7a91;
+    --indigo:#8b9cf5; --navy:#7fb0ff; --blue-bg:#1c2b45; --blue-fg:#7ab6f0;
+    --green-bg:#16301f; --green-fg:#6ddc9c; --red-bg:#3a1c1c; --red-fg:#ff9a9d;
+    --amber-bg:#382a15; --amber-fg:#f0b969; --head:#212936;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#12151d; --card:#1a1f2b; --line:#2c3444; --hair:#242c3a;
+      --ink:#e8edf6; --mid:#b4c0d4; --dim:#8b99b0; --faint:#6c7a91;
+      --indigo:#8b9cf5; --navy:#7fb0ff; --blue-bg:#1c2b45; --blue-fg:#7ab6f0;
+      --green-bg:#16301f; --green-fg:#6ddc9c; --red-bg:#3a1c1c; --red-fg:#ff9a9d;
+      --amber-bg:#382a15; --amber-fg:#f0b969; --head:#212936;
+    }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+  .topbar{background:#1a1a2e;color:#fff;padding:0 24px;display:flex;align-items:center;gap:26px;height:56px}
+  :root[data-theme="dark"] .topbar{background:#0d1017}
+  .topbar .brand{font-size:15px;font-weight:700}
+  .topbar .nav{font-size:14px;color:#aab4c8;padding:18px 0;border-bottom:2px solid transparent}
+  .topbar .nav.on{color:#fff;border-bottom-color:#fff;font-weight:600}
+  .topbar .sp{flex:1}
+  .topbar .demo{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#7fd8ff;
+    background:rgba(0,186,242,.14);padding:4px 10px;border-radius:99px}
+
+  .page{max-width:1120px;margin:0 auto;padding:28px 24px 90px}
+  h1{font-size:22px;font-weight:700;margin:0 0 6px}
+  .lede{color:var(--dim);font-size:13.5px;margin:0 0 22px;max-width:78ch}
+  h2{font-size:16px;font-weight:600;margin:0 0 14px}
+  .card{background:var(--card);border-radius:12px;padding:24px;box-shadow:0 1px 4px rgba(16,24,40,.08);margin-bottom:24px}
+
+  .split{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:30px}
+  @media (max-width:900px){.split{grid-template-columns:1fr}}
+
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media (max-width:620px){.form-grid{grid-template-columns:1fr}}
+  .form-group{display:flex;flex-direction:column;gap:6px}
+  .form-group.full{grid-column:1/-1}
+  label{font-size:13px;font-weight:600;color:var(--mid)}
+  label small{font-weight:400;color:var(--faint)}
+  input[type=text],input[type=number],select{
+    padding:9px 12px;border:1.5px solid var(--line);border-radius:8px;font-size:14px;font-family:inherit;
+    background:var(--card);color:var(--ink);outline:none;width:100%}
+  input:focus,select:focus{border-color:var(--indigo)}
+  input::placeholder{color:var(--faint)}
+
+  .seg{display:flex;gap:10px}
+  .seg button{flex:1;padding:11px;border-radius:9px;border:1.5px solid var(--line);background:var(--card);
+    color:var(--mid);font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+  .seg button.on{border-color:var(--indigo);background:var(--blue-bg);color:var(--indigo)}
+  .drop{border:2px dashed var(--line);border-radius:10px;padding:26px;text-align:center;color:var(--dim);font-size:13.5px;cursor:pointer}
+  .drop:hover{border-color:var(--indigo)}
+  .drop b{display:block;color:var(--mid);font-size:14px;margin-bottom:3px;font-weight:600}
+  .drop .ico{font-size:20px;display:block;margin-bottom:6px}
+
+  .section-divider{display:flex;align-items:baseline;gap:9px;margin:26px 0 13px;padding-top:18px;border-top:1px solid var(--line);flex-wrap:wrap}
+  .section-divider span{font-size:13px;font-weight:700;color:var(--ink)}
+  .section-divider small{font-size:12px;color:var(--faint)}
+
+  .toggle-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:10px;font-size:13.5px;color:var(--mid);cursor:pointer}
+  .toggle-row input{width:16px;height:16px;accent-color:var(--indigo);margin-top:2px;flex-shrink:0;cursor:pointer}
+  .toggle-row small{display:block;color:var(--faint);font-size:12px;margin-top:2px}
+  .toggle-row.off{opacity:.55;cursor:not-allowed}
+
+  .btn{padding:10px 18px;border-radius:8px;border:none;font:inherit;font-size:14px;font-weight:600;cursor:pointer}
+  .btn-primary{background:var(--indigo);color:#fff}
+  .btn-primary:hover{filter:brightness(.94)}
+  .btn-ghost{background:transparent;color:var(--mid);border:1.5px solid var(--line)}
+  .btn-ghost:hover{background:var(--head)}
+  .btn-danger{background:var(--red-bg);color:var(--red-fg);border:1.5px solid transparent}
+  .btn:focus-visible{outline:2px solid var(--indigo);outline-offset:2px}
+  .btn-sm{padding:5px 11px;font-size:12.5px;border-radius:6px}
+
+  .badge{display:inline-block;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600;background:var(--blue-bg);color:var(--blue-fg);margin:2px}
+  .badge.lang{background:var(--green-bg);color:var(--green-fg)}
+  .badge.stage{background:var(--amber-bg);color:var(--amber-fg)}
+  .badge.blocker{background:var(--red-bg);color:var(--red-fg)}
+  .badge.self{background:var(--head);color:var(--dim)}
+  .badge.trig{background:var(--amber-bg);color:var(--amber-fg)}
+  .badge.assess{background:var(--blue-bg);color:var(--navy);cursor:pointer;border:none;font-family:inherit}
+
+  .tw{overflow-x:auto;margin:0 -4px}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th{text-align:left;padding:10px 12px;background:var(--head);font-size:11.5px;color:var(--dim);font-weight:600;border-bottom:1px solid var(--line);white-space:nowrap}
+  td{padding:12px;border-bottom:1px solid var(--hair);vertical-align:top}
+  td.t{font-weight:700;min-width:170px}
+  .qbox{background:var(--head);border-radius:9px;padding:14px 16px;margin:2px 0}
+  .qbox .q{font-size:13px;font-weight:700;margin-bottom:8px}
+  .qbox .o{display:inline-block;font-size:12px;padding:4px 10px;border-radius:7px;border:1px solid var(--line);margin:0 5px 5px 0;color:var(--mid)}
+  .qbox .o.ok{border-color:var(--green-fg);color:var(--green-fg);font-weight:600;background:var(--green-bg)}
+
+  /* phone preview */
+  .prev-wrap{position:sticky;top:22px}
+  .prev-label{font-size:12px;font-weight:700;color:var(--dim);text-align:center;margin-bottom:10px}
+  .phone{width:250px;height:500px;margin:0 auto;background:#f4f6fa;border:7px solid #1a1a2e;border-radius:28px;
+    overflow:hidden;display:flex;flex-direction:column;position:relative;box-shadow:0 12px 30px rgba(16,24,40,.2)}
+  .phone .sb{height:20px;background:#eaf1fa;display:flex;justify-content:space-between;align-items:center;padding:0 11px;font-size:8.5px;color:#5b6b84;flex-shrink:0}
+  .phone .body{flex:1;position:relative;overflow:hidden;font-family:Roboto,system-ui,sans-serif}
+  .prev-note{font-size:11.5px;color:var(--faint);text-align:center;margin-top:11px;line-height:1.5}
+
+  .q-editor{border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:11px;background:var(--card)}
+  .q-editor .hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+  .q-editor .hd b{font-size:12.5px;color:var(--dim)}
+  .opt-row{display:flex;align-items:center;gap:9px;margin-top:7px}
+  .opt-row input[type=radio]{accent-color:var(--green-fg);width:15px;height:15px;flex-shrink:0}
+
+  .toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--ink);color:var(--bg);
+    padding:11px 20px;border-radius:9px;font-size:13.5px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.25);z-index:99;
+    opacity:0;pointer-events:none;transition:opacity .2s ease}
+  .toast.on{opacity:1}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="topbar">
+  <span class="brand">GGApp Training Videos</span>
+  <span class="nav on">Admin Panel</span>
+  <span class="nav">Viewer UI</span>
+  <span class="sp"></span>
+  <span class="demo">Shareable prototype</span>
+</div>
+
+<div class="page">
+  <h1>Admin Panel — Upload &amp; Manage Videos</h1>
+  <p class="lede">Everything the FSE sees is configured here. Fill the form and press Upload — the training is added to the library below and the phone preview updates as you change the widget view. Changes live in your browser only; nothing is written to a server.</p>
+
+  <div class="card">
+    <h2>Upload New Training</h2>
+    <div class="split">
+      <div>
+        <div class="form-group full" style="margin-bottom:16px">
+          <label>Content Type</label>
+          <div class="seg">
+            <button type="button" data-ct="video" class="on">🎬 Video</button>
+            <button type="button" data-ct="document">📄 Document (PDF / Slides)</button>
+          </div>
+        </div>
+
+        <div class="drop" id="drop">
+          <span class="ico" id="dropIco">🎬</span>
+          <b id="dropTitle">Click or drag &amp; drop a video file</b>
+          <span id="dropHint">MP4, MOV, WebM supported</span>
+        </div>
+
+        <div class="form-grid" style="margin-top:16px">
+          <div class="form-group">
+            <label>Title <span style="color:#e53e3e">*</span></label>
+            <input type="text" id="f_title" placeholder="e.g. How to complete KYC">
+          </div>
+          <div class="form-group">
+            <label>Language</label>
+            <select id="f_lang"></select>
+          </div>
+          <div class="form-group">
+            <label>Screen <span style="color:#e53e3e">*</span></label>
+            <select id="f_screen"></select>
+          </div>
+          <div class="form-group">
+            <label>Widget View <small>(pre-built by FE team)</small></label>
+            <select id="f_widget"></select>
+          </div>
+        </div>
+
+        <div class="section-divider"><span>Targeting</span><small>Who this video is visible to. Leave everything blank for everyone.</small></div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Team</label>
+            <select id="f_team"></select>
+          </div>
+          <div class="form-group">
+            <label>Subteam</label>
+            <select id="f_subteam"><option value="">All subteams</option></select>
+          </div>
+          <div class="form-group">
+            <label>FSE stage (AON)</label>
+            <select id="f_aon"></select>
+          </div>
+          <div class="form-group">
+            <label>Performance trigger <small>— assign on FSE state</small></label>
+            <select id="f_trigger"></select>
+          </div>
+          <div class="form-group full">
+            <label>Target specific ecodes <small>(CSV / Excel — leave Team, Subteam and FSE stage blank to target ONLY this list)</small></label>
+            <button class="btn btn-ghost" type="button" id="ecodeBtn" style="align-self:flex-start">📤 Upload ecode list</button>
+          </div>
+        </div>
+
+        <div class="section-divider"><span>Homepage Behavior</span><small>Only meaningful when Screen is Home.</small></div>
+        <label class="toggle-row"><input type="checkbox" id="f_blocker">
+          <span>Homepage blocker — a gate on the home screen sends the FSE to Trainings &amp; Assessment, with no way past it until this is done</span></label>
+
+        <div class="section-divider"><span>How often it shows</span><small>Stop surfacing this in workflows once the FSE has seen enough. It stays available in Trainings &amp; Assessment either way.</small></div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Stop after this many views <small>— blank for no limit</small></label>
+            <input type="number" min="1" id="f_maxviews" placeholder="e.g. 3">
+          </div>
+          <div class="form-group">
+            <label>Stop after this many days <small>— from first view</small></label>
+            <input type="number" min="1" id="f_expiry" placeholder="e.g. 14">
+          </div>
+        </div>
+
+        <div class="section-divider"><span>Completion</span><small>How the FSE is allowed to clear this content.</small></div>
+        <label class="toggle-row" id="selfRow"><input type="checkbox" id="f_self">
+          <span>Let the FSE mark this watched without finishing it<small id="selfHint">Adds an “I’ve watched this” button. Leave off to require the full video.</small></span></label>
+
+        <div class="section-divider"><span>Assessment</span><small>Optional MCQ shown to the FSE right after the content.</small></div>
+        <label class="toggle-row"><input type="checkbox" id="f_assess"><span>Add an assessment</span></label>
+
+        <div id="assessBox" hidden>
+          <label class="toggle-row"><input type="checkbox" id="f_mand">
+            <span>Passing this is mandatory<small>Adds the MANDATORY tag, a required call to action, and includes it in the homepage gate.</small></span></label>
+          <div class="form-grid" style="margin-bottom:14px">
+            <div class="form-group">
+              <label>Passing score (%)</label>
+              <input type="number" min="1" max="100" id="f_pass" value="70">
+            </div>
+            <div class="form-group">
+              <label>Max questions to show <small>— blank shows all</small></label>
+              <input type="number" min="1" id="f_maxq" placeholder="e.g. 3">
+            </div>
+          </div>
+          <div id="qList"></div>
+          <button class="btn btn-ghost btn-sm" type="button" id="addQ">＋ Add question</button>
+        </div>
+
+        <div style="margin-top:22px">
+          <button class="btn btn-primary" type="button" id="uploadBtn">⬆ Upload</button>
+          <button class="btn btn-ghost" type="button" id="resetBtn" style="margin-left:8px">Reset form</button>
+        </div>
+      </div>
+
+      <div class="prev-wrap">
+        <div class="prev-label">Preview — how this looks in the app</div>
+        <div class="phone">
+          <div class="sb"><span>9:41</span><span>▮▮▮ ▲</span></div>
+          <div class="body" id="prev"></div>
+        </div>
+        <div class="prev-note" id="prevNote"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 id="libTitle">Uploaded Trainings</h2>
+    <div class="tw">
+      <table>
+        <thead><tr>
+          <th>Title</th><th>Screen</th><th>Widget</th><th>Language</th><th>Targeting</th>
+          <th>Shows</th><th>Assessment</th><th>Uploaded</th><th></th>
+        </tr></thead>
+        <tbody id="lib"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SEED = [{"title": "How to Pitch SoundBox to a Merchant", "screen": "Home", "widget_type": "stories", "languages": ["English", "Hindi", "Tamil"], "mandatory": false, "homepage_blocker": false, "allow_manual_complete": true, "performance_triggers": ["onboarding_short"], "max_views": 5, "expiry_days": null, "pass_percent": 70, "content_type": "video", "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}, {"question": "What real-time benefit does SoundBox give a merchant?", "options": ["Free advertising on the box", "Instant voice and display confirmation for every payment", "Unlimited free phone calls", "A physical cash register"], "correct_index": 1}, {"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "uploaded": "03/08/2026"}, {"title": "How to use Paytm v2", "screen": "Home", "widget_type": "stories", "languages": ["English"], "mandatory": false, "homepage_blocker": false, "allow_manual_complete": true, "performance_triggers": [], "max_views": 3, "expiry_days": null, "pass_percent": 70, "content_type": "video", "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}, {"question": "Where does a merchant manage their business profile in the v2 app?", "options": ["Under the \"Manage your Business\" section", "Under Offers", "Under Refer & Earn", "Under chat support"], "correct_index": 0}, {"question": "A merchant cannot find a feature after the v2 update. What do you do?", "options": ["Ask them to downgrade the app", "Show them where it has moved to in the updated navigation", "Tell them the feature was removed", "Raise a device replacement request"], "correct_index": 1}], "uploaded": "26/06/2026"}, {"title": "QR mapping new process", "screen": "Home", "widget_type": "interstitial", "languages": ["English"], "mandatory": true, "homepage_blocker": true, "allow_manual_complete": false, "performance_triggers": [], "max_views": null, "expiry_days": null, "pass_percent": 70, "content_type": "video", "questions": [{"question": "What does QR mapping actually link?", "options": ["The FSE's phone to the TL's phone", "The merchant's QR to the correct MID, so payments settle to the right account", "The SoundBox to the shop's WiFi router", "The merchant's Aadhaar to their PAN"], "correct_index": 1}, {"question": "What do you verify immediately after mapping a new QR?", "options": ["Nothing \u2014 mapping is instant and never fails", "That the merchant has restarted the shop", "Do a small test payment and confirm the SoundBox announces it", "Peel off the old sticker before checking anything"], "correct_index": 2}, {"question": "The QR you are about to map is already mapped to a different MID. What is the correct action?", "options": ["Stop and raise a remapping request instead of forcing a new mapping", "Map it anyway and inform the TL later", "Peel the sticker off and reuse it at another shop", "Ask the merchant to create a new business account"], "correct_index": 0}], "uploaded": "26/06/2026"}, {"title": "How to Complete a Merchant's Re-KYC", "screen": "KYC", "widget_type": "bottom-sheet", "languages": ["English", "Hindi"], "mandatory": true, "homepage_blocker": false, "allow_manual_complete": false, "performance_triggers": [], "max_views": null, "expiry_days": null, "pass_percent": 70, "content_type": "video", "questions": [{"question": "On the Re-KYC check screen, which items sit under \"Action Required\"?", "options": ["Bank Details only", "KYC Details and Business Proof", "Device model and plan", "Nothing \u2014 Re-KYC completes automatically"], "correct_index": 1}, {"question": "The profile upgrade is pending on the P4B app. What do you ask the merchant to do?", "options": ["Visit the nearest bank branch", "Reinstall the consumer Paytm app", "Open Paytm for Business, scroll to \"Manage your Business\" and select \"Upgrade Profile\"", "Buy a new SoundBox"], "correct_index": 2}, {"question": "Bank Details already appears under \"Completed\". What does that mean?", "options": ["That part of the Re-KYC is done \u2014 only the pending items still need action", "The whole Re-KYC is finished", "The merchant's account has been blocked", "The bank account has to be entered again"], "correct_index": 0}], "uploaded": "03/08/2026"}, {"title": "How to use Paytm", "screen": "KYC", "widget_type": "accordion", "languages": ["English"], "mandatory": false, "homepage_blocker": false, "allow_manual_complete": true, "performance_triggers": [], "max_views": null, "expiry_days": null, "pass_percent": 70, "content_type": "video", "questions": [{"question": "Where does a merchant change app language or notification preferences?", "options": ["In the Offers carousel", "On the QR sticker", "In the Settings section of the app", "On the SoundBox device itself"], "correct_index": 2}, {"question": "A merchant wants payment alerts on a second phone. What is the correct setup?", "options": ["Add the extra device or user from Settings so alerts are mirrored", "Share the account login password with the second person", "Insist they buy a second SoundBox", "Tell them it cannot be done"], "correct_index": 0}, {"question": "Why must an FSE never ask a merchant for their password or OTP?", "options": ["It slows onboarding down", "It uses too much mobile data", "It voids the GST invoice", "It is a security violation \u2014 Paytm staff never ask for an OTP or password"], "correct_index": 3}], "uploaded": "26/06/2026"}, {"title": "Completing the Merchant Task Checklist", "screen": "Dashboard", "widget_type": "popup", "languages": ["English", "Hindi"], "mandatory": false, "homepage_blocker": false, "allow_manual_complete": true, "performance_triggers": ["nap_allocation"], "max_views": null, "expiry_days": null, "pass_percent": 70, "content_type": "video", "questions": [{"question": "On the Merchant Detail screen, which tab holds the merchant's open tasks?", "options": ["Details", "Tasks", "Interactions", "Offers"], "correct_index": 1}, {"question": "A task card shows \"Assigned by TL\", \"OPEN\" and \u20b9150. What is the \u20b9150?", "options": ["The incentive payable to you for completing that task", "The rental you must collect from the merchant", "The merchant's outstanding dues", "The GST on the device"], "correct_index": 0}, {"question": "What has to be true before a task can be marked complete?", "options": ["The merchant has called the helpline", "The TL has reassigned the task", "The proof or action that task requires has been captured in the app", "You are outside your assigned zone"], "correct_index": 2}], "uploaded": "03/08/2026"}, {"title": "Reading Your Performance Dashboard", "screen": "Dashboard", "widget_type": "inline-card", "languages": ["English"], "mandatory": false, "homepage_blocker": false, "allow_manual_complete": true, "performance_triggers": [], "max_views": null, "expiry_days": 14, "pass_percent": 70, "content_type": "video", "questions": [{"question": "Which three tabs make up the Team Performance view?", "options": ["Participation, Productivity, Leaderboard", "Sales, Refunds, Payouts", "Attendance, Salary, Incentive", "Tasks, Merchants, Devices"], "correct_index": 0}, {"question": "What does the red alert card at the top of the dashboard flag?", "options": ["That three merchants missed a payment", "That FSEs who have not participated today put attendance at risk", "That the dashboard failed to load", "That salary is pending for three FSEs"], "correct_index": 1}, {"question": "What does the \"Out of Zone\" count tell you?", "options": ["Merchants located outside the city", "Devices that have not been installed yet", "Videos that have not been watched", "FSEs who checked in from outside their assigned zone"], "correct_index": 3}], "uploaded": "03/08/2026"}, {"title": "Adding a New SoundBox Device", "screen": "Payments", "widget_type": "pip", "languages": ["English", "Hindi", "Marathi"], "mandatory": true, "homepage_blocker": false, "allow_manual_complete": false, "performance_triggers": [], "max_views": null, "expiry_days": null, "pass_percent": 70, "content_type": "video", "questions": [{"question": "On the Add Device Details screen, which device type do you select for a monthly rental plan?", "options": ["Purchase", "Rental", "Demo", "Replacement"], "correct_index": 1}, {"question": "For the Monthly Subscription plan at \u20b9125/month, what does the screen say about UPI Autopay?", "options": ["It is optional for the merchant", "It is not supported on rental plans", "It is required \u2014 the screen shows Yes", "It replaces the monthly rental"], "correct_index": 2}, {"question": "The screen shows \u20b9125 as the total amount to be collected. What does that figure include?", "options": ["Only the one-time charge", "A refundable security deposit", "The monthly rental, inclusive of 18% GST", "The full purchase price of the device"], "correct_index": 2}], "uploaded": "03/08/2026"}, {"title": "Explaining SoundBox Plans to a Merchant", "screen": "Payments", "widget_type": "carousel", "languages": ["English", "Hindi"], "mandatory": true, "homepage_blocker": false, "allow_manual_complete": false, "performance_triggers": ["sb_short"], "max_views": null, "expiry_days": null, "pass_percent": 70, "content_type": "video", "questions": [{"question": "A merchant asks what the \u20b9125 a month actually covers. What is the accurate answer?", "options": ["A one-time purchase of the device", "The monthly rental for the SB-V2 Music 4G, GST included", "A refundable deposit returned after a year", "Unlimited free QR stickers"], "correct_index": 1}, {"question": "What does the merchant need to set up for a monthly subscription plan to keep running?", "options": ["UPI Autopay", "A brand new bank account", "A credit card EMI", "A physical cash register"], "correct_index": 0}, {"question": "The merchant objects that the rental is too expensive. What is the best response?", "options": ["Tell them it is mandatory by law", "Offer the device free permanently", "End the conversation and move to the next shop", "Bundle the rental with an applicable cashback offer and show the value of instant confirmations"], "correct_index": 3}], "uploaded": "03/08/2026"}, {"title": "Verifying a SoundBox Payment", "screen": "Payments", "widget_type": "inline-card", "languages": ["English", "Hindi", "Tamil"], "mandatory": true, "homepage_blocker": false, "allow_manual_complete": false, "performance_triggers": [], "max_views": null, "expiry_days": null, "pass_percent": 70, "content_type": "video", "questions": [{"question": "A merchant says a customer paid but the SoundBox never announced it. What do you check first?", "options": ["Ask the merchant to restart their phone", "Look up the order ID and its status in the payment history", "Tell them to collect the amount in cash instead", "Replace the SoundBox straight away"], "correct_index": 1}, {"question": "Where is the order ID for the payment you are verifying shown?", "options": ["On the payment collection screen, just above the QR", "Printed on the back of the SoundBox", "In the merchant's bank passbook", "It is never visible to the FSE"], "correct_index": 0}, {"question": "The app shows the payment as successful but the merchant insists it never arrived. What is the right next step?", "options": ["Refund the amount from your own account", "Ask the merchant to wait 24 hours and do nothing", "Cancel the merchant's SoundBox subscription", "Share the order ID and raise a ticket so the settlement can be traced"], "correct_index": 3}], "uploaded": "03/08/2026"}];
+
+const SCREENS = ['Home','Profile','Dashboard','Onboarding','KYC','Payments','Settings','Other'];
+const LANGS = ['English','Hindi','Tamil','Telugu','Kannada','Bengali','Marathi'];
+const TEAMS = {
+  'Sales':['Merchant Acquisition','Cross-sell & Upsell'],
+  'Service':['Service & Support','Retention'],
+  'Collections':['Field Collections','Tele-Collections'],
+  'Onboarding & Compliance':['KYC & Onboarding','Risk & Compliance'],
+};
+const WIDGETS = [
+  {id:'',label:'Any widget on this screen'},
+  {id:'mini-banner',label:'Mini Banner'},
+  {id:'bottom-sheet',label:'Bottom Sheet'},
+  {id:'interstitial',label:'Interstitial (Full-Screen)'},
+  {id:'accordion',label:'Inline Accordion'},
+  {id:'pip',label:'Picture-in-Picture'},
+  {id:'carousel',label:'Carousel'},
+  {id:'inline-card',label:'Inline Embedded Card'},
+  {id:'stories',label:'Stories'},
+  {id:'popup',label:'Popup Modal'},
+];
+const AON = [
+  {id:'',label:'All stages'},
+  {id:'new',label:'New — 0–15 days on network'},
+  {id:'semi_new',label:'Semi-new — 15–45 days on network'},
+  {id:'old',label:'Old — 45+ days on network'},
+];
+const TRIGGERS = [
+  {id:'',label:'No trigger — assign to everyone matched above'},
+  {id:'nap_allocation',label:'Task or NAP allocation — work allocated but not actioned'},
+  {id:'onboarding_short',label:'Onboarding target not met — below target for the cycle'},
+  {id:'sb_short',label:'SB deployment target not met — below SoundBox target'},
+];
+const TRIG_SHORT = {nap_allocation:'NAP allocation',onboarding_short:'Onboarding short',sb_short:'SB short'};
+const WIDGET_LABEL = Object.fromEntries(WIDGETS.map(w=>[w.id,w.label]));
+
+const esc = s => String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const $ = id => document.getElementById(id);
+const fill = (el,items,val=i=>i.id,lab=i=>i.label) =>
+  el.innerHTML = items.map(i=>`<option value="${esc(val(i))}">${esc(lab(i))}</option>`).join('');
+
+fill($('f_screen'), [{id:'',label:'— select screen —'}].concat(SCREENS.map(s=>({id:s,label:s}))));
+fill($('f_widget'), WIDGETS);
+fill($('f_lang'), LANGS.map(l=>({id:l,label:l})));
+fill($('f_team'), [{id:'',label:'All teams'}].concat(Object.keys(TEAMS).map(t=>({id:t,label:t}))));
+fill($('f_aon'), AON);
+fill($('f_trigger'), TRIGGERS);
+
+let rows = SEED.map(r=>({...r}));
+let contentType = 'video';
+let questions = [];
+let expanded = null;
+
+/* ── form behaviour ─────────────────────────────────────────── */
+document.querySelectorAll('[data-ct]').forEach(b => b.onclick = () => {
+  contentType = b.dataset.ct;
+  document.querySelectorAll('[data-ct]').forEach(x=>x.classList.toggle('on', x===b));
+  const doc = contentType === 'document';
+  $('dropIco').textContent = doc ? '📄' : '🎬';
+  $('dropTitle').textContent = doc ? 'Click or drag & drop a document' : 'Click or drag & drop a video file';
+  $('dropHint').textContent = doc ? 'PDF, PPT, PPTX supported' : 'MP4, MOV, WebM supported';
+  preview();
+});
+$('f_team').onchange = e => {
+  const subs = TEAMS[e.target.value] || [];
+  $('f_subteam').innerHTML = '<option value="">All subteams</option>' + subs.map(s=>`<option>${esc(s)}</option>`).join('');
+  $('f_subteam').disabled = !subs.length;
+};
+$('f_subteam').disabled = true;
+$('f_widget').onchange = preview;
+$('f_title').oninput = preview;
+$('f_blocker').onchange = preview;
+
+// Mandatory content can never be self-marked — the control locks rather than
+// silently disagreeing with what the app will do.
+function syncSelf(){
+  const mand = $('f_assess').checked && $('f_mand').checked;
+  $('f_self').disabled = mand;
+  $('selfRow').classList.toggle('off', mand);
+  if (mand) $('f_self').checked = false;
+  $('selfHint').textContent = mand
+    ? 'Not available on mandatory content — the first clearance must be watched to the end. Once the FSE has passed it, repeat viewings get the shortcut automatically.'
+    : 'Adds an “I’ve watched this” button. Leave off to require the full video.';
+}
+$('f_assess').onchange = () => { $('assessBox').hidden = !$('f_assess').checked; syncSelf(); preview(); };
+$('f_mand').onchange = () => { syncSelf(); preview(); };
+$('ecodeBtn').onclick = () => toast('Ecode upload is disabled in the shared prototype.');
+$('drop').onclick = () => toast('File upload is disabled in the shared prototype.');
+
+/* ── assessment builder ─────────────────────────────────────── */
+function drawQs(){
+  $('qList').innerHTML = questions.map((q,i)=>`
+    <div class="q-editor">
+      <div class="hd"><b>Question ${i+1}</b><button class="btn btn-danger btn-sm" data-rm="${i}" type="button">Remove</button></div>
+      <input type="text" data-q="${i}" value="${esc(q.question)}" placeholder="Question text">
+      ${q.options.map((o,j)=>`<div class="opt-row">
+        <input type="radio" name="c${i}" data-c="${i}-${j}" ${q.correct_index===j?'checked':''} title="Mark correct">
+        <input type="text" data-o="${i}-${j}" value="${esc(o)}" placeholder="Option ${j+1}"></div>`).join('')}
+      <div style="font-size:11.5px;color:var(--faint);margin-top:8px">Select the radio beside the correct option.</div>
+    </div>`).join('');
+  $('qList').querySelectorAll('[data-rm]').forEach(b=>b.onclick=()=>{questions.splice(+b.dataset.rm,1);drawQs();});
+  $('qList').querySelectorAll('[data-q]').forEach(i=>i.oninput=()=>questions[+i.dataset.q].question=i.value);
+  $('qList').querySelectorAll('[data-o]').forEach(i=>i.oninput=()=>{const[a,b]=i.dataset.o.split('-');questions[+a].options[+b]=i.value;});
+  $('qList').querySelectorAll('[data-c]').forEach(r=>r.onchange=()=>{const[a,b]=r.dataset.c.split('-');questions[+a].correct_index=+b;});
+}
+$('addQ').onclick = () => { questions.push({question:'',options:['','','',''],correct_index:0}); drawQs(); };
+
+/* ── live phone preview ─────────────────────────────────────── */
+function preview(){
+  const title = $('f_title').value.trim() || 'Training title';
+  const w = $('f_widget').value;
+  const mand = $('f_assess').checked && $('f_mand').checked;
+  const blocker = $('f_blocker').checked;
+  const doc = contentType === 'document';
+  const tag = mand ? '<span style="background:#fff0f0;color:#c53030;font-size:7.5px;font-weight:800;padding:2px 6px;border-radius:4px">MANDATORY</span>' : '';
+  const art = `<div style="height:100%;background:linear-gradient(150deg,#012b72,#00baf2);display:flex;align-items:center;justify-content:center">
+      <span style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.94);display:flex;align-items:center;justify-content:center;font-size:13px;color:#012b72">${doc?'📄':'▶'}</span></div>`;
+  const shell = inner => `<div style="height:100%;display:flex;flex-direction:column">
+      <div style="background:linear-gradient(160deg,#e9f4ff,#f4f6fa);padding:9px 11px;display:flex;align-items:center;gap:8px;flex-shrink:0">
+        <div style="width:24px;height:24px;border-radius:50%;background:#fff;border:1.5px solid #00baf2;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#012b72">AK</div>
+        <div style="flex:1;font-size:11px;font-weight:800;color:#1a1a2e">Ajay Kumar</div></div>
+      ${inner}
+      <div style="flex:1;padding:9px 11px;background:#f4f6fa">
+        <div style="background:#fff;border-radius:8px;height:38px;margin-bottom:7px"></div>
+        <div style="background:#fff;border-radius:8px;height:38px;margin-bottom:7px"></div>
+        <div style="background:#fff;border-radius:8px;height:38px"></div></div></div>`;
+
+  const P = {
+    'mini-banner': shell(`<div style="background:linear-gradient(135deg,#161c33,#1a1a2e);border-radius:9px;margin:7px 10px;padding:8px 9px;display:flex;align-items:center;gap:8px">
+        <div style="width:34px;height:26px;border-radius:5px;background:linear-gradient(135deg,#012b72,#00baf2);flex-shrink:0"></div>
+        <div style="flex:1;min-width:0"><div style="color:#fff;font-size:9.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(title)}</div>
+        <div style="color:#8fb8ff;font-size:8px;margin-top:1px">${blocker?'🔒 ':''}Tap to expand</div></div>
+        <span style="color:#8fb8ff;font-size:8px">▼</span></div>`),
+    'bottom-sheet': `<div style="height:100%;position:relative;background:#f4f6fa">
+        <div style="padding:11px;opacity:.4"><div style="background:#fff;border-radius:8px;height:44px;margin-bottom:8px"></div><div style="background:#fff;border-radius:8px;height:44px"></div></div>
+        <div style="position:absolute;inset:0;background:rgba(10,12,22,.45)"></div>
+        <div style="position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:14px 14px 0 0;padding:9px 11px 14px">
+          <div style="width:28px;height:3px;border-radius:3px;background:#dde3ee;margin:0 auto 9px"></div>
+          <div style="font-size:11px;font-weight:700;margin-bottom:8px">Training Videos</div>
+          <div style="display:flex;gap:8px;align-items:center"><div style="width:38px;height:29px;border-radius:5px;background:linear-gradient(135deg,#012b72,#00baf2)"></div>
+          <div style="flex:1;min-width:0"><div style="font-size:9.5px;font-weight:700;line-height:1.3">${esc(title)}</div><div style="margin-top:3px">${tag}</div></div></div></div></div>`,
+    'interstitial': `<div style="height:100%;background:#080a12;display:flex;flex-direction:column">
+        <div style="padding:11px 11px 8px"><span style="background:rgba(253,81,84,.16);color:#ff9a9d;font-size:7px;font-weight:800;padding:3px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.05em">🔒 Required before you continue</span>
+        <div style="color:#fff;font-size:12px;font-weight:800;margin-top:8px;line-height:1.3">${esc(title)}</div></div>
+        <div style="flex:1;min-height:0">${art}</div>
+        <div style="background:#0e1220;padding:8px 11px 12px"><div style="color:#7f8ca8;font-size:8px;text-align:center">Watch to the end to unlock the quick check.</div></div></div>`,
+    'accordion': shell(`<div style="background:#fff;border:1px solid #e0e6ea;border-radius:8px;margin:7px 10px;padding:9px 10px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:10px;font-weight:700;color:#004299">🎬 Training Videos (1)</span><span style="font-size:10px;color:#004299">▼</span></div>`),
+    'pip': `<div style="height:100%;position:relative;background:#f4f6fa;padding:11px">
+        <div style="background:#fff;border-radius:8px;height:40px;margin-bottom:8px"></div><div style="background:#fff;border-radius:8px;height:40px;margin-bottom:8px"></div><div style="background:#fff;border-radius:8px;height:40px"></div>
+        <div style="position:absolute;bottom:14px;right:11px;width:104px;border-radius:8px;overflow:hidden;background:#1a1a2e;box-shadow:0 6px 16px rgba(0,0,0,.4)">
+          <div style="height:66px">${art}</div><div style="padding:6px 7px"><div style="color:#fff;font-size:8px;font-weight:700;line-height:1.3">${esc(title)}</div></div></div></div>`,
+    'carousel': `<div style="height:100%;background:#f4f6fa;padding:11px 0"><div style="padding:0 11px;font-size:11px;font-weight:800;margin-bottom:8px">Add Device Details</div>
+        <div style="display:flex;gap:8px;overflow:hidden;padding:0 11px">
+          <div style="flex:0 0 96px;border-radius:8px;overflow:hidden;background:#1a1a2e"><div style="height:56px">${art}</div>
+          <div style="padding:6px 7px"><div style="color:#fff;font-size:8px;font-weight:700;line-height:1.3;height:20px;overflow:hidden">${esc(title)}</div></div></div>
+          <div style="flex:0 0 96px;border-radius:8px;background:#1a1a2e;opacity:.55"></div></div>
+        <div style="padding:11px"><div style="background:#fff;border-radius:8px;height:34px;margin-bottom:7px"></div><div style="background:#fff;border-radius:8px;height:34px"></div></div></div>`,
+    'inline-card': `<div style="height:100%;background:#f4f6fa;padding:11px"><div style="font-size:11px;font-weight:800;margin-bottom:9px">Team Performance</div>
+        <div style="background:#fff;border-radius:8px;height:44px;margin-bottom:9px"></div>
+        <div style="display:flex;gap:8px;background:#fff;border:1px solid #e6ebf3;border-radius:9px;padding:7px">
+          <div style="width:62px;height:44px;border-radius:6px;overflow:hidden;flex-shrink:0">${art}</div>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:3px">
+            <div style="font-size:9px;font-weight:700;line-height:1.3">${esc(title)}</div><div>${tag||'<span style="font-size:8px;color:#8a94a6;font-weight:600">Tap to watch</span>'}</div></div></div></div>`,
+    'stories': `<div style="height:100%;position:relative;overflow:hidden">${art}
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(6,10,20,.7),rgba(6,10,20,.05) 30%,rgba(6,10,20,.88))"></div>
+        <div style="position:absolute;top:8px;left:9px;right:9px;display:flex;gap:3px">
+          <div style="flex:1;height:2px;border-radius:2px;background:#fff"></div><div style="flex:1;height:2px;border-radius:2px;background:rgba(255,255,255,.34)"></div><div style="flex:1;height:2px;border-radius:2px;background:rgba(255,255,255,.34)"></div></div>
+        <div style="position:absolute;left:11px;right:11px;bottom:14px">
+          <div style="color:#fff;font-size:13px;font-weight:800;line-height:1.2">${esc(title)}</div>
+          <div style="margin-top:7px;display:flex;gap:6px;align-items:center">${tag}<span style="background:rgba(255,255,255,.18);color:#fff;font-size:7px;font-weight:800;padding:2px 7px;border-radius:99px;text-transform:uppercase">${esc($('f_screen').value||'Training')}</span></div></div></div>`,
+    'popup': `<div style="height:100%;position:relative;background:#f4f6fa">
+        <div style="padding:11px;opacity:.5"><div style="background:#fff;border-radius:8px;height:40px;margin-bottom:8px"></div><div style="background:#fff;border-radius:8px;height:40px"></div></div>
+        <div style="position:absolute;inset:0;background:rgba(8,10,18,.6);display:flex;align-items:center;justify-content:center;padding:16px">
+          <div style="background:#fff;border-radius:13px;width:100%;padding:15px 13px;text-align:center">
+            <div style="width:34px;height:34px;border-radius:50%;background:${mand?'#fff0f0':'#eaf4ff'};display:flex;align-items:center;justify-content:center;font-size:15px;margin:0 auto 8px">${mand?'🔒':'🎬'}</div>
+            <div style="font-size:11px;font-weight:800;line-height:1.3">1 training for you</div>
+            <div style="font-size:8.5px;color:#718096;margin-top:4px;line-height:1.4">${esc(title)}</div>
+            <div style="background:#004299;color:#fff;border-radius:7px;padding:8px;font-size:9.5px;font-weight:800;margin-top:11px">Go to Trainings</div></div></div></div>`,
+  };
+  $('prev').innerHTML = P[w] || shell(`<div style="margin:8px 10px;padding:12px 10px;border:1.5px dashed #cbd5e0;border-radius:9px;text-align:center;color:#8a94a6;font-size:9px;line-height:1.5">
+      Shows in whichever widget<br>this screen carries</div>`);
+  $('prevNote').textContent = w
+    ? `Pinned to ${WIDGET_LABEL[w]} on ${$('f_screen').value || 'the selected screen'}.`
+    : 'On a screen — the widget shown depends on what is built into that screen.';
+}
+
+/* ── library ────────────────────────────────────────────────── */
+function drawLib(){
+  $('libTitle').textContent = `Uploaded Trainings (${rows.length})`;
+  $('lib').innerHTML = rows.map((r,i)=>{
+    const qs = r.questions || [];
+    const shows = [
+      r.max_views ? `${r.max_views} views` : null,
+      r.expiry_days ? `${r.expiry_days} days` : null,
+    ].filter(Boolean).join(' · ') || '<span style="color:var(--faint)">No limit</span>';
+    const targeting = r.performance_triggers && r.performance_triggers.length
+      ? r.performance_triggers.map(t=>`<span class="badge trig">⚡ ${esc(TRIG_SHORT[t]||t)}</span>`).join('')
+      : '<span style="color:var(--faint);font-size:12.5px">All teams</span>';
+    return `<tr>
+      <td class="t">${r.content_type==='document'?'📄 ':''}${esc(r.title)}
+        ${r.homepage_blocker?'<span class="badge blocker">⛔ Blocker</span>':''}
+        ${r.allow_manual_complete && !r.mandatory?'<span class="badge self">Self-mark</span>':''}</td>
+      <td><span class="badge">${esc(r.screen)}</span></td>
+      <td><span class="badge">${esc(WIDGET_LABEL[r.widget_type]||'Any')}</span></td>
+      <td>${r.languages.map(l=>`<span class="badge lang">${esc(l)}</span>`).join('')}</td>
+      <td>${targeting}</td>
+      <td style="font-size:12.5px;color:var(--mid);white-space:nowrap">${shows}</td>
+      <td>${qs.length?`<button class="badge assess" data-x="${i}">${qs.length} Qs · ${r.pass_percent}%${r.mandatory?' · Mandatory':''} ${expanded===i?'▲':'▼'}</button>`:'<span style="color:var(--faint)">None</span>'}</td>
+      <td style="font-size:12.5px;color:var(--dim);white-space:nowrap">${esc(r.uploaded)}</td>
+      <td style="white-space:nowrap"><button class="btn btn-ghost btn-sm" data-ed="${i}">Edit</button>
+        <button class="btn btn-danger btn-sm" data-del="${i}" style="margin-left:5px">Delete</button></td>
+    </tr>
+    ${expanded===i?`<tr><td colspan="9" style="background:var(--head)">
+      ${qs.map((q,n)=>`<div class="qbox"><div class="q">${n+1}. ${esc(q.question)}</div>
+        ${q.options.map((o,k)=>`<span class="o ${k===q.correct_index?'ok':''}">${k===q.correct_index?'✓ ':''}${esc(o)}</span>`).join('')}</div>`).join('')}
+    </td></tr>`:''}`;
+  }).join('');
+  $('lib').querySelectorAll('[data-x]').forEach(b=>b.onclick=()=>{const i=+b.dataset.x;expanded = expanded===i?null:i;drawLib();});
+  $('lib').querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{const r=rows[+b.dataset.del];rows.splice(+b.dataset.del,1);expanded=null;drawLib();toast(`Deleted “${r.title}”`);});
+  $('lib').querySelectorAll('[data-ed]').forEach(b=>b.onclick=()=>{
+    const r = rows[+b.dataset.ed];
+    $('f_title').value=r.title; $('f_screen').value=r.screen; $('f_widget').value=r.widget_type||'';
+    $('f_lang').value=r.languages[0]||'English'; $('f_blocker').checked=!!r.homepage_blocker;
+    $('f_maxviews').value=r.max_views||''; $('f_expiry').value=r.expiry_days||'';
+    $('f_trigger').value=(r.performance_triggers||[])[0]||'';
+    $('f_assess').checked=(r.questions||[]).length>0; $('assessBox').hidden=!(r.questions||[]).length;
+    $('f_mand').checked=!!r.mandatory; $('f_pass').value=r.pass_percent||70;
+    $('f_self').checked=!!r.allow_manual_complete;
+    questions=(r.questions||[]).map(q=>({...q,options:[...q.options]}));
+    contentType=r.content_type||'video';
+    document.querySelectorAll('[data-ct]').forEach(x=>x.classList.toggle('on',x.dataset.ct===contentType));
+    syncSelf(); drawQs(); preview();
+    window.scrollTo({top:0,behavior:'smooth'});
+    toast(`Loaded “${r.title}” into the form`);
+  });
+}
+
+/* ── upload ─────────────────────────────────────────────────── */
+$('uploadBtn').onclick = () => {
+  const title = $('f_title').value.trim();
+  if(!title) return toast('Add a title first.');
+  if(!$('f_screen').value) return toast('Choose a screen.');
+  if($('f_assess').checked && !questions.length) return toast('Add at least one question, or turn the assessment off.');
+  if($('f_assess').checked && questions.some(q=>!q.question.trim()||q.options.some(o=>!o.trim())))
+    return toast('Every question needs text and all four options.');
+  rows.unshift({
+    title, screen:$('f_screen').value, widget_type:$('f_widget').value,
+    languages:[$('f_lang').value], mandatory:$('f_assess').checked && $('f_mand').checked,
+    homepage_blocker:$('f_blocker').checked,
+    allow_manual_complete:$('f_self').checked && !($('f_assess').checked && $('f_mand').checked),
+    performance_triggers:$('f_trigger').value?[$('f_trigger').value]:[],
+    max_views:$('f_maxviews').value?+$('f_maxviews').value:null,
+    expiry_days:$('f_expiry').value?+$('f_expiry').value:null,
+    pass_percent:+$('f_pass').value||70, content_type:contentType,
+    questions:questions.map(q=>({...q,options:[...q.options]})),
+    uploaded:new Date().toLocaleDateString('en-GB'),
+  });
+  expanded=null; drawLib(); reset();
+  toast(`Published “${title}”`);
+  document.querySelector('.card:last-of-type').scrollIntoView({behavior:'smooth',block:'start'});
+};
+
+function reset(){
+  ['f_title','f_maxviews','f_expiry','f_maxq'].forEach(id=>$(id).value='');
+  $('f_screen').value=''; $('f_widget').value=''; $('f_lang').value='English';
+  $('f_team').value=''; $('f_subteam').innerHTML='<option value="">All subteams</option>'; $('f_subteam').disabled=true;
+  $('f_aon').value=''; $('f_trigger').value='';
+  ['f_blocker','f_self','f_assess','f_mand'].forEach(id=>$(id).checked=false);
+  $('f_pass').value=70; $('assessBox').hidden=true; questions=[];
+  contentType='video';
+  document.querySelectorAll('[data-ct]').forEach(x=>x.classList.toggle('on',x.dataset.ct==='video'));
+  syncSelf(); drawQs(); preview();
+}
+$('resetBtn').onclick = () => { reset(); toast('Form cleared'); };
+
+let tt;
+function toast(msg){
+  const el=$('toast'); el.textContent=msg; el.classList.add('on');
+  clearTimeout(tt); tt=setTimeout(()=>el.classList.remove('on'),2400);
+}
+
+syncSelf(); drawQs(); preview(); drawLib();
+</script>
+
+</body>
+</html>

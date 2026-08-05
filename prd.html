@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PRD — Contextual Video Coaching</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0}
+  img,video{max-width:100%}
+  button,input,select,textarea{font:inherit;color:inherit}
+</style>
+</head>
+<body>
+
+<style>
+  :root {
+    --paper:   #ffffff;
+    --wash:    #f3f7fc;
+    --rule:    #d7e1ee;
+    --ink:     #0e1726;
+    --muted:   #56688a;
+    --navy:    #012b72;
+    --cyan:    #0089c4;
+    --flag:    #b3261e;
+    --shadow:  0 1px 2px rgba(14,23,38,.06), 0 8px 28px rgba(14,23,38,.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #10151f; --wash: #171e2b; --rule: #2a3547;
+      --ink: #e6ecf5; --muted: #97a7c0; --navy: #7fb3ff; --cyan: #4cc9f0;
+      --flag: #ff8a80;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 28px rgba(0,0,0,.32);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #10151f; --wash: #171e2b; --rule: #2a3547;
+    --ink: #e6ecf5; --muted: #97a7c0; --navy: #7fb3ff; --cyan: #4cc9f0;
+    --flag: #ff8a80;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 28px rgba(0,0,0,.32);
+  }
+  :root[data-theme="light"] {
+    --paper: #ffffff; --wash: #f3f7fc; --rule: #d7e1ee;
+    --ink: #0e1726; --muted: #56688a; --navy: #012b72; --cyan: #0089c4;
+    --flag: #b3261e;
+    --shadow: 0 1px 2px rgba(14,23,38,.06), 0 8px 28px rgba(14,23,38,.06);
+  }
+
+  body {
+    background: var(--wash);
+    color: var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+    padding: 0 20px 96px;
+  }
+
+  .bar {
+    position: sticky; top: 0; z-index: 20;
+    margin: 0 -20px 32px; padding: 12px 20px;
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--rule);
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+  }
+  .bar .who { font-size: 12.5px; color: var(--muted); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+  .bar .sp { flex: 1; }
+  button.copy {
+    font: inherit; font-size: 13.5px; font-weight: 650;
+    background: var(--navy); color: var(--paper);
+    border: none; border-radius: 7px; padding: 8px 15px; cursor: pointer;
+    transition: opacity .15s ease;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) button.copy { color: #0b111b; }
+  }
+  :root[data-theme="dark"] button.copy { color: #0b111b; }
+  button.copy:hover { opacity: .86; }
+  button.copy:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+  .hint { font-size: 12.5px; color: var(--muted); }
+
+  article {
+    max-width: 860px; margin: 0 auto;
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    box-shadow: var(--shadow);
+    padding: 64px 68px 72px;
+  }
+  @media (max-width: 720px) { article { padding: 34px 22px 44px; } }
+
+  /* Cover */
+  .eyebrow {
+    font-size: 11.5px; font-weight: 700; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--cyan); margin: 0 0 12px;
+  }
+  h1 {
+    font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
+    font-size: 42px; line-height: 1.14; font-weight: 700;
+    color: var(--navy); margin: 0 0 12px; text-wrap: balance;
+    letter-spacing: -.015em;
+  }
+  .deck {
+    font-size: 18px; line-height: 1.5; color: var(--muted);
+    margin: 0 0 34px; max-width: 46ch;
+  }
+
+  h2 {
+    font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
+    font-size: 25px; line-height: 1.25; font-weight: 700;
+    color: var(--navy); margin: 52px 0 6px;
+    padding-bottom: 9px; border-bottom: 2px solid var(--rule);
+    text-wrap: balance;
+  }
+  h3 {
+    font-size: 17px; font-weight: 700; color: var(--ink);
+    margin: 30px 0 6px; text-wrap: balance;
+  }
+  h4 {
+    font-size: 14.5px; font-weight: 700; color: var(--muted);
+    margin: 22px 0 4px;
+  }
+  p { margin: 0 0 14px; max-width: 68ch; }
+  ul, ol { margin: 0 0 16px; padding-left: 22px; max-width: 68ch; }
+  li { margin-bottom: 7px; }
+  li::marker { color: var(--cyan); }
+  strong { font-weight: 680; }
+  em { color: var(--muted); }
+
+  .tw { overflow-x: auto; margin: 0 0 22px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14.5px; line-height: 1.5; }
+  th, td { border: 1px solid var(--rule); padding: 9px 12px; text-align: left; vertical-align: top; }
+  th { background: var(--navy); color: #fff; font-weight: 650; font-size: 13.5px; }
+  :root[data-theme="dark"] th { color: #0b111b; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) th { color: #0b111b; } }
+  tbody tr:nth-child(even) td { background: var(--wash); }
+  td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+  .note {
+    border-left: 3px solid var(--cyan);
+    background: var(--wash);
+    padding: 13px 16px; margin: 0 0 20px; border-radius: 0 4px 4px 0;
+  }
+  .note p:last-child { margin-bottom: 0; }
+
+  .meta td:first-child { width: 168px; font-weight: 650; color: var(--muted); }
+  .p0 { color: var(--flag); font-weight: 700; }
+
+  hr { border: none; border-top: 1px solid var(--rule); margin: 44px 0; }
+  .end { font-size: 13px; color: var(--muted); font-style: italic; }
+  ::selection { background: color-mix(in srgb, var(--cyan) 26%, transparent); }
+</style>
+
+<div class="bar">
+  <span class="who">PRD · Contextual Video Coaching</span>
+  <span class="sp"></span>
+  <span class="hint" id="hint">Select-all copies the document only</span>
+  <button class="copy" id="copyBtn" type="button">Copy document</button>
+</div>
+
+<article id="doc">
+
+  <p class="eyebrow">Product Requirements Document</p>
+  <h1>Contextual Video Coaching</h1>
+  <p class="deck">In-workflow training nudges, mandatory assessments, and the GG App admin console.</p>
+
+  <div class="tw">
+    <table class="meta">
+      <tbody>
+        <tr><td>Product</td><td>GG App — Field Sales Executive (FSE) mobile application</td></tr>
+        <tr><td>Feature</td><td>Contextual Video Coaching — nine in-app widget views, Trainings &amp; Assessment hub, admin console</td></tr>
+        <tr><td>Document owner</td><td>Product</td></tr>
+        <tr><td>Status</td><td>Draft for review</td></tr>
+        <tr><td>Version</td><td>1.0</td></tr>
+        <tr><td>Date</td><td>5 August 2026</td></tr>
+        <tr><td>Reviewers</td><td>Design, Frontend, Backend, Field Ops, L&amp;D</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>1. Overview</h2>
+
+  <h3>1.1 Problem</h3>
+
+  <h4>The operating context</h4>
+  <p>A Field Sales Executive works alone. On any given day they are on foot in a market, running a beat of eight to ten merchants, carrying tasks named Onboarding, KYC, EDC Deployment and Soundbox Sale — each with its own SLA, proof requirements and rejection criteria. Their screen shows acceptance windows measured in minutes and breach warnings measured in hours. Nobody is standing next to them.</p>
+  <p>Every one of those tasks can fail for a knowledge reason: the wrong device type selected, a QR mapped to the wrong MID, a KYC submitted without business proof, a geo-tag captured from the wrong place, a merchant objection that goes unanswered and ends the conversation. These are not motivation failures. They are <em>nobody told me — or nobody told me recently enough</em> failures, and they are addressable.</p>
+
+  <h4>Four forces make this structural, not incidental</h4>
+  <ul>
+    <li><strong>Training has a price the FSE personally pays.</strong> Time in a video is time not closing a task. An FSE looking at an SLA countdown is being asked to choose between compliance and income. Most choose income, and they are not wrong to.</li>
+    <li><strong>Process changes faster than people can be retrained.</strong> Product launches, revised SOPs, pricing changes and new device models reach the field continuously. Each change invalidates what was learned before it, and no mechanism today reliably reaches every affected FSE <em>before</em> the change takes effect.</li>
+    <li><strong>The population turns over.</strong> Attrition means the audience for day-one content is never finished. Onboarding is not a project with an end date; it is permanent load.</li>
+    <li><strong>The workforce is not English-first.</strong> Content produced in one language reaches a fraction of the people who need it — and the fraction it misses is not random, it skews toward the FSEs who need the coaching most.</li>
+  </ul>
+
+  <h4>Why the current model fails</h4>
+  <p>Training today lives in a section of the app the FSE has no reason to open during a working day. That produces three distinct failures. They are worth separating, because they have different fixes:</p>
+  <ol>
+    <li><strong>Not consumed.</strong> Content that has to be sought out, by someone with no time to seek it, is not consumed. This is a distribution problem, not a content problem — better videos in the same place would not move it.</li>
+    <li><strong>Not retained.</strong> Where it is consumed, it is consumed hours or days away from the moment it is needed. A video watched on Monday does not change what an FSE says to a merchant on Thursday.</li>
+    <li><strong>Not verified.</strong> Nothing today distinguishes an FSE who understood the content from one who let it play. For anything the business wants to enforce — a compliance refresher, a mandatory SOP before a launch date — completion is currently a claim, not a fact.</li>
+  </ol>
+
+  <h4>Who bears the cost</h4>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Who</th><th>How it shows up</th></tr></thead>
+      <tbody>
+        <tr><td><strong>FSE</strong></td><td>Activities rejected after the work was already done. Incentive lost on effort already spent. A merchant conversation lost to an objection they had no answer for.</td></tr>
+        <tr><td><strong>Merchant</strong></td><td>Wrong plan explained, wrong device installed, a return visit needed to fix what should have worked first time.</td></tr>
+        <tr><td><strong>Team Lead / ASM</strong></td><td>Coaching the same mistakes repeatedly, one FSE at a time, with no way to see who has actually absorbed a process change.</td></tr>
+        <tr><td><strong>Business</strong></td><td>Rework cost on invalid activities, slower time-to-productivity for new hires, and process changes that land unevenly across the field force.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>Why now</h4>
+  <p>The distribution problem is solvable without building new app surface area. The workflow screens the FSE already uses — task lists, merchant profiles, device setup, payment collection, performance — are exactly the screens where the knowledge gaps occur, and they can carry training slots additively without changing what those screens do. The targeting signals already exist too: age on network, invalid-activity flags and QC rejection reasons are all captured today. What is missing is the layer that connects them.</p>
+
+  <h4>What we know, and what we are assuming</h4>
+  <p>This section should be closed out before build. Where a number is needed, it is named rather than estimated.</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Established</th><th>Assumed — needs validation before build</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Activities are rejected for identifiable, repeating reasons (geo mismatch, duplicate merchant, unclear proof, incomplete KYC), and those reasons are already recorded.</td>
+          <td>What share of rejections are knowledge-addressable rather than deliberate or environmental. <em>Pull the rejection-reason distribution for one quarter.</em></td>
+        </tr>
+        <tr>
+          <td>Training currently sits in its own section, disconnected from the workflows where the knowledge is applied.</td>
+          <td>Current open rate and completion rate of that section, as the baseline this feature is measured against.</td>
+        </tr>
+        <tr>
+          <td>FSEs operate under SLA and acceptance-window pressure, visible on their own task screens.</td>
+          <td>How much time an FSE will tolerate spending on training in a working day before they disengage entirely.</td>
+        </tr>
+        <tr>
+          <td>The field force spans multiple language regions.</td>
+          <td>The actual language distribution, and which languages are committed for launch.</td>
+        </tr>
+        <tr>
+          <td>New hires need structured day-one orientation.</td>
+          <td>Current time-to-first-productive-activity, and how much of that gap is knowledge rather than territory or access.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>1.2 Solution</h3>
+  <p>Deliver short training content at the point of need, inside the workflows the FSE already uses, through a small set of reusable placeholder slots. Pair it with lightweight assessments so knowledge can be verified rather than assumed, and give the business a console to target, sequence and enforce it.</p>
+  <p>The feature has three parts:</p>
+  <ol>
+    <li>Nine widget views that render training inside existing app screens without altering those screens.</li>
+    <li>A Trainings &amp; Assessment hub listing everything assigned to the FSE with its status.</li>
+    <li>An admin console where every behaviour the FSE sees is configured.</li>
+  </ol>
+
+  <h3>1.3 Design principle</h3>
+  <div class="note">
+    <p><strong>The FSE is not a learner. They are a salesperson with a merchant watching and an SLA burning.</strong> Training must behave like a tool, not a course. Every design decision in this document resolves in favour of speed and minimal interruption.</p>
+  </div>
+
+  <h3>1.4 Non-goals</h3>
+  <ul>
+    <li>This feature does not modify any existing app workflow, screen layout or copy. Widgets are additive slots only.</li>
+    <li>It is not a Learning Management System. There are no courses, certifications or learning paths in v1.</li>
+    <li>It does not author or host video production. Content is uploaded ready-made.</li>
+    <li>It does not replace classroom or field coaching by Team Leads.</li>
+  </ul>
+
+  <h3>1.5 Success metrics</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Metric</th><th>Definition</th><th>Target</th></tr></thead>
+      <tbody>
+        <tr><td>Mandatory completion rate</td><td>Mandatory trainings passed ÷ assigned, per cycle</td><td class="num">≥ 90% in window</td></tr>
+        <tr><td>Time to completion</td><td>Assignment to pass, mandatory content</td><td class="num">Median ≤ 48 h</td></tr>
+        <tr><td>In-workflow consumption</td><td>Plays originating from a widget rather than the hub</td><td class="num">≥ 60%</td></tr>
+        <tr><td>First-attempt pass rate</td><td>First attempts at or above the pass mark</td><td class="num">60–80%</td></tr>
+        <tr><td>Invalid activity rate</td><td>Invalid ÷ submitted, for FSEs who completed the relevant compliance training vs. those who did not</td><td class="num">≥ 15% relative drop</td></tr>
+        <tr><td>Interruption tolerance</td><td>Sessions where a gate or interstitial is dismissed without engagement</td><td class="num">≤ 25%</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p><em>A first-attempt pass rate above 80% indicates the questions are trivial; below 60% indicates the content is not teaching what the assessment tests. Both are content signals, not FSE signals.</em></p>
+
+  <h2>2. Users and scenarios</h2>
+
+  <h3>2.1 Personas</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Persona</th><th>Context</th><th>What they need</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Field Sales Executive</strong><br>Primary</td><td>On foot in a market, one hand on the phone, merchant present, SLA running. Variable literacy in English; regional language strongly preferred.</td><td>A five-second answer at the moment a merchant asks. Zero friction, and no embarrassment in front of the merchant.</td></tr>
+        <tr><td><strong>New FSE</strong><br>0–15 days</td><td>First fortnight on network. Does not yet know what the app can do.</td><td>Day-one orientation that finds them rather than waiting to be found.</td></tr>
+        <tr><td><strong>Team Lead / ASM</strong></td><td>Manages 20–25 FSEs; accountable for compliance and productivity.</td><td>Visibility of who is behind, and enforcement that does not require chasing.</td></tr>
+        <tr><td><strong>Training admin</strong></td><td>Central L&amp;D or product ops, publishing for the whole field force.</td><td>Upload once, target precisely, verify comprehension, enforce where it matters.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>2.2 Primary scenarios</h3>
+
+  <h4>S1 — Merchant asks a question mid-pitch</h4>
+  <p>An FSE is on the SoundBox plan screen. The merchant asks what the ₹125 monthly charge covers. The FSE taps an inline card already sitting in the page flow, gets the answer, and continues the conversation. The training was not sought out; it was already where the question arose.</p>
+
+  <h4>S2 — Day one on the network</h4>
+  <p>A new FSE opens the app for the first time. Mandatory orientation is outstanding, so a gate on the home screen names what is pending and routes them to the hub. They clear it before starting work.</p>
+
+  <h4>S3 — Repeated invalid activity</h4>
+  <p>An FSE has had activities rejected for the same reason twice. A corrective training is assigned as mandatory. Until it is passed they cannot clear the gate, and their Team Lead can see the outstanding item.</p>
+
+  <h4>S4 — Process change goes live</h4>
+  <p>A revised SOP takes effect on a fixed date. The training is published as mandatory with the homepage blocker set. Every FSE is gated on their next home screen visit and routed to the hub.</p>
+
+  <h2>3. App — the nine widget views</h2>
+  <p>Training reaches the FSE only through these nine views. Each is a reusable placeholder slot dropped into an existing screen. A slot owns no app content, changes no layout, and renders nothing at all when no training is targeted at it.</p>
+
+  <h3>3.1 View catalogue</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>#</th><th>View</th><th>Behaviour</th><th>Use when</th><th>Reference placement</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1</td><td><strong>Mini Banner</strong></td><td>A collapsed strip pinned into the screen that expands inline to play. Never takes the screen over.</td><td>Persistent, low-pressure presence for optional content.</td><td>FSE Home</td></tr>
+        <tr><td class="num">2</td><td><strong>Bottom Sheet</strong></td><td>Slides up over the screen and dims the content behind. Dismissed by tap-away or close.</td><td>A question asked mid-flow, at a prompt or decision point.</td><td>Re-KYC Check</td></tr>
+        <tr><td class="num">3</td><td><strong>Interstitial</strong><br>Full-screen</td><td>Takes over the screen and interrupts. Must be dealt with before the FSE proceeds.</td><td>Mandatory content and hard gates only. The most expensive view — use sparingly.</td><td>Check-in gate</td></tr>
+        <tr><td class="num">4</td><td><strong>Inline Accordion</strong></td><td>A collapsible row inline in the page flow that expands in place. Covers nothing.</td><td>Dense list screens where no existing content may be obscured.</td><td>Merchant Task Details; Consumer App Verification</td></tr>
+        <tr><td class="num">5</td><td><strong>Picture-in-Picture</strong></td><td>Opens full-screen, shrinks to a floating card that stays on top while the FSE works underneath.</td><td>Step-by-step content the FSE must follow while operating a form.</td><td>SoundBox Plan Selection</td></tr>
+        <tr><td class="num">6</td><td><strong>Carousel</strong></td><td>Horizontally scrolling cards; tapping one opens it in a sheet.</td><td>Browsing several short clips to pick the relevant one.</td><td>SoundBox Add Device</td></tr>
+        <tr><td class="num">7</td><td><strong>Stories</strong></td><td>Full-bleed vertical playback with a segmented progress bar, one segment per training. Autoplays muted, auto-advances, taps move between segments.</td><td>Short, browsable content the FSE flicks through rather than commits to.</td><td>FSE Home</td></tr>
+        <tr><td class="num">8</td><td><strong>Popup Modal</strong></td><td>A centred card naming what is outstanding, with a hand-off to the hub. Plays nothing in place.</td><td>Trigger-driven nudges — allocation, target shortfalls — where the point is to route, not to teach on the spot.</td><td>Performance Tracking</td></tr>
+        <tr><td class="num">9</td><td><strong>Inline Embedded Card</strong></td><td>A static thumbnail with a play badge and duration, embedded in the natural page flow.</td><td>Explainers that belong beside the numbers or fields they explain.</td><td>Performance Tracking; SoundBox Payment; Merchant Detail</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>3.2 Common player behaviour</h3>
+  <p>All nine views open the same player, presented in three modes — full-screen, floating, and in-sheet. Behaviour is identical across them.</p>
+  <ul>
+    <li><strong>Content types.</strong> Video and document (PDF or slide deck) are handled identically. A document renders as a tap-to-open card, opens in a new tab, and counts as consumed on open.</li>
+    <li><strong>Language.</strong> The control is always present in the player, so the capability is discoverable. It lists exactly the languages uploaded for that training and nothing else; where only one exists, the sheet says so rather than offering placeholders. Selection persists across trainings, and playback position is preserved across a switch.</li>
+    <li><strong>Captions.</strong> A CC control sits beside the language control. Caption tracks are supplied alongside the media file. Where a training has none, the control reports its absence rather than failing silently.</li>
+    <li><strong>Completion.</strong> Mandatory content must be watched to the end; optional content may offer a self-declared shortcut if the admin has enabled it. See §5.1.</li>
+    <li><strong>Frequency capping.</strong> A training stops surfacing in workflows once it hits its view cap or day cap. It remains findable in the hub either way — a cap governs how hard the platform pushes, never whether the FSE can reach the content.</li>
+    <li><strong>Assessment handoff.</strong> Where a training carries an assessment, the call to action is locked until the content is consumed, then becomes the assessment entry point.</li>
+  </ul>
+
+  <h3>3.3 Interstitial rules</h3>
+  <p>The interstitial is the only view that interrupts, so it is the only one with an escape policy.</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Condition</th><th>Behaviour</th></tr></thead>
+      <tbody>
+        <tr><td>Mandatory — assessment mandatory, or homepage blocker set</td><td>No skip control is rendered. Clears only when the content is finished and the assessment passed.</td></tr>
+        <tr><td>Non-mandatory</td><td>A <strong>Skip for now</strong> control is offered. The skip is remembered for the session so the FSE is not interrupted again.</td></tr>
+        <tr><td>Already cleared</td><td>Never fires again.</td></tr>
+        <tr><td>Multiple candidates on one screen</td><td>One interstitial only. Priority: homepage blocker, then mandatory, then anything unfinished.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>3.4 Homepage mandatory gate</h3>
+  <p>When mandatory trainings are outstanding, the home screen presents a gate. The gate does not play content. Its only job is to name what is pending and hand off to the Trainings &amp; Assessment hub — deliberately moving the interruption off the workflow and into the surface built for it.</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Tier</th><th>Trigger</th><th>Behaviour</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Hard gate</strong></td><td>Any outstanding mandatory training has <em>Homepage blocker</em> enabled</td><td>No dismiss control. Primary action routes to the hub. Copy: “These must be completed before you continue.”</td></tr>
+        <tr><td><strong>Soft gate</strong></td><td>Mandatory trainings outstanding, none flagged as blocker</td><td>Same sheet plus <em>Remind me later</em>. Shown once per session.</td></tr>
+        <tr><td><strong>None</strong></td><td>No mandatory trainings outstanding</td><td>No gate.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The gate lists the first three pending trainings with thumbnails and a MANDATORY tag, with a “+N more” affordance beyond that.</p>
+
+  <h2>4. App — Trainings &amp; Assessment hub</h2>
+  <p>The hub is the single view where an FSE sees everything assigned to them. It is the destination the homepage gate routes to, and the only place training can be browsed rather than encountered.</p>
+
+  <h3>4.1 Structure</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Region</th><th>Content</th></tr></thead>
+      <tbody>
+        <tr><td>Header</td><td>Title, “X of Y completed”, and a circular progress ring showing percentage complete.</td></tr>
+        <tr><td>Alert strip</td><td>“N mandatory trainings pending”, shown only when the count is above zero.</td></tr>
+        <tr><td>Search</td><td>Free-text search across training titles.</td></tr>
+        <tr><td>Filters</td><td>Exactly three: <strong>All</strong>, <strong>Pending</strong>, <strong>Completed</strong>. No other grouping or filtering.</td></tr>
+        <tr><td>List</td><td>A flat, ungrouped list of training cards.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>4.2 Training card</h3>
+  <p>Each card carries only what an admin can set. Nothing is displayed that the console cannot control.</p>
+  <ul>
+    <li>Thumbnail with duration timestamp and a play badge.</li>
+    <li>Title.</li>
+    <li><strong>MANDATORY</strong> tag, shown on mandatory trainings until they are passed.</li>
+    <li>Status: Not started, Take assessment, Retry assessment, or Passed with score.</li>
+    <li>Question count, and a language count where more than one language is uploaded.</li>
+    <li>A left edge accent — red for outstanding mandatory, green for complete.</li>
+  </ul>
+
+  <h3>4.3 Post-completion flow</h3>
+  <p>Passing an assessment inside the hub returns the FSE to the player with a confirmed state and offers the next outstanding training, so a pass leads somewhere rather than dropping them back at the list.</p>
+
+  <h2>5. Completion and assessment</h2>
+
+  <h3>5.1 Completion rules</h3>
+  <p>Completion is the signal that gates payout-adjacent enforcement, so it must be earned rather than claimed.</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Content</th><th>How it can be completed</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Mandatory</strong></td><td>The video must reach the end, or the document must be opened. No self-declaration is offered under any configuration.</td></tr>
+        <tr><td><strong>Optional</strong> — self-mark enabled</td><td>Reaching the end, or tapping “I’ve watched this video”.</td></tr>
+        <tr><td><strong>Optional</strong> — self-mark disabled</td><td>Reaching the end only.</td></tr>
+        <tr><td><strong>Mandatory, already passed</strong></td><td>Reaching the end, or the self-mark shortcut. The first clearance was earned; a repeat viewing is a refresher and should not cost the FSE the full runtime again.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Where a training carries an assessment, completion additionally requires a passing score.</p>
+
+  <h3>5.2 Assessment format</h3>
+  <ul>
+    <li>Multiple choice, four options per question.</li>
+    <li>Question order is shuffled on every attempt.</li>
+    <li>An optional cap limits how many of the uploaded questions are shown, drawn at random.</li>
+    <li>A configurable pass mark, defaulting to 70%.</li>
+    <li>Unlimited retakes.</li>
+  </ul>
+
+  <h3>5.3 Feedback model</h3>
+  <div class="note">
+    <p><strong>The correct answer is never revealed.</strong> Feedback is given per selection, on the FSE’s own choice only.</p>
+  </div>
+  <ul>
+    <li>Selecting an option locks it for that question and marks it correct or not correct.</li>
+    <li>Remaining options are disabled and de-emphasised. The right answer is not highlighted.</li>
+    <li>An incorrect selection prompts the FSE to re-watch the content, and notes that the assessment can be retaken.</li>
+    <li>The result screen shows the score and the pass mark only. It does not list questions or answers.</li>
+  </ul>
+  <p>This is deliberate. An end-of-quiz answer key lets an FSE memorise the correct options and clear a retake without engaging with the content, which defeats the purpose of gating anything on the result.</p>
+
+  <h2>6. Admin console</h2>
+  <p>Every behaviour described in sections 3 to 5 is configured here. The console and the app are strictly linked: the app must never display or enforce anything an admin cannot set, and the console must never present a control the app does not honour.</p>
+
+  <h3>6.1 Upload form</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Field</th><th>Type</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td>Content Type</td><td>Toggle — Video / Document</td><td>Determines player treatment. Video accepts MP4, MOV, WebM; Document accepts PDF, PPT, PPTX.</td></tr>
+        <tr><td>File</td><td>Upload, drag and drop</td><td>The media asset.</td></tr>
+        <tr><td>Title</td><td>Text, required</td><td>Displayed everywhere the training appears.</td></tr>
+        <tr><td>Language</td><td>Select</td><td>The language of this file. Additional languages are uploaded as separate entries sharing the same title.</td></tr>
+        <tr><td>Screen</td><td>Select, required</td><td>Which app screen the training is eligible to appear on.</td></tr>
+        <tr><td>Widget View</td><td>Select — one of nine, or “Any widget on this screen”</td><td>Pins the training to a view, or leaves it eligible for whichever view the screen carries.</td></tr>
+        <tr><td>Team / Subteam</td><td>Select</td><td>Targeting. Blank means all.</td></tr>
+        <tr><td>FSE stage (AON)</td><td>Dropdown — All stages, New 0–15 d, Semi-new 15–45 d, Old 45+ d</td><td>Age-on-Network targeting.</td></tr>
+        <tr><td>Performance trigger</td><td>Dropdown</td><td>Rule-driven assignment on FSE state, layered on top of the static targeting above. Launch set: <em>Task or NAP allocation</em>, <em>Onboarding target not met</em>, <em>SB deployment target not met</em>. The list is designed to extend as further rules and queries are defined.</td></tr>
+        <tr><td>Target specific ecodes</td><td>CSV / Excel upload</td><td>Restricts visibility to a named list of FSEs, overriding broader targeting.</td></tr>
+        <tr><td>Stop after this many views</td><td>Number, optional</td><td>Frequency cap. The training stops surfacing in workflows once the FSE has seen it this many times.</td></tr>
+        <tr><td>Stop after this many days</td><td>Number, optional</td><td>Frequency cap measured from the FSE's first view.</td></tr>
+        <tr><td>Homepage blocker</td><td>Checkbox</td><td>Escalates the homepage gate to a hard gate with no dismiss.</td></tr>
+        <tr><td>Allow self-marking</td><td>Checkbox</td><td>Adds the “I’ve watched this video” shortcut. Locked off while the assessment is mandatory — but once the FSE has passed it, repeat viewings get the shortcut automatically, since a refresher is not a gate.</td></tr>
+        <tr><td>Add an assessment</td><td>Checkbox, expands a builder</td><td>Questions with four options and a marked correct answer, added manually or bulk-uploaded by CSV / Excel.</td></tr>
+        <tr><td>Assessment mandatory</td><td>Checkbox</td><td>Drives the MANDATORY tag, the required-assessment call to action, gate inclusion, and the completion rules in §5.1.</td></tr>
+        <tr><td>Passing score</td><td>Number, default 70</td><td>Percentage required to pass.</td></tr>
+        <tr><td>Max questions to show</td><td>Number, optional</td><td>Caps how many uploaded questions appear in any one attempt.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>6.2 Live preview</h3>
+  <p>The form renders a phone preview beside it showing how the training will appear in the selected widget view, updating as the configuration changes. This is the primary guard against an admin publishing content into a view it does not suit.</p>
+
+  <h3>6.3 Library</h3>
+  <p>A table of everything published, showing title with <em>Blocker</em> and <em>Self-mark</em> badges; screen; widget view; every uploaded language; team and ecode targeting; FSE stage; assessment summary; and upload date. The assessment cell expands in place to reveal the full question set with the correct option marked, for review. Rows support edit and delete.</p>
+
+  <h3>6.4 Validation rules</h3>
+  <ul>
+    <li>Title and Screen are required.</li>
+    <li>An assessment must have at least one complete question; every question needs text and all four options.</li>
+    <li>Passing score must be between 1 and 100.</li>
+    <li>Max questions to show cannot exceed the number of uploaded questions.</li>
+    <li>Self-marking is force-disabled on save whenever the assessment is mandatory, regardless of the checkbox state.</li>
+  </ul>
+
+  <h2>7. Measurement</h2>
+  <p>Consumption on its own is a vanity number. The point of the feature is what happens <em>after</em> the video, so the event stream is designed to join training completion to the FSE’s subsequent activity outcomes.</p>
+
+  <h3>7.1 Event taxonomy</h3>
+  <p>Every widget emits into a single stream. Each event carries a common envelope — <span class="mono">ts, ecode, video_id, title, screen, widget, content_type, language, mandatory</span> — plus the properties below.</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Event</th><th>Fires when</th><th>Extra properties</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">training_impression</td><td>A training is surfaced in a widget</td><td>—</td></tr>
+        <tr><td class="mono">training_opened</td><td>The FSE opens the player</td><td>surface</td></tr>
+        <tr><td class="mono">training_progress</td><td>25 / 50 / 75% of the media is reached</td><td>percent</td></tr>
+        <tr><td class="mono">training_completed</td><td>Content is cleared</td><td>method — played_to_end | self_marked | document_opened</td></tr>
+        <tr><td class="mono">training_skipped</td><td>Skip is used on a non-mandatory interstitial</td><td>widget</td></tr>
+        <tr><td class="mono">training_language_changed</td><td>A language is selected</td><td>from, to</td></tr>
+        <tr><td class="mono">training_captions_toggled</td><td>CC is turned on or off</td><td>on</td></tr>
+        <tr><td class="mono">frequency_cap_suppressed</td><td>A cap stops the training surfacing</td><td>views, max_views, expiry_days</td></tr>
+        <tr><td class="mono">assessment_started</td><td>The quick check opens</td><td>questions, attempt</td></tr>
+        <tr><td class="mono">assessment_question_answered</td><td>Each option selection</td><td>position, correct</td></tr>
+        <tr><td class="mono">assessment_passed</td><td>Score is at or above the pass mark</td><td>score, total, percent, pass_mark, attempt</td></tr>
+        <tr><td class="mono">assessment_failed</td><td>Score is below the pass mark</td><td>score, total, percent, pass_mark, attempt</td></tr>
+        <tr><td class="mono">gate_shown</td><td>The homepage gate appears</td><td>tier — hard | soft, pending</td></tr>
+        <tr><td class="mono">gate_cta_clicked</td><td>Go to Trainings is tapped</td><td>tier, pending</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>7.2 Consumption metrics</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Metric</th><th>Derived from</th></tr></thead>
+      <tbody>
+        <tr><td>Impression → open rate, by widget</td><td><span class="mono">training_opened</span> ÷ <span class="mono">training_impression</span>, grouped by widget. Identifies which views actually earn a tap.</td></tr>
+        <tr><td>Open → completion rate</td><td><span class="mono">training_completed</span> ÷ <span class="mono">training_opened</span></td></tr>
+        <tr><td>Drop-off curve</td><td><span class="mono">training_progress</span> at 25 / 50 / 75 against completion. A cliff before 50% means the content is too long for the moment.</td></tr>
+        <tr><td>Self-mark share</td><td><span class="mono">training_completed</span> where <span class="mono">method = self_marked</span>. A high share on optional content signals the video is not worth watching.</td></tr>
+        <tr><td>Skip rate</td><td><span class="mono">training_skipped</span> ÷ interstitial impressions. Rising skip rate is the early warning that nudging has become noise.</td></tr>
+        <tr><td>Language mix</td><td><span class="mono">training_language_changed</span> plus the language on every completion. Tells you which dubs to fund next.</td></tr>
+        <tr><td>Caption usage</td><td><span class="mono">training_captions_toggled</span>. High usage validates the muted-by-default direction.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>7.3 Comprehension metrics</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Metric</th><th>Derived from</th></tr></thead>
+      <tbody>
+        <tr><td>First-attempt pass rate</td><td><span class="mono">assessment_passed</span> where <span class="mono">attempt = 1</span>. Below 60% the content is not teaching what the check tests; above 80% the questions are trivial.</td></tr>
+        <tr><td>Attempts to pass</td><td>Distribution of <span class="mono">attempt</span> on <span class="mono">assessment_passed</span></td></tr>
+        <tr><td>Per-question failure rate</td><td><span class="mono">assessment_question_answered</span> where <span class="mono">correct = false</span>, grouped by position. Isolates the one concept a video explains badly.</td></tr>
+        <tr><td>Abandonment</td><td><span class="mono">assessment_started</span> with no matching pass or fail</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>7.4 Behaviour change — the metrics that justify the feature</h3>
+  <p>These require joining the training stream to activity and payout data. They are the only metrics that answer whether the feature works.</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Metric</th><th>How it is measured</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Rejection rate, before vs. after</strong></td><td>Invalid-activity rate for the specific task type a training covers, per FSE, in the 30 days before and after their pass date. The headline number.</td></tr>
+        <tr><td><strong>Matched-cohort comparison</strong></td><td>Same metric against FSEs assigned the training who have not yet completed it, matched on tenure and beat. Controls for the FSEs who would have improved anyway.</td></tr>
+        <tr><td><strong>Time to first productive activity</strong></td><td>For new hires, days from joining to first validated activity, split by whether day-one training was completed in the first 48 hours.</td></tr>
+        <tr><td><strong>Task completion rate by type</strong></td><td>Completion of the workflow a contextual training sits on, for FSEs who opened it from that screen vs. those who did not.</td></tr>
+        <tr><td><strong>Repeat-offence rate</strong></td><td>For compliance-triggered assignments, whether the same rejection reason recurs within 30 days of passing.</td></tr>
+        <tr><td><strong>SOP adoption lag</strong></td><td>Days from a process change going live to 90% of the affected field force passing its training.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <p><strong>The join key is the ecode.</strong> Every event must carry it, and the activity and payout systems must expose the same identifier, or none of §7.4 is computable. This is the single most important integration dependency in the project.</p>
+  </div>
+
+  <h2>8. Data model</h2>
+
+  <h3>8.1 Video record</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Field</th><th>Type</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>Primary key</td></tr>
+        <tr><td>title</td><td>text</td><td>Language variants share a title</td></tr>
+        <tr><td>screen</td><td>text</td><td>Target screen</td></tr>
+        <tr><td>widget_type</td><td>text, nullable</td><td>One of the seven views; null means any view on that screen</td></tr>
+        <tr><td>language</td><td>text</td><td>Language of this file</td></tr>
+        <tr><td>content_type</td><td>text</td><td>video | document</td></tr>
+        <tr><td>public_url, storage_path</td><td>text</td><td>Media location</td></tr>
+        <tr><td>team, subteam</td><td>text, nullable</td><td>Targeting; null means all</td></tr>
+        <tr><td>fse_stage</td><td>text[]</td><td>AON buckets; empty means all</td></tr>
+        <tr><td>target_ecodes</td><td>text[]</td><td>Named FSE list; empty means no restriction</td></tr>
+        <tr><td>homepage_blocker</td><td>boolean</td><td>Escalates the gate to hard</td></tr>
+        <tr><td>allow_manual_complete</td><td>boolean</td><td>Self-mark shortcut; forced false when mandatory</td></tr>
+        <tr><td>assessment_mandatory</td><td>boolean</td><td>Drives tag, gate and completion rules</td></tr>
+        <tr><td>assessment_pass_percent</td><td>int</td><td>Default 70</td></tr>
+        <tr><td>assessment_max_questions</td><td>int, nullable</td><td>Caps questions per attempt</td></tr>
+        <tr><td>created_at</td><td>timestamptz</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>8.2 Assessment question</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Field</th><th>Type</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>id</td><td>uuid</td><td>Primary key</td></tr>
+        <tr><td>video_id</td><td>uuid</td><td>Cascade on delete</td></tr>
+        <tr><td>question</td><td>text</td><td></td></tr>
+        <tr><td>options</td><td>text[]</td><td>Four options</td></tr>
+        <tr><td>correct_index</td><td>int</td><td>Zero-based; never sent to the result screen</td></tr>
+        <tr><td>position</td><td>int</td><td>Authoring order; display order is shuffled</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>8.3 Progress</h3>
+  <p>Per FSE and per training: watched, attempted, passed, score, total. Held client-side in the current build. This must move server-side before any enforcement is tied to payout or escalation.</p>
+
+  <h2>9. Open items and roadmap</h2>
+
+  <h3>9.1 Known gaps in the current build</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Gap</th><th>Impact</th><th>Priority</th></tr></thead>
+      <tbody>
+        <tr><td>No offline caching</td><td>A mandatory training that will not load in a low-signal market becomes a blocked task and a blocked payout.</td><td class="p0">P0</td></tr>
+        <tr><td>Progress stored client-side</td><td>Cannot be trusted for enforcement, and is lost when app data is cleared.</td><td class="p0">P0</td></tr>
+        <tr><td>No resume from playback position</td><td>An interrupting phone call loses all progress and forces a full re-watch.</td><td class="p0">P0</td></tr>
+        <tr><td>Completion is binary, not percentage-based</td><td>Reaching the end is detected, but partial viewing is not measured.</td><td class="num">P1</td></tr>
+        <tr><td>Audio defaults on</td><td>An FSE will not play objection-handling content aloud with the merchant present. In-flow views should default to muted with captions on.</td><td class="num">P1</td></tr>
+        <tr><td>No chapters or key moments</td><td>A 30-second linear video is a slow answer to a five-second question.</td><td class="num">P1</td></tr>
+        <tr><td>No global interruption budget</td><td>A gate, an interstitial and a banner can all fire in one session.</td><td class="num">P1</td></tr>
+        <tr><td>No TL / ASM visibility surface</td><td>Non-completion cannot be actioned by the reporting line.</td><td class="num">P1</td></tr>
+        <tr><td>Interface labels not localised</td><td>Audio switches language while the interface stays English.</td><td class="num">P2</td></tr>
+        <tr><td>No completion payoff</td><td>For an incentive-driven workforce, completion is not visibly linked to anything they value.</td><td class="num">P2</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>9.2 Phasing</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Phase</th><th>Scope</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1 — Foundation</strong></td><td>Nine widget views; hub; assessments with per-selection feedback; admin console with targeting, blocker, self-mark and assessment builder; language variants; captions.</td></tr>
+        <tr><td><strong>2 — Field-readiness</strong></td><td>Server-side progress; offline pre-caching at check-in; resume from position; percentage-based completion; muted-with-captions default on in-flow views.</td></tr>
+        <tr><td><strong>3 — Precision</strong></td><td>Chapters and key moments; trigger-reason copy; interruption budget and orchestration; TL / ASM dashboard; due dates and consequences.</td></tr>
+        <tr><td><strong>4 — Automation</strong></td><td>Rule-driven auto-assignment from FSE state — AON bucket, invalid-activity flags, productivity state, earnings milestones.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>9.3 Open questions</h3>
+  <ol>
+    <li>Is connectivity in target markets poor enough to make offline caching a launch blocker, or can it follow in Phase 2?</li>
+    <li>Should mandatory non-completion affect payout directly, or escalate to the Team Lead only? This determines how defensible the completion signal has to be.</li>
+    <li>What is the acceptable ceiling on interruptions per session before FSEs begin ignoring them?</li>
+    <li>Which languages are committed for launch, and who owns dubbing and caption production?</li>
+    <li>Should assessments be deferrable to a downtime moment rather than fired immediately after the video, while the FSE is still in front of a merchant?</li>
+  </ol>
+
+  <hr>
+  <p class="end">End of document.</p>
+</article>
+
+<script>
+  const btn = document.getElementById('copyBtn');
+  const hint = document.getElementById('hint');
+  const doc = document.getElementById('doc');
+  const original = hint.textContent;
+
+  btn.addEventListener('click', async () => {
+    const range = document.createRange();
+    range.selectNodeContents(doc);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    let ok = false;
+    try {
+      ok = document.execCommand('copy');
+    } catch (e) {
+      ok = false;
+    }
+    if (!ok) {
+      try {
+        const html = doc.innerHTML;
+        await navigator.clipboard.write([new ClipboardItem({
+          'text/html': new Blob([html], { type: 'text/html' }),
+          'text/plain': new Blob([doc.innerText], { type: 'text/plain' }),
+        })]);
+        ok = true;
+      } catch (e) { ok = false; }
+    }
+    hint.textContent = ok ? 'Copied — paste into Google Docs' : 'Press Cmd/Ctrl + C to copy the selection';
+    btn.textContent = ok ? 'Copied' : 'Copy document';
+    setTimeout(() => { hint.textContent = original; btn.textContent = 'Copy document'; }, 3200);
+  });
+</script>
+
+</body>
+</html>
