@@ -190,7 +190,7 @@
         <tr><td>Feature</td><td>Contextual Video Coaching — nine in-app widget views, Trainings &amp; Assessment hub, admin console</td></tr>
         <tr><td>Document owner</td><td>Product</td></tr>
         <tr><td>Status</td><td>Draft for review</td></tr>
-        <tr><td>Version</td><td>1.0</td></tr>
+        <tr><td>Version</td><td>2.0</td></tr>
         <tr><td>Date</td><td>5 August 2026</td></tr>
         <tr><td>Reviewers</td><td>Design, Frontend, Backend, Field Ops, L&amp;D</td></tr>
       </tbody>
@@ -394,124 +394,175 @@
   </div>
   <p>The gate lists the first three pending trainings with thumbnails and a MANDATORY tag, with a “+N more” affordance beyond that.</p>
 
-  <h2>4. App — Trainings &amp; Assessment hub</h2>
-  <p>The hub is the single view where an FSE sees everything assigned to them. It is the destination the homepage gate routes to, and the only place training can be browsed rather than encountered.</p>
+  <h2>4. The content model</h2>
+  <p>Three objects, deliberately separated. Collapsing any two of them is what made the first version of this feature unmanageable.</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Object</th><th>What it is</th><th>Owns</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Video</strong></td><td>A media asset in one or more languages.</td><td>Its file per language, captions, and optionally its own check questions.</td></tr>
+        <tr><td><strong>Training</strong></td><td>An <strong>ordered set of videos</strong> plus its assessment rules. This is the unit an FSE completes, and it is <strong>reusable</strong>.</td><td>Name, widget view, the ordered video list, per-video checks, the combined assessment.</td></tr>
+        <tr><td><strong>Placement</strong></td><td>One training, surfaced to one segment in one place. A training can have many.</td><td>App, screen, segmentation, and the delivery rules.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <p><strong>Why the split matters.</strong> The same “SoundBox pitch masterclass” can run on GG App Home for everyone <em>and</em> on Onboarding for new Sales FSEs with a 30-day cap — one piece of content, two delivery decisions, one thing to maintain.</p>
+  </div>
 
-  <h3>4.1 Structure</h3>
+  <h3>4.1 What belongs where</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Field</th><th>Lives on</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>Widget view</td><td>Training</td><td>It determines how many videos fit and whether a combined assessment is possible — both structural properties of the content.</td></tr>
+        <tr><td>App and screen</td><td>Placement</td><td>The same training may belong on different screens for different segments, or on none at all.</td></tr>
+        <tr><td>Assessment</td><td>Training</td><td>The questions test the content, not the context. They should not change with placement.</td></tr>
+        <tr><td>Targeting and rules</td><td>Placement</td><td>Who sees it and how hard it pushes is a delivery decision.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>4.2 Video capacity by widget view</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Widget view</th><th>Videos</th><th>Combined assessment</th><th>Reason</th></tr></thead>
+      <tbody>
+        <tr><td>Mini Banner · Interstitial · Picture-in-Picture</td><td class="num">1</td><td>Single assessment</td><td>One video, so “after each” and “after all” are the same thing. The UI shows one control.</td></tr>
+        <tr><td>Bottom Sheet · Inline Accordion</td><td class="num">8</td><td class="p0">Not available</td><td>Items are browsed in any order and can be closed at any point — there is no reliable end of the set.</td></tr>
+        <tr><td>Carousel</td><td class="num">12</td><td class="p0">Not available</td><td>The FSE picks the one card matching the merchant in front of them. A combined test would ask about videos they never opened.</td></tr>
+        <tr><td>Inline Embedded Card</td><td class="num">8</td><td class="p0">Not available</td><td>Each card is opened independently from the page.</td></tr>
+        <tr><td><strong>Stories</strong></td><td class="num">10</td><td><strong>Available</strong></td><td>Sequential and auto-advancing. The last segment is a real ending.</td></tr>
+        <tr><td>Popup Modal</td><td class="num">6</td><td class="p0">No assessment at all</td><td>It routes rather than plays, so any assessment belongs to the training it sends the FSE to.</td></tr>
+        <tr><td><strong>Hub only</strong> — no screen widget</td><td class="num">20</td><td><strong>Available</strong></td><td>Completed in order from Trainings &amp; Assessment, which is a committed, sequential context.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Where a browse-style view needs one combined pass mark, the answer is to build it as a <strong>hub-only</strong> training rather than to weaken the rule.</p>
+
+  <h2>5. App — Trainings &amp; Assessment hub</h2>
+  <p>The hub lists <strong>trainings</strong>, not videos. It is the destination the homepage gate routes to, and the only place training can be browsed rather than encountered.</p>
+  <p>A training appears here when its placement has <strong>“Also list in Trainings &amp; Assessment”</strong> enabled, or when the placement <em>is</em> the hub.</p>
+
+  <h3>5.1 List view</h3>
   <div class="tw">
     <table>
       <thead><tr><th>Region</th><th>Content</th></tr></thead>
       <tbody>
-        <tr><td>Header</td><td>Title, “X of Y completed”, and a circular progress ring showing percentage complete.</td></tr>
-        <tr><td>Alert strip</td><td>“N mandatory trainings pending”, shown only when the count is above zero.</td></tr>
-        <tr><td>Search</td><td>Free-text search across training titles.</td></tr>
-        <tr><td>Filters</td><td>Exactly three: <strong>All</strong>, <strong>Pending</strong>, <strong>Completed</strong>. No other grouping or filtering.</td></tr>
-        <tr><td>List</td><td>A flat, ungrouped list of training cards.</td></tr>
+        <tr><td>Header</td><td>“X of Y completed” across trainings, with a percentage ring.</td></tr>
+        <tr><td>Alert strip</td><td>“N mandatory trainings pending”, shown only when above zero.</td></tr>
+        <tr><td>Search &amp; filters</td><td>Free-text search plus exactly three filters: All, Pending, Completed.</td></tr>
+        <tr><td>Cards</td><td>Training name, video count, assessment size, MANDATORY tag, and status.</td></tr>
       </tbody>
     </table>
   </div>
+  <p>Status is expressed in the unit that matters — <em>Not started</em>, <em>2 of 4 videos</em>, <em>Take assessment</em>, <em>Retry assessment</em>, <em>Passed · 3/3</em>.</p>
 
-  <h3>4.2 Training card</h3>
-  <p>Each card carries only what an admin can set. Nothing is displayed that the console cannot control.</p>
-  <ul>
-    <li>Thumbnail with duration timestamp and a play badge.</li>
-    <li>Title.</li>
-    <li><strong>MANDATORY</strong> tag, shown on mandatory trainings until they are passed.</li>
-    <li>Status: Not started, Take assessment, Retry assessment, or Passed with score.</li>
-    <li>Question count, and a language count where more than one language is uploaded.</li>
-    <li>A left edge accent — red for outstanding mandatory, green for complete.</li>
-  </ul>
+  <h3>5.2 Training detail — the ordered run</h3>
+  <p>Opening a training shows its videos in order. Each row carries its number, title, language count and the state of its check. Tapping one opens the player; where per-video checks are on, the check follows immediately.</p>
+  <div class="note">
+    <p><strong>The combined assessment is locked until every video is done</strong>, and says so — <em>“Unlocks when all 3 videos are done — 3 to go.”</em> That lock is what makes it a fair test of the whole set rather than of whichever videos the FSE happened to open.</p>
+  </div>
 
-  <h3>4.3 Post-completion flow</h3>
-  <p>Passing an assessment inside the hub returns the FSE to the player with a confirmed state and offers the next outstanding training, so a pass leads somewhere rather than dropping them back at the list.</p>
+  <h2>6. Completion and assessment</h2>
 
-  <h2>5. Completion and assessment</h2>
+  <h3>6.1 Two levels</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Level</th><th>Fires</th><th>Configured with</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Per-video check</strong></td><td>Immediately after each video</td><td>Its own question set, pass mark and “show N of M”, edited inside that video’s row.</td></tr>
+        <tr><td><strong>Combined assessment</strong></td><td>After every video in the training</td><td>One question set, one pass mark, one “show N of M”, and the mandatory flag.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>The two are independent. Stories typically uses both; a single-video training uses one; a Carousel can only use per-video checks.</p>
 
-  <h3>5.1 Completion rules</h3>
-  <p>Completion is the signal that gates payout-adjacent enforcement, so it must be earned rather than claimed.</p>
+  <h3>6.2 Completion rules</h3>
   <div class="tw">
     <table>
       <thead><tr><th>Content</th><th>How it can be completed</th></tr></thead>
       <tbody>
-        <tr><td><strong>Mandatory</strong></td><td>The video must reach the end, or the document must be opened. No self-declaration is offered under any configuration.</td></tr>
-        <tr><td><strong>Optional</strong> — self-mark enabled</td><td>Reaching the end, or tapping “I’ve watched this video”.</td></tr>
-        <tr><td><strong>Optional</strong> — self-mark disabled</td><td>Reaching the end only.</td></tr>
-        <tr><td><strong>Mandatory, already passed</strong></td><td>Reaching the end, or the self-mark shortcut. The first clearance was earned; a repeat viewing is a refresher and should not cost the FSE the full runtime again.</td></tr>
+        <tr><td><strong>Mandatory</strong>, first time</td><td>Every video watched to the end, every configured check passed, and the combined assessment passed. No self-declaration is offered.</td></tr>
+        <tr><td><strong>Mandatory</strong>, already passed</td><td>Repeat viewings may be self-marked. The first clearance was earned; a refresher is not a gate.</td></tr>
+        <tr><td><strong>Optional</strong>, self-mark enabled on the placement</td><td>Watching to the end, or “I’ve watched this”.</td></tr>
+        <tr><td><strong>Optional</strong>, self-mark disabled</td><td>Watching to the end only.</td></tr>
       </tbody>
     </table>
   </div>
-  <p>Where a training carries an assessment, completion additionally requires a passing score.</p>
 
-  <h3>5.2 Assessment format</h3>
-  <ul>
-    <li>Multiple choice, four options per question.</li>
-    <li>Question order is shuffled on every attempt.</li>
-    <li>An optional cap limits how many of the uploaded questions are shown, drawn at random.</li>
-    <li>A configurable pass mark, defaulting to 70%.</li>
-    <li>Unlimited retakes.</li>
-  </ul>
+  <h3>6.3 Question sampling</h3>
+  <p>Every question set — per-video and combined — carries a pass mark and an optional cap. With a cap set, that many questions are drawn at random from the uploaded pool on each attempt, so a retake is not the same paper. A cap higher than the pool is rejected at save.</p>
 
-  <h3>5.3 Feedback model</h3>
+  <h3>6.4 Feedback model</h3>
   <div class="note">
     <p><strong>The correct answer is never revealed.</strong> Feedback is given per selection, on the FSE’s own choice only.</p>
   </div>
   <ul>
     <li>Selecting an option locks it for that question and marks it correct or not correct.</li>
     <li>Remaining options are disabled and de-emphasised. The right answer is not highlighted.</li>
-    <li>An incorrect selection prompts the FSE to re-watch the content, and notes that the assessment can be retaken.</li>
-    <li>The result screen shows the score and the pass mark only. It does not list questions or answers.</li>
+    <li>An incorrect selection prompts a re-watch and notes the assessment can be retaken.</li>
+    <li>The result screen shows the score and the pass mark only — no question list, no answer key.</li>
   </ul>
-  <p>This is deliberate. An end-of-quiz answer key lets an FSE memorise the correct options and clear a retake without engaging with the content, which defeats the purpose of gating anything on the result.</p>
+  <p>An end-of-quiz answer key would let an FSE memorise the options and clear a retake without engaging with the content, which defeats the purpose of gating anything on the result.</p>
 
-  <h2>6. Admin console</h2>
-  <p>Every behaviour described in sections 3 to 5 is configured here. The console and the app are strictly linked: the app must never display or enforce anything an admin cannot set, and the console must never present a control the app does not honour.</p>
+  <h2>7. Admin console</h2>
+  <p>Two sections, matching the content model. Everything the FSE sees is configured in one of them, and neither shows a control the app does not honour.</p>
 
-  <h3>6.1 Upload form</h3>
+  <h3>7.1 Section 1 — Training creation</h3>
   <div class="tw">
     <table>
       <thead><tr><th>Field</th><th>Type</th><th>Purpose</th></tr></thead>
       <tbody>
-        <tr><td>Content Type</td><td>Toggle — Video / Document</td><td>Determines player treatment. Video accepts MP4, MOV, WebM; Document accepts PDF, PPT, PPTX.</td></tr>
-        <tr><td>File</td><td>Upload, drag and drop</td><td>The media asset.</td></tr>
-        <tr><td>Title</td><td>Text, required</td><td>Displayed everywhere the training appears.</td></tr>
-        <tr><td>Language</td><td>Select</td><td>The language of this file. Additional languages are uploaded as separate entries sharing the same title.</td></tr>
-        <tr><td>Screen</td><td>Select, required</td><td>Which app screen the training is eligible to appear on.</td></tr>
-        <tr><td>Widget View</td><td>Select — one of nine, or “Any widget on this screen”</td><td>Pins the training to a view, or leaves it eligible for whichever view the screen carries.</td></tr>
-        <tr><td>Team / Subteam</td><td>Select</td><td>Targeting. Blank means all.</td></tr>
-        <tr><td>FSE stage (AON)</td><td>Dropdown — All stages, New 0–15 d, Semi-new 15–45 d, Old 45+ d</td><td>Age-on-Network targeting.</td></tr>
-        <tr><td>Performance trigger</td><td>Dropdown</td><td>Rule-driven assignment on FSE state, layered on top of the static targeting above. Launch set: <em>Task or NAP allocation</em>, <em>Onboarding target not met</em>, <em>SB deployment target not met</em>. The list is designed to extend as further rules and queries are defined.</td></tr>
-        <tr><td>Target specific ecodes</td><td>CSV / Excel upload</td><td>Restricts visibility to a named list of FSEs, overriding broader targeting.</td></tr>
-        <tr><td>Stop after this many views</td><td>Number, optional</td><td>Frequency cap. The training stops surfacing in workflows once the FSE has seen it this many times.</td></tr>
-        <tr><td>Stop after this many days</td><td>Number, optional</td><td>Frequency cap measured from the FSE's first view.</td></tr>
-        <tr><td>Homepage blocker</td><td>Checkbox</td><td>Escalates the homepage gate to a hard gate with no dismiss.</td></tr>
-        <tr><td>Allow self-marking</td><td>Checkbox</td><td>Adds the “I’ve watched this video” shortcut. Locked off while the assessment is mandatory — but once the FSE has passed it, repeat viewings get the shortcut automatically, since a refresher is not a gate.</td></tr>
-        <tr><td>Add an assessment</td><td>Checkbox, expands a builder</td><td>Questions with four options and a marked correct answer, added manually or bulk-uploaded by CSV / Excel.</td></tr>
-        <tr><td>Assessment mandatory</td><td>Checkbox</td><td>Drives the MANDATORY tag, the required-assessment call to action, gate inclusion, and the completion rules in §5.1.</td></tr>
-        <tr><td>Passing score</td><td>Number, default 70</td><td>Percentage required to pass.</td></tr>
-        <tr><td>Max questions to show</td><td>Number, optional</td><td>Caps how many uploaded questions appear in any one attempt.</td></tr>
+        <tr><td>Training name</td><td>Text, required</td><td>Displayed everywhere the training appears.</td></tr>
+        <tr><td>Widget view</td><td>Select — one of nine, or Hub only</td><td>Sets video capacity and assessment capability. Also determines which screens can host it.</td></tr>
+        <tr><td>Videos</td><td>Ordered list, reorderable</td><td>Capacity enforced by the widget view. Reducing capacity trims the list and says what it removed.</td></tr>
+        <tr><td>— Video file</td><td>Upload</td><td>The <strong>title is derived from the filename</strong> unless one has been typed.</td></tr>
+        <tr><td>— Language versions</td><td>Upload, nested under each video</td><td>One file per language, listed inside that video so ownership is unambiguous. The player offers exactly this list.</td></tr>
+        <tr><td>— Check questions</td><td>Manual or CSV import</td><td>With their own pass mark and “show N of M”.</td></tr>
+        <tr><td>Per-video checks</td><td>Checkbox</td><td>Turns on the check block inside every video row.</td></tr>
+        <tr><td>Combined assessment</td><td>Checkbox</td><td>Disabled with an explanation where the widget view cannot support one.</td></tr>
+        <tr><td>Passing is mandatory</td><td>Checkbox</td><td>Drives the MANDATORY tag and the required call to action wherever the training is placed.</td></tr>
       </tbody>
     </table>
   </div>
 
-  <h3>6.2 Live preview</h3>
-  <p>The form renders a phone preview beside it showing how the training will appear in the selected widget view, updating as the configuration changes. This is the primary guard against an admin publishing content into a view it does not suit.</p>
+  <h3>7.2 Section 2 — Segmentation, placement &amp; rules</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Field</th><th>Type</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td>Training</td><td>Select from section 1</td><td>The content being placed.</td></tr>
+        <tr><td>App</td><td>Select — GG App or Force App</td><td>Screens differ per app.</td></tr>
+        <tr><td>Screen</td><td>Select</td><td>Filtered to screens in that app carrying the training’s widget, plus <strong>“Trainings &amp; Assessment only”</strong> for content with no screen presence.</td></tr>
+        <tr><td>Team / Subteam</td><td>Select</td><td>Blank means all.</td></tr>
+        <tr><td>FSE stage (AON)</td><td>Dropdown</td><td>New 0–15 d, Semi-new 15–45 d, Old 45+ d.</td></tr>
+        <tr><td>Performance trigger</td><td>Dropdown</td><td>Rule-driven assignment on FSE state: Task or NAP allocation, Onboarding target not met, SB deployment target not met. Designed to extend.</td></tr>
+        <tr><td>Target specific ecodes</td><td>CSV upload</td><td>Overrides the broader targeting.</td></tr>
+        <tr><td>Stop after N views / N days</td><td>Number</td><td>Frequency cap on workflow surfacing. The training stays reachable in the hub.</td></tr>
+        <tr><td>Also list in Trainings &amp; Assessment</td><td>Checkbox</td><td>Whether the training is findable in the hub as well as on the screen. Forced on when the screen is the hub.</td></tr>
+        <tr><td>Homepage blocker</td><td>Checkbox</td><td>Gates the home screen until this is done. <strong>Available on any screen</strong> — the gate is about the home screen, not about where the training sits.</td></tr>
+        <tr><td>Allow self-marking</td><td>Checkbox</td><td>Disabled while the training’s assessment is mandatory.</td></tr>
+      </tbody>
+    </table>
+  </div>
 
-  <h3>6.3 Library</h3>
-  <p>A table of everything published, showing title with <em>Blocker</em> and <em>Self-mark</em> badges; screen; widget view; every uploaded language; team and ecode targeting; FSE stage; assessment summary; and upload date. The assessment cell expands in place to reveal the full question set with the correct option marked, for review. Rows support edit and delete.</p>
-
-  <h3>6.4 Validation rules</h3>
+  <h3>7.3 Rules the console enforces</h3>
   <ul>
-    <li>Title and Screen are required.</li>
-    <li>An assessment must have at least one complete question; every question needs text and all four options.</li>
-    <li>Passing score must be between 1 and 100.</li>
-    <li>Max questions to show cannot exceed the number of uploaded questions.</li>
-    <li>Self-marking is force-disabled on save whenever the assessment is mandatory, regardless of the checkbox state.</li>
+    <li><strong>A blocker must be listed in the hub.</strong> The gate’s only action is “Go to Trainings”, so a blocker on a training absent from the hub is a dead end. Warned, and corrected on save.</li>
+    <li><strong>Mandatory content should be reachable.</strong> Mandatory but not in the hub is flagged — an FSE who never visits that screen could not complete it.</li>
+    <li><strong>A training in use cannot be deleted.</strong> Its placements must be removed first, so nothing is orphaned.</li>
+    <li><strong>Duplicate placements are flagged</strong> per app and screen, since the two would compete.</li>
+    <li><strong>Question caps cannot exceed the pool</strong>, and pass marks must be 1–100.</li>
+    <li><strong>Switching app clears an out-of-app screen</strong> rather than leaving an invalid pairing.</li>
   </ul>
 
-  <h2>7. Measurement</h2>
+  <h3>7.4 Managing what exists</h3>
+  <p>Both sections carry a list. <strong>Trainings</strong> shows widget view, the ordered video titles, the assessment structure, and a <em>Placed in</em> column with the screens and a count — so reuse and orphans are both visible at a glance. Rows support edit, duplicate and delete. <strong>Placements</strong> shows training, app, screen and view, segment, and rules, with edit and delete.</p>
+  <h2>8. Measurement</h2>
   <p>Consumption on its own is a vanity number. The point of the feature is what happens <em>after</em> the video, so the event stream is designed to join training completion to the FSE’s subsequent activity outcomes.</p>
 
-  <h3>7.1 Event taxonomy</h3>
+  <h3>8.1 Event taxonomy</h3>
   <p>Every widget emits into a single stream. Each event carries a common envelope — <span class="mono">ts, ecode, video_id, title, screen, widget, content_type, language, mandatory</span> — plus the properties below.</p>
   <div class="tw">
     <table>
@@ -535,7 +586,7 @@
     </table>
   </div>
 
-  <h3>7.2 Consumption metrics</h3>
+  <h3>8.2 Consumption metrics</h3>
   <div class="tw">
     <table>
       <thead><tr><th>Metric</th><th>Derived from</th></tr></thead>
@@ -551,7 +602,7 @@
     </table>
   </div>
 
-  <h3>7.3 Comprehension metrics</h3>
+  <h3>8.3 Comprehension metrics</h3>
   <div class="tw">
     <table>
       <thead><tr><th>Metric</th><th>Derived from</th></tr></thead>
@@ -564,7 +615,7 @@
     </table>
   </div>
 
-  <h3>7.4 Behaviour change — the metrics that justify the feature</h3>
+  <h3>8.4 Behaviour change — the metrics that justify the feature</h3>
   <p>These require joining the training stream to activity and payout data. They are the only metrics that answer whether the feature works.</p>
   <div class="tw">
     <table>
@@ -580,57 +631,92 @@
     </table>
   </div>
   <div class="note">
-    <p><strong>The join key is the ecode.</strong> Every event must carry it, and the activity and payout systems must expose the same identifier, or none of §7.4 is computable. This is the single most important integration dependency in the project.</p>
+    <p><strong>The join key is the ecode.</strong> Every event must carry it, and the activity and payout systems must expose the same identifier, or none of §8.4 is computable. This is the single most important integration dependency in the project.</p>
   </div>
 
-  <h2>8. Data model</h2>
+  <h2>9. Data model</h2>
+  <p>Three tables mirroring §4, plus questions. A video belongs to a training; a placement points at one.</p>
 
-  <h3>8.1 Video record</h3>
-  <div class="tw">
-    <table>
-      <thead><tr><th>Field</th><th>Type</th><th>Notes</th></tr></thead>
-      <tbody>
-        <tr><td>id</td><td>uuid</td><td>Primary key</td></tr>
-        <tr><td>title</td><td>text</td><td>Language variants share a title</td></tr>
-        <tr><td>screen</td><td>text</td><td>Target screen</td></tr>
-        <tr><td>widget_type</td><td>text, nullable</td><td>One of the seven views; null means any view on that screen</td></tr>
-        <tr><td>language</td><td>text</td><td>Language of this file</td></tr>
-        <tr><td>content_type</td><td>text</td><td>video | document</td></tr>
-        <tr><td>public_url, storage_path</td><td>text</td><td>Media location</td></tr>
-        <tr><td>team, subteam</td><td>text, nullable</td><td>Targeting; null means all</td></tr>
-        <tr><td>fse_stage</td><td>text[]</td><td>AON buckets; empty means all</td></tr>
-        <tr><td>target_ecodes</td><td>text[]</td><td>Named FSE list; empty means no restriction</td></tr>
-        <tr><td>homepage_blocker</td><td>boolean</td><td>Escalates the gate to hard</td></tr>
-        <tr><td>allow_manual_complete</td><td>boolean</td><td>Self-mark shortcut; forced false when mandatory</td></tr>
-        <tr><td>assessment_mandatory</td><td>boolean</td><td>Drives tag, gate and completion rules</td></tr>
-        <tr><td>assessment_pass_percent</td><td>int</td><td>Default 70</td></tr>
-        <tr><td>assessment_max_questions</td><td>int, nullable</td><td>Caps questions per attempt</td></tr>
-        <tr><td>created_at</td><td>timestamptz</td><td></td></tr>
-      </tbody>
-    </table>
-  </div>
+  <h3>9.1 training</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Field</th><th>Type</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>id</td><td>uuid</td><td>Primary key</td></tr>
+      <tr><td>name</td><td>text</td><td></td></tr>
+      <tr><td>widget_view</td><td>text</td><td>One of nine, or <span class="mono">hub_only</span></td></tr>
+      <tr><td>per_video_checks</td><td>boolean</td><td>Whether each video carries its own check</td></tr>
+      <tr><td>final_enabled</td><td>boolean</td><td>Combined assessment on. Rejected where the widget view cannot support one</td></tr>
+      <tr><td>final_pass_percent</td><td>int</td><td>Default 70</td></tr>
+      <tr><td>final_max_questions</td><td>int, nullable</td><td>Sampled from the pool per attempt</td></tr>
+      <tr><td>final_mandatory</td><td>boolean</td><td>Drives the MANDATORY tag everywhere the training is placed</td></tr>
+      <tr><td>created_at</td><td>timestamptz</td><td></td></tr>
+    </tbody></table></div>
 
-  <h3>8.2 Assessment question</h3>
-  <div class="tw">
-    <table>
-      <thead><tr><th>Field</th><th>Type</th><th>Notes</th></tr></thead>
-      <tbody>
-        <tr><td>id</td><td>uuid</td><td>Primary key</td></tr>
-        <tr><td>video_id</td><td>uuid</td><td>Cascade on delete</td></tr>
-        <tr><td>question</td><td>text</td><td></td></tr>
-        <tr><td>options</td><td>text[]</td><td>Four options</td></tr>
-        <tr><td>correct_index</td><td>int</td><td>Zero-based; never sent to the result screen</td></tr>
-        <tr><td>position</td><td>int</td><td>Authoring order; display order is shuffled</td></tr>
-      </tbody>
-    </table>
-  </div>
+  <h3>9.2 training_video</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Field</th><th>Type</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>id</td><td>uuid</td><td>Primary key</td></tr>
+      <tr><td>training_id</td><td>uuid</td><td>Cascade on delete</td></tr>
+      <tr><td>position</td><td>int</td><td>Playback order</td></tr>
+      <tr><td>title</td><td>text</td><td>Derived from the filename unless overridden</td></tr>
+      <tr><td>content_type</td><td>text</td><td>video | document</td></tr>
+      <tr><td>check_pass_percent</td><td>int</td><td>Pass mark for this video’s own check</td></tr>
+      <tr><td>check_max_questions</td><td>int, nullable</td><td>Sampled from this video’s pool</td></tr>
+    </tbody></table></div>
 
-  <h3>8.3 Progress</h3>
-  <p>Per FSE and per training: watched, attempted, passed, score, total. Held client-side in the current build. This must move server-side before any enforcement is tied to payout or escalation.</p>
+  <h3>9.3 training_video_file</h3>
+  <p>One row per uploaded language. This table alone determines the languages the player offers.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Field</th><th>Type</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>id</td><td>uuid</td><td>Primary key</td></tr>
+      <tr><td>training_video_id</td><td>uuid</td><td>Cascade on delete</td></tr>
+      <tr><td>language</td><td>text</td><td>Unique per video</td></tr>
+      <tr><td>is_primary</td><td>boolean</td><td>Exactly one per video; the fallback track</td></tr>
+      <tr><td>public_url, storage_path</td><td>text</td><td>Media location</td></tr>
+      <tr><td>caption_url</td><td>text, nullable</td><td>VTT track</td></tr>
+    </tbody></table></div>
 
-  <h2>9. Open items and roadmap</h2>
+  <h3>9.4 placement</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Field</th><th>Type</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>id</td><td>uuid</td><td>Primary key</td></tr>
+      <tr><td>training_id</td><td>uuid</td><td>Restrict on delete — a training in use cannot be removed</td></tr>
+      <tr><td>app</td><td>text</td><td>gg | force</td></tr>
+      <tr><td>screen</td><td>text</td><td>App screen, or <span class="mono">hub_only</span></td></tr>
+      <tr><td>team, subteam</td><td>text, nullable</td><td>Null means all</td></tr>
+      <tr><td>fse_stage</td><td>text, nullable</td><td>AON bucket</td></tr>
+      <tr><td>performance_trigger</td><td>text, nullable</td><td>Rule-driven assignment</td></tr>
+      <tr><td>target_ecodes</td><td>text[]</td><td>Overrides the broader targeting</td></tr>
+      <tr><td>max_views, expiry_days</td><td>int, nullable</td><td>Frequency cap on workflow surfacing only</td></tr>
+      <tr><td>show_in_hub</td><td>boolean</td><td>Forced true when screen is <span class="mono">hub_only</span> or the blocker is on</td></tr>
+      <tr><td>homepage_blocker</td><td>boolean</td><td>Gates the home screen, whatever screen this placement targets</td></tr>
+      <tr><td>allow_manual_complete</td><td>boolean</td><td>Forced false while the training is mandatory</td></tr>
+    </tbody></table></div>
+  <p>Unique on <span class="mono">(training_id, app, screen)</span> — the same training twice on one screen would compete with itself.</p>
 
-  <h3>9.1 Known gaps in the current build</h3>
+  <h3>9.5 assessment_question</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Field</th><th>Type</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>id</td><td>uuid</td><td>Primary key</td></tr>
+      <tr><td>training_id</td><td>uuid, nullable</td><td>Set for combined-assessment questions</td></tr>
+      <tr><td>training_video_id</td><td>uuid, nullable</td><td>Set for per-video check questions</td></tr>
+      <tr><td>question</td><td>text</td><td></td></tr>
+      <tr><td>options</td><td>text[]</td><td>Four options</td></tr>
+      <tr><td>correct_index</td><td>int</td><td>Zero-based. Never sent to the client’s result screen</td></tr>
+      <tr><td>position</td><td>int</td><td>Authoring order; display order is shuffled</td></tr>
+    </tbody></table></div>
+  <p>Exactly one of <span class="mono">training_id</span> / <span class="mono">training_video_id</span> is set — that is what makes a question belong to one level or the other.</p>
+
+  <h3>9.6 Progress</h3>
+  <p>Per FSE, per video and per training: watched, percent watched, attempted, passed, score, attempts. A training is complete when every video is complete and, where enabled, the combined assessment is passed. Held client-side in the current build — this must move server-side before enforcement is tied to payout or escalation.</p>
+
+  <h2>10. Open items and roadmap</h2>
+
+  <h3>10.1 Known gaps in the current build</h3>
   <div class="tw">
     <table>
       <thead><tr><th>Gap</th><th>Impact</th><th>Priority</th></tr></thead>
@@ -642,6 +728,7 @@
         <tr><td>Audio defaults on</td><td>An FSE will not play objection-handling content aloud with the merchant present. In-flow views should default to muted with captions on.</td><td class="num">P1</td></tr>
         <tr><td>No chapters or key moments</td><td>A 30-second linear video is a slow answer to a five-second question.</td><td class="num">P1</td></tr>
         <tr><td>No global interruption budget</td><td>A gate, an interstitial and a banner can all fire in one session.</td><td class="num">P1</td></tr>
+        <tr><td>No reusable video library across trainings</td><td>A video used in two trainings is uploaded twice.</td><td class="num">P1</td></tr>
         <tr><td>No TL / ASM visibility surface</td><td>Non-completion cannot be actioned by the reporting line.</td><td class="num">P1</td></tr>
         <tr><td>Interface labels not localised</td><td>Audio switches language while the interface stays English.</td><td class="num">P2</td></tr>
         <tr><td>No completion payoff</td><td>For an incentive-driven workforce, completion is not visibly linked to anything they value.</td><td class="num">P2</td></tr>
@@ -649,12 +736,12 @@
     </table>
   </div>
 
-  <h3>9.2 Phasing</h3>
+  <h3>10.2 Phasing</h3>
   <div class="tw">
     <table>
       <thead><tr><th>Phase</th><th>Scope</th></tr></thead>
       <tbody>
-        <tr><td><strong>1 — Foundation</strong></td><td>Nine widget views; hub; assessments with per-selection feedback; admin console with targeting, blocker, self-mark and assessment builder; language variants; captions.</td></tr>
+        <tr><td><strong>1 — Foundation</strong></td><td>Nine widget views; training/placement split; training-centric hub; assessments with per-selection feedback; admin console with targeting, blocker, self-mark and assessment builder; language variants; captions.</td></tr>
         <tr><td><strong>2 — Field-readiness</strong></td><td>Server-side progress; offline pre-caching at check-in; resume from position; percentage-based completion; muted-with-captions default on in-flow views.</td></tr>
         <tr><td><strong>3 — Precision</strong></td><td>Chapters and key moments; trigger-reason copy; interruption budget and orchestration; TL / ASM dashboard; due dates and consequences.</td></tr>
         <tr><td><strong>4 — Automation</strong></td><td>Rule-driven auto-assignment from FSE state — AON bucket, invalid-activity flags, productivity state, earnings milestones.</td></tr>
@@ -662,7 +749,7 @@
     </table>
   </div>
 
-  <h3>9.3 Open questions</h3>
+  <h3>10.3 Open questions</h3>
   <ol>
     <li>Is connectivity in target markets poor enough to make offline caching a launch blocker, or can it follow in Phase 2?</li>
     <li>Should mandatory non-completion affect payout directly, or escalate to the Team Lead only? This determines how defensible the completion signal has to be.</li>
