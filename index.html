@@ -139,6 +139,14 @@
   .addlang{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
   .addlang select{width:auto;min-width:130px;padding:6px 10px;font-size:12.5px}
 
+  .rules{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;background:var(--card);
+    border:1px solid var(--line);border-radius:9px;padding:10px 12px;margin-bottom:10px}
+  .rules .fg{display:flex;flex-direction:column;gap:4px}
+  .rules label{font-size:11px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.04em}
+  .rules input{width:96px;padding:6px 9px;font-size:13px}
+  .rules .of{font-size:11.5px;color:var(--faint);align-self:center;padding-bottom:7px}
+  .rules .bad{color:var(--red-fg);font-weight:600}
+
   .q-editor{border:1px solid var(--line);border-radius:9px;padding:12px;margin-bottom:9px;background:var(--card)}
   .q-editor .hd2{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
   .q-editor .hd2 b{font-size:12px;color:var(--dim)}
@@ -247,16 +255,7 @@
       background:var(--amber-bg);color:var(--amber-fg);font-size:12.5px;line-height:1.55"></div>
 
     <div id="finalBox" hidden style="border-top:1px solid var(--line);padding-top:16px;margin-top:6px">
-      <div class="form-grid" style="margin-bottom:14px">
-        <div class="form-group">
-          <label>Passing score (%)</label>
-          <input type="number" min="1" max="100" id="f_pass" value="70">
-        </div>
-        <div class="form-group">
-          <label>Max questions to show <small>— blank shows all</small></label>
-          <input type="number" min="1" id="f_maxq" placeholder="e.g. 5">
-        </div>
-      </div>
+      <div id="finalRules"></div>
       <label class="toggle-row"><input type="checkbox" id="f_mand">
         <span>Passing is mandatory
           <small>Adds the MANDATORY tag, a required call to action, and includes it in the homepage gate.</small></span></label>
@@ -306,7 +305,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const SEED = [{"kind": "placed", "name": "SoundBox pitch masterclass", "screen": "Home", "widget": "stories", "videos": [{"title": "Opening the conversation", "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}], "files": [{"lang": "English", "name": "soundbox_pitch_merchant.mp4"}, {"lang": "Hindi", "name": "soundbox_pitch_merchant_hi.mp4"}, {"lang": "Tamil", "name": "soundbox_pitch_merchant_ta.mp4"}]}, {"title": "Explaining the plan", "questions": [{"question": "A merchant asks what the \u20b9125 a month actually covers. What is the accurate answer?", "options": ["A one-time purchase of the device", "The monthly rental for the SB-V2 Music 4G, GST included", "A refundable deposit returned after a year", "Unlimited free QR stickers"], "correct_index": 1}], "files": [{"lang": "English", "name": "soundbox_plans.mp4"}, {"lang": "Hindi", "name": "soundbox_plans_hi.mp4"}]}, {"title": "Handling the price objection", "questions": [{"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_objection_price.mp4"}]}], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}, {"question": "What real-time benefit does SoundBox give a merchant?", "options": ["Free advertising on the box", "Instant voice and display confirmation for every payment", "Unlimited free phone calls", "A physical cash register"], "correct_index": 1}, {"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "pass": 70, "maxq": "", "mandatory": true}, "team": "", "aon": "", "trigger": "onboarding_short", "maxViews": 5, "expiry": "", "blocker": false, "self": false}, {"kind": "placed", "name": "SoundBox device setup", "screen": "Payments", "widget": "carousel", "videos": [{"title": "Adding a new device", "questions": [{"question": "On the Add Device Details screen, which device type do you select for a monthly rental plan?", "options": ["Purchase", "Rental", "Demo", "Replacement"], "correct_index": 1}], "files": [{"lang": "English", "name": "soundbox_add_device.mp4"}, {"lang": "Hindi", "name": "soundbox_add_device_hi.mp4"}, {"lang": "Marathi", "name": "soundbox_add_device_mr.mp4"}]}, {"title": "Selecting the right plan", "questions": [{"question": "For the Monthly Subscription plan at \u20b9125/month, what does the screen say about UPI Autopay?", "options": ["It is optional for the merchant", "It is not supported on rental plans", "It is required \u2014 the screen shows Yes", "It replaces the monthly rental"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_plan_selection.mp4"}, {"lang": "Hindi", "name": "soundbox_plan_selection_hi.mp4"}]}, {"title": "Verifying the first payment", "questions": [{"question": "The screen shows \u20b9125 as the total amount to be collected. What does that figure include?", "options": ["Only the one-time charge", "A refundable security deposit", "The monthly rental, inclusive of 18% GST", "The full purchase price of the device"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_payment_verify.mp4"}]}], "perVideo": true, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "mandatory": false}, "team": "", "aon": "", "trigger": "sb_short", "maxViews": "", "expiry": "", "blocker": false, "self": false}, {"kind": "placed", "name": "QR mapping \u2014 revised SOP", "screen": "Home", "widget": "interstitial", "videos": [{"title": "What changed in the SOP", "questions": [], "files": [{"lang": "English", "name": "qr_mapping_sop_v4.mp4"}]}], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "What does QR mapping actually link?", "options": ["The FSE's phone to the TL's phone", "The merchant's QR to the correct MID, so payments settle to the right account", "The SoundBox to the shop's WiFi router", "The merchant's Aadhaar to their PAN"], "correct_index": 1}, {"question": "What do you verify immediately after mapping a new QR?", "options": ["Nothing \u2014 mapping is instant and never fails", "That the merchant has restarted the shop", "Do a small test payment and confirm the SoundBox announces it", "Peel off the old sticker before checking anything"], "correct_index": 2}, {"question": "The QR you are about to map is already mapped to a different MID. What is the correct action?", "options": ["Stop and raise a remapping request instead of forcing a new mapping", "Map it anyway and inform the TL later", "Peel the sticker off and reuse it at another shop", "Ask the merchant to create a new business account"], "correct_index": 0}], "pass": 70, "maxq": "", "mandatory": true}, "team": "", "aon": "", "trigger": "", "maxViews": "", "expiry": "", "blocker": true, "self": false}, {"kind": "module", "name": "New joiner essentials", "screen": "", "widget": "mini-banner", "videos": [{"title": "Your first login", "questions": [{"question": "Where does a merchant change app language or notification preferences?", "options": ["In the Offers carousel", "On the QR sticker", "In the Settings section of the app", "On the SoundBox device itself"], "correct_index": 2}], "files": [{"lang": "English", "name": "first_login_setup.mp4"}, {"lang": "Hindi", "name": "first_login_setup_hi.mp4"}, {"lang": "Tamil", "name": "first_login_setup_ta.mp4"}]}, {"title": "Finding your way around", "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}], "files": [{"lang": "English", "name": "app_navigation_tour.mp4"}, {"lang": "Hindi", "name": "app_navigation_tour_hi.mp4"}]}, {"title": "Daily check-in", "questions": [{"question": "On the Merchant Detail screen, which tab holds the merchant's open tasks?", "options": ["Details", "Tasks", "Interactions", "Offers"], "correct_index": 1}], "files": [{"lang": "English", "name": "daily_checkin.mp4"}]}, {"title": "Reading your dashboard", "questions": [{"question": "Which three tabs make up the Team Performance view?", "options": ["Participation, Productivity, Leaderboard", "Sales, Refunds, Payouts", "Attendance, Salary, Incentive", "Tasks, Merchants, Devices"], "correct_index": 0}], "files": [{"lang": "English", "name": "performance_dashboard.mp4"}]}], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}, {"question": "Where does a merchant manage their business profile in the v2 app?", "options": ["Under the \"Manage your Business\" section", "Under Offers", "Under Refer & Earn", "Under chat support"], "correct_index": 0}, {"question": "A merchant cannot find a feature after the v2 update. What do you do?", "options": ["Ask them to downgrade the app", "Show them where it has moved to in the updated navigation", "Tell them the feature was removed", "Raise a device replacement request"], "correct_index": 1}], "pass": 80, "maxq": "", "mandatory": true}, "team": "", "aon": "new", "trigger": "", "maxViews": "", "expiry": "", "blocker": false, "self": false}, {"kind": "placed", "name": "Re-KYC walkthrough", "screen": "KYC", "widget": "bottom-sheet", "videos": [{"title": "Clearing Action Required items", "questions": [], "files": [{"lang": "English", "name": "rekyc_completion.mp4"}, {"lang": "Hindi", "name": "rekyc_completion_hi.mp4"}]}], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "On the Re-KYC check screen, which items sit under \"Action Required\"?", "options": ["Bank Details only", "KYC Details and Business Proof", "Device model and plan", "Nothing \u2014 Re-KYC completes automatically"], "correct_index": 1}, {"question": "The profile upgrade is pending on the P4B app. What do you ask the merchant to do?", "options": ["Visit the nearest bank branch", "Reinstall the consumer Paytm app", "Open Paytm for Business, scroll to \"Manage your Business\" and select \"Upgrade Profile\"", "Buy a new SoundBox"], "correct_index": 2}, {"question": "Bank Details already appears under \"Completed\". What does that mean?", "options": ["That part of the Re-KYC is done \u2014 only the pending items still need action", "The whole Re-KYC is finished", "The merchant's account has been blocked", "The bank account has to be entered again"], "correct_index": 0}], "pass": 70, "maxq": "", "mandatory": true}, "team": "", "aon": "", "trigger": "", "maxViews": "", "expiry": "", "blocker": false, "self": false}, {"kind": "placed", "name": "Reading your performance dashboard", "screen": "Dashboard", "widget": "inline-card", "videos": [{"title": "Participation, productivity, leaderboard", "questions": [], "files": [{"lang": "English", "name": "performance_dashboard.mp4"}]}], "perVideo": false, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "mandatory": false}, "team": "", "aon": "", "trigger": "", "maxViews": "", "expiry": 14, "blocker": false, "self": true}];
+const SEED = [{"kind": "placed", "name": "SoundBox pitch masterclass", "screen": "Home", "widget": "stories", "videos": [{"title": "Opening the conversation", "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}], "files": [{"lang": "English", "name": "soundbox_pitch_merchant.mp4"}, {"lang": "Hindi", "name": "soundbox_pitch_merchant_hi.mp4"}, {"lang": "Tamil", "name": "soundbox_pitch_merchant_ta.mp4"}], "pass": 60, "maxq": ""}, {"title": "Explaining the plan", "questions": [{"question": "A merchant asks what the \u20b9125 a month actually covers. What is the accurate answer?", "options": ["A one-time purchase of the device", "The monthly rental for the SB-V2 Music 4G, GST included", "A refundable deposit returned after a year", "Unlimited free QR stickers"], "correct_index": 1}], "files": [{"lang": "English", "name": "soundbox_plans.mp4"}, {"lang": "Hindi", "name": "soundbox_plans_hi.mp4"}], "pass": 60, "maxq": ""}, {"title": "Handling the price objection", "questions": [{"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_objection_price.mp4"}], "pass": 60, "maxq": ""}], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}, {"question": "What real-time benefit does SoundBox give a merchant?", "options": ["Free advertising on the box", "Instant voice and display confirmation for every payment", "Unlimited free phone calls", "A physical cash register"], "correct_index": 1}, {"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "pass": 70, "maxq": "", "mandatory": true}, "team": "", "aon": "", "trigger": "onboarding_short", "maxViews": 5, "expiry": "", "blocker": false, "self": false}, {"kind": "placed", "name": "SoundBox device setup", "screen": "Payments", "widget": "carousel", "videos": [{"title": "Adding a new device", "questions": [{"question": "On the Add Device Details screen, which device type do you select for a monthly rental plan?", "options": ["Purchase", "Rental", "Demo", "Replacement"], "correct_index": 1}], "files": [{"lang": "English", "name": "soundbox_add_device.mp4"}, {"lang": "Hindi", "name": "soundbox_add_device_hi.mp4"}, {"lang": "Marathi", "name": "soundbox_add_device_mr.mp4"}], "pass": 70, "maxq": ""}, {"title": "Selecting the right plan", "questions": [{"question": "For the Monthly Subscription plan at \u20b9125/month, what does the screen say about UPI Autopay?", "options": ["It is optional for the merchant", "It is not supported on rental plans", "It is required \u2014 the screen shows Yes", "It replaces the monthly rental"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_plan_selection.mp4"}, {"lang": "Hindi", "name": "soundbox_plan_selection_hi.mp4"}], "pass": 70, "maxq": ""}, {"title": "Verifying the first payment", "questions": [{"question": "The screen shows \u20b9125 as the total amount to be collected. What does that figure include?", "options": ["Only the one-time charge", "A refundable security deposit", "The monthly rental, inclusive of 18% GST", "The full purchase price of the device"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_payment_verify.mp4"}], "pass": 70, "maxq": ""}], "perVideo": true, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "mandatory": false}, "team": "", "aon": "", "trigger": "sb_short", "maxViews": "", "expiry": "", "blocker": false, "self": false}, {"kind": "placed", "name": "QR mapping \u2014 revised SOP", "screen": "Home", "widget": "interstitial", "videos": [{"title": "What changed in the SOP", "questions": [], "files": [{"lang": "English", "name": "qr_mapping_sop_v4.mp4"}], "pass": 70, "maxq": ""}], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "What does QR mapping actually link?", "options": ["The FSE's phone to the TL's phone", "The merchant's QR to the correct MID, so payments settle to the right account", "The SoundBox to the shop's WiFi router", "The merchant's Aadhaar to their PAN"], "correct_index": 1}, {"question": "What do you verify immediately after mapping a new QR?", "options": ["Nothing \u2014 mapping is instant and never fails", "That the merchant has restarted the shop", "Do a small test payment and confirm the SoundBox announces it", "Peel off the old sticker before checking anything"], "correct_index": 2}, {"question": "The QR you are about to map is already mapped to a different MID. What is the correct action?", "options": ["Stop and raise a remapping request instead of forcing a new mapping", "Map it anyway and inform the TL later", "Peel the sticker off and reuse it at another shop", "Ask the merchant to create a new business account"], "correct_index": 0}], "pass": 70, "maxq": "", "mandatory": true}, "team": "", "aon": "", "trigger": "", "maxViews": "", "expiry": "", "blocker": true, "self": false}, {"kind": "module", "name": "New joiner essentials", "screen": "", "widget": "mini-banner", "videos": [{"title": "Your first login", "questions": [{"question": "Where does a merchant change app language or notification preferences?", "options": ["In the Offers carousel", "On the QR sticker", "In the Settings section of the app", "On the SoundBox device itself"], "correct_index": 2}], "files": [{"lang": "English", "name": "first_login_setup.mp4"}, {"lang": "Hindi", "name": "first_login_setup_hi.mp4"}, {"lang": "Tamil", "name": "first_login_setup_ta.mp4"}], "pass": 70, "maxq": ""}, {"title": "Finding your way around", "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}], "files": [{"lang": "English", "name": "app_navigation_tour.mp4"}, {"lang": "Hindi", "name": "app_navigation_tour_hi.mp4"}], "pass": 70, "maxq": ""}, {"title": "Daily check-in", "questions": [{"question": "On the Merchant Detail screen, which tab holds the merchant's open tasks?", "options": ["Details", "Tasks", "Interactions", "Offers"], "correct_index": 1}], "files": [{"lang": "English", "name": "daily_checkin.mp4"}], "pass": 70, "maxq": ""}, {"title": "Reading your dashboard", "questions": [{"question": "Which three tabs make up the Team Performance view?", "options": ["Participation, Productivity, Leaderboard", "Sales, Refunds, Payouts", "Attendance, Salary, Incentive", "Tasks, Merchants, Devices"], "correct_index": 0}], "files": [{"lang": "English", "name": "performance_dashboard.mp4"}], "pass": 70, "maxq": ""}], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}, {"question": "Where does a merchant manage their business profile in the v2 app?", "options": ["Under the \"Manage your Business\" section", "Under Offers", "Under Refer & Earn", "Under chat support"], "correct_index": 0}, {"question": "A merchant cannot find a feature after the v2 update. What do you do?", "options": ["Ask them to downgrade the app", "Show them where it has moved to in the updated navigation", "Tell them the feature was removed", "Raise a device replacement request"], "correct_index": 1}], "pass": 80, "maxq": 2, "mandatory": true}, "team": "", "aon": "new", "trigger": "", "maxViews": "", "expiry": "", "blocker": false, "self": false}, {"kind": "placed", "name": "Re-KYC walkthrough", "screen": "KYC", "widget": "bottom-sheet", "videos": [{"title": "Clearing Action Required items", "questions": [], "files": [{"lang": "English", "name": "rekyc_completion.mp4"}, {"lang": "Hindi", "name": "rekyc_completion_hi.mp4"}], "pass": 70, "maxq": ""}], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "On the Re-KYC check screen, which items sit under \"Action Required\"?", "options": ["Bank Details only", "KYC Details and Business Proof", "Device model and plan", "Nothing \u2014 Re-KYC completes automatically"], "correct_index": 1}, {"question": "The profile upgrade is pending on the P4B app. What do you ask the merchant to do?", "options": ["Visit the nearest bank branch", "Reinstall the consumer Paytm app", "Open Paytm for Business, scroll to \"Manage your Business\" and select \"Upgrade Profile\"", "Buy a new SoundBox"], "correct_index": 2}, {"question": "Bank Details already appears under \"Completed\". What does that mean?", "options": ["That part of the Re-KYC is done \u2014 only the pending items still need action", "The whole Re-KYC is finished", "The merchant's account has been blocked", "The bank account has to be entered again"], "correct_index": 0}], "pass": 70, "maxq": "", "mandatory": true}, "team": "", "aon": "", "trigger": "", "maxViews": "", "expiry": "", "blocker": false, "self": false}, {"kind": "placed", "name": "Reading your performance dashboard", "screen": "Dashboard", "widget": "inline-card", "videos": [{"title": "Participation, productivity, leaderboard", "questions": [], "files": [{"lang": "English", "name": "performance_dashboard.mp4"}], "pass": 70, "maxq": ""}], "perVideo": false, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "mandatory": false}, "team": "", "aon": "", "trigger": "", "maxViews": "", "expiry": 14, "blocker": false, "self": true}];
 
 const SCREENS=['Home','Profile','Dashboard','Onboarding','KYC','Payments','Settings','Other'];
 const LANGS=['English','Hindi','Tamil','Telugu','Kannada','Bengali','Marathi'];
@@ -362,7 +361,7 @@ fill($('f_trigger'),TRIGGERS);
 let rows = SEED.map(r=>JSON.parse(JSON.stringify(r)));
 let editingId = null;
 const blankQ = () => ({question:'',options:['','','',''],correct_index:0});
-const blankVideo = n => ({title:`Video ${n}`, files:[{lang:'English', name:''}], questions:[]});
+const blankVideo = n => ({title:`Video ${n}`, files:[{lang:'English', name:''}], questions:[], pass:70, maxq:''});
 
 // The title is derived from the file the admin picks, so nobody has to type it twice.
 function titleFromFile(name){
@@ -415,8 +414,17 @@ function drawFlow(){
     : `as a <b>${esc(W[T.widget]?.label||'widget')}</b> on <b>${esc(T.screen||'— pick a screen —')}</b>`;
   const perQ = T.videos.reduce((s,v)=>s+v.questions.length,0);
   const bits=[`Watches <b>${n} video${n>1?'s':''}</b> ${where}`];
-  if(T.perVideo) bits.push(`answers a check after each one <b>(${perQ} question${perQ===1?'':'s'} total)</b>`);
-  if(T.final.enabled) bits.push(`${isSingle(T)?'then an assessment':'then a combined assessment'} of <b>${T.final.questions.length} question${T.final.questions.length===1?'':'s'}</b> at <b>${T.final.pass}%</b> to pass`);
+  if(T.perVideo){
+    const shown = T.videos.reduce((n,v)=>n + (v.maxq ? Math.min(+v.maxq, v.questions.length) : v.questions.length), 0);
+    const marks = [...new Set(T.videos.map(v=>+(v.pass ?? 70)))];
+    const mark = marks.length===1 ? `${marks[0]}%` : `${Math.min(...marks)}–${Math.max(...marks)}%`;
+    bits.push(`answers a check after each one <b>(${shown} of ${perQ} question${perQ===1?'':'s'}, ${mark} to pass)</b>`);
+  }
+  if(T.final.enabled){
+    const fq=T.final.questions.length;
+    const fs=T.final.maxq ? Math.min(+T.final.maxq, fq) : fq;
+    bits.push(`${isSingle(T)?'then an assessment':'then a combined assessment'} of <b>${fs===fq?fs:`${fs} of ${fq}`} question${fq===1?'':'s'}</b> at <b>${T.final.pass}%</b> to pass`);
+  }
   if(!T.perVideo && !T.final.enabled) bits.push('with no assessment — watching is enough');
 
   const warns=[];
@@ -424,6 +432,10 @@ function drawFlow(){
   if(T.perVideo && T.videos.some(v=>!v.questions.length)) warns.push('Some videos have no check questions yet.');
   if(T.final.mandatory && T.self) warns.push('Self-marking is ignored while the assessment is mandatory.');
   if(T.kind==='placed' && !T.screen) warns.push('No screen chosen — this will not surface anywhere yet.');
+  T.videos.forEach((v,i)=>{ if(v.maxq && +v.maxq > v.questions.length)
+    warns.push(`Video ${i+1} is set to show ${v.maxq} questions but only ${v.questions.length} are uploaded.`); });
+  if(T.final.maxq && +T.final.maxq > T.final.questions.length)
+    warns.push(`The combined assessment is set to show ${T.final.maxq} questions but only ${T.final.questions.length} are uploaded.`);
 
   $('flow').innerHTML = `<div class="k">What the FSE will experience</div>
     <div class="v">${bits.join(' → ')}.${T.final.mandatory?' <span class="badge red">MANDATORY</span>':''}</div>
@@ -485,6 +497,7 @@ function drawVideos(){
 
       ${T.perVideo?`<div class="check">
         <div class="ttl">Check after video ${i+1}</div>
+        ${rulesRow(`v${i}`, v.pass ?? 70, v.maxq ?? '', v.questions.length)}
         ${v.questions.map((q,j)=>qEditor(q,`v${i}`,j)).join('')}
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
           <button class="btn btn-ghost btn-sm" data-vaq="${i}">＋ Add question</button>
@@ -528,6 +541,7 @@ function drawVideos(){
     loadQuestions(e.target.files[0], T.videos[+inp.dataset.vqf].questions);
   });
   wireQ($('vlist'));
+  wireRules($('vlist'));
 }
 
 // Shared by the per-video checks and the combined assessment.
@@ -543,6 +557,21 @@ function loadQuestions(file, target){
   r.readAsText(file);
 }
 
+// Shown wherever questions can be uploaded, so the rule always sits next to the set
+// it governs rather than in a separate place.
+function rulesRow(scope, pass, maxq, total){
+  const over = maxq && +maxq > total;
+  return `<div class="rules">
+    <div class="fg"><label>Passing score</label>
+      <input type="number" min="1" max="100" data-rpass="${scope}" value="${esc(pass)}"></div>
+    <div class="fg"><label>Questions to show</label>
+      <input type="number" min="1" data-rmax="${scope}" value="${esc(maxq)}" placeholder="All"></div>
+    <div class="of ${over?'bad':''}">${total
+      ? (over ? `only ${total} uploaded` : `of <b>${total}</b> uploaded${maxq?` · picked at random each attempt`:' · blank shows all'}`)
+      : 'no questions uploaded yet'}</div>
+  </div>`;
+}
+
 function qEditor(q,scope,j){
   return `<div class="q-editor">
     <div class="hd2"><b>Q${j+1}</b><button class="btn btn-danger btn-sm" data-qrm="${scope}-${j}">Remove</button></div>
@@ -553,6 +582,18 @@ function qEditor(q,scope,j){
   </div>`;
 }
 const bucket = scope => scope==='final' ? T.final.questions : T.videos[+scope.slice(1)].questions;
+function wireRules(root){
+  root.querySelectorAll('[data-rpass]').forEach(i=>i.oninput=()=>{
+    const s=i.dataset.rpass;
+    if(s==='final') T.final.pass=i.value; else T.videos[+s.slice(1)].pass=i.value;
+    drawFlow();
+  });
+  root.querySelectorAll('[data-rmax]').forEach(i=>i.oninput=()=>{
+    const s=i.dataset.rmax;
+    if(s==='final') T.final.maxq=i.value; else T.videos[+s.slice(1)].maxq=i.value;
+    drawFlow();
+  });
+}
 function wireQ(root){
   root.querySelectorAll('[data-qrm]').forEach(b=>b.onclick=()=>{const[s,j]=b.dataset.qrm.split('-');bucket(s).splice(+j,1);render();});
   root.querySelectorAll('[data-qt]').forEach(i=>i.oninput=()=>{const[s,j]=i.dataset.qt.split('-');bucket(s)[+j].question=i.value;});
@@ -562,8 +603,10 @@ function wireQ(root){
 
 function drawFinal(){
   $('finalBox').hidden = !T.final.enabled;
+  $('finalRules').innerHTML = rulesRow('final', T.final.pass, T.final.maxq, T.final.questions.length);
   $('finalQs').innerHTML = T.final.questions.map((q,j)=>qEditor(q,'final',j)).join('');
   wireQ($('finalQs'));
+  wireRules($('finalBox'));
 }
 
 /* ── whole-form render ──────────────────────────────────────────────────── */
@@ -580,7 +623,7 @@ function render(){
   $('f_team').value=T.team; $('f_aon').value=T.aon; $('f_trigger').value=T.trigger;
   $('f_maxviews').value=T.maxViews; $('f_expiry').value=T.expiry;
   $('f_pervideo').checked=T.perVideo; $('f_final').checked=T.final.enabled;
-  $('f_pass').value=T.final.pass; $('f_maxq').value=T.final.maxq; $('f_mand').checked=T.final.mandatory;
+  $('f_mand').checked=T.final.mandatory;
 
   const w = W[T.widget];
   $('capNote').innerHTML = module ? '' :
@@ -668,8 +711,6 @@ $('f_final').onchange=e=>{
   render();
 };
 $('f_mand').onchange=e=>{T.final.mandatory=e.target.checked;render();};
-$('f_pass').oninput=e=>{T.final.pass=e.target.value;drawFlow();};
-$('f_maxq').oninput=e=>{T.final.maxq=e.target.value;};
 $('f_self').onchange=e=>{T.self=e.target.checked;};
 $('f_blocker').onchange=e=>{T.blocker=e.target.checked;};
 ['team','aon','trigger'].forEach(k=>$('f_'+k).onchange=e=>{T[k]=e.target.value;});
@@ -687,11 +728,18 @@ $('tplLink').href = CSV_HREF;
 
 /* ── library ────────────────────────────────────────────────────────────── */
 function structOf(t){
-  const perQ=t.videos.reduce((s,v)=>s+v.questions.length,0);
   const parts=[];
-  if(t.perVideo) parts.push(`check after each (${perQ} Q)`);
-  if(t.final.enabled) parts.push(`${isSingle(t)?'assessment':'final'} ${t.final.questions.length} Q · ${t.final.pass}%`);
-  return parts.length?parts.join(' + '):'<span style="color:var(--faint)">None</span>';
+  if(t.perVideo){
+    const total=t.videos.reduce((s,v)=>s+v.questions.length,0);
+    const shown=t.videos.reduce((n,v)=>n+(v.maxq?Math.min(+v.maxq,v.questions.length):v.questions.length),0);
+    const marks=[...new Set(t.videos.map(v=>+(v.pass??70)))];
+    parts.push(`check after each · ${shown===total?`${total} Q`:`${shown} of ${total} Q`} · ${marks.length===1?marks[0]:`${Math.min(...marks)}–${Math.max(...marks)}`}%`);
+  }
+  if(t.final.enabled){
+    const fq=t.final.questions.length, fs=t.final.maxq?Math.min(+t.final.maxq,fq):fq;
+    parts.push(`${isSingle(t)?'assessment':'final'} · ${fs===fq?`${fq} Q`:`${fs} of ${fq} Q`} · ${t.final.pass}%`);
+  }
+  return parts.length?parts.join('<br>'):'<span style="color:var(--faint)">None</span>';
 }
 function drawLib(){
   $('libTitle').textContent=`Trainings (${rows.length})`;
@@ -724,6 +772,13 @@ $('saveBtn').onclick=()=>{
   const bad = q => !q.question.trim() || q.options.some(o=>!o.trim());
   if(T.final.enabled && T.final.questions.some(bad)) return toast('Every final question needs text and all four options.');
   if(T.perVideo && T.videos.some(v=>v.questions.some(bad))) return toast('Every per-video question needs text and all four options.');
+  const badCap = T.videos.findIndex(v=>v.maxq && +v.maxq > v.questions.length);
+  if(T.perVideo && badCap>-1) return toast(`Video ${badCap+1}: cannot show more questions than are uploaded.`);
+  if(T.final.enabled && T.final.maxq && +T.final.maxq > T.final.questions.length)
+    return toast('The combined assessment cannot show more questions than are uploaded.');
+  const badPass = q => !(+q>=1 && +q<=100);
+  if(T.perVideo && T.videos.some(v=>badPass(v.pass ?? 70))) return toast('Per-video passing scores must be between 1 and 100.');
+  if(T.final.enabled && badPass(T.final.pass)) return toast('The passing score must be between 1 and 100.');
 
   const copy=JSON.parse(JSON.stringify(T));
   if(editingId!==null){rows[editingId]=copy;toast(`Updated “${copy.name}”`);}
