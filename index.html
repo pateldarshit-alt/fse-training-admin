@@ -120,6 +120,25 @@
   .vrow .check{border-top:1px dashed var(--line);background:var(--head);padding:11px 12px 12px}
   .vrow .check .ttl{font-size:11.5px;font-weight:800;color:var(--dim);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
 
+  .filerow{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:6px}
+  .fpick{display:inline-flex;align-items:center;gap:6px;border:1.5px dashed var(--line);border-radius:8px;
+    padding:6px 11px;font-size:12px;font-weight:600;color:var(--dim);cursor:pointer;background:var(--card)}
+  .fpick:hover{border-color:var(--indigo);color:var(--indigo)}
+  .fpick input{display:none}
+  .fname{font-size:11.5px;color:var(--faint);font-family:ui-monospace,Menlo,monospace}
+
+  .langs{border-top:1px dashed var(--line);background:var(--head);padding:10px 12px 12px}
+  .langs .ttl{font-size:11.5px;font-weight:800;color:var(--dim);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+  .lrow{display:flex;align-items:center;gap:9px;background:var(--card);border:1px solid var(--line);
+    border-radius:8px;padding:7px 10px;margin-bottom:6px}
+  .lrow .lg{font-size:12px;font-weight:700;min-width:74px}
+  .lrow .pf{font-size:9.5px;font-weight:800;color:var(--green-fg);background:var(--green-bg);
+    padding:1px 7px;border-radius:99px}
+  .lrow .fn{flex:1;min-width:0;font-size:11.5px;color:var(--faint);font-family:ui-monospace,Menlo,monospace;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .addlang{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+  .addlang select{width:auto;min-width:130px;padding:6px 10px;font-size:12.5px}
+
   .q-editor{border:1px solid var(--line);border-radius:9px;padding:12px;margin-bottom:9px;background:var(--card)}
   .q-editor .hd2{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
   .q-editor .hd2 b{font-size:12px;color:var(--dim)}
@@ -242,7 +261,11 @@
         <span>Passing is mandatory
           <small>Adds the MANDATORY tag, a required call to action, and includes it in the homepage gate.</small></span></label>
       <div id="finalQs"></div>
-      <button class="btn btn-ghost btn-sm" type="button" id="addFinalQ">＋ Add question</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <button class="btn btn-ghost btn-sm" type="button" id="addFinalQ">＋ Add question</button>
+        <label class="fpick">📤 Upload questions<input type="file" accept=".csv,.tsv,.txt" id="finalQFile"></label>
+        <a href="#" id="tplLink" download="questions-template.csv" style="font-size:11.5px;color:var(--indigo)">Download template</a>
+      </div>
     </div>
   </div>
 
@@ -283,7 +306,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const SEED = [{"kind": "placed", "name": "SoundBox pitch masterclass", "screen": "Home", "widget": "stories", "videos": [{"title": "Opening the conversation", "languages": ["English", "Hindi", "Tamil"], "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}]}, {"title": "Explaining the plan", "languages": ["English", "Hindi"], "questions": [{"question": "A merchant asks what the \u20b9125 a month actually covers. What is the accurate answer?", "options": ["A one-time purchase of the device", "The monthly rental for the SB-V2 Music 4G, GST included", "A refundable deposit returned after a year", "Unlimited free QR stickers"], "correct_index": 1}]}, {"title": "Handling the price objection", "languages": ["English"], "questions": [{"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}]}], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}, {"question": "What real-time benefit does SoundBox give a merchant?", "options": ["Free advertising on the box", "Instant voice and display confirmation for every payment", "Unlimited free phone calls", "A physical cash register"], "correct_index": 1}, {"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "pass": 70, "maxq": "", "mandatory": true}, "team": "", "aon": "", "trigger": "onboarding_short", "maxViews": 5, "expiry": "", "blocker": false, "self": false}, {"kind": "placed", "name": "SoundBox device setup", "screen": "Payments", "widget": "carousel", "videos": [{"title": "Adding a new device", "languages": ["English", "Hindi", "Marathi"], "questions": [{"question": "On the Add Device Details screen, which device type do you select for a monthly rental plan?", "options": ["Purchase", "Rental", "Demo", "Replacement"], "correct_index": 1}]}, {"title": "Selecting the right plan", "languages": ["English", "Hindi"], "questions": [{"question": "For the Monthly Subscription plan at \u20b9125/month, what does the screen say about UPI Autopay?", "options": ["It is optional for the merchant", "It is not supported on rental plans", "It is required \u2014 the screen shows Yes", "It replaces the monthly rental"], "correct_index": 2}]}, {"title": "Verifying the first payment", "languages": ["English"], "questions": [{"question": "The screen shows \u20b9125 as the total amount to be collected. What does that figure include?", "options": ["Only the one-time charge", "A refundable security deposit", "The monthly rental, inclusive of 18% GST", "The full purchase price of the device"], "correct_index": 2}]}], "perVideo": true, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "mandatory": false}, "team": "", "aon": "", "trigger": "sb_short", "maxViews": "", "expiry": "", "blocker": false, "self": false}, {"kind": "placed", "name": "QR mapping \u2014 revised SOP", "screen": "Home", "widget": "interstitial", "videos": [{"title": "What changed in the SOP", "languages": ["English"], "questions": []}], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "What does QR mapping actually link?", "options": ["The FSE's phone to the TL's phone", "The merchant's QR to the correct MID, so payments settle to the right account", "The SoundBox to the shop's WiFi router", "The merchant's Aadhaar to their PAN"], "correct_index": 1}, {"question": "What do you verify immediately after mapping a new QR?", "options": ["Nothing \u2014 mapping is instant and never fails", "That the merchant has restarted the shop", "Do a small test payment and confirm the SoundBox announces it", "Peel off the old sticker before checking anything"], "correct_index": 2}, {"question": "The QR you are about to map is already mapped to a different MID. What is the correct action?", "options": ["Stop and raise a remapping request instead of forcing a new mapping", "Map it anyway and inform the TL later", "Peel the sticker off and reuse it at another shop", "Ask the merchant to create a new business account"], "correct_index": 0}], "pass": 70, "maxq": "", "mandatory": true}, "team": "", "aon": "", "trigger": "", "maxViews": "", "expiry": "", "blocker": true, "self": false}, {"kind": "module", "name": "New joiner essentials", "screen": "", "widget": "mini-banner", "videos": [{"title": "Your first login", "languages": ["English", "Hindi", "Tamil"], "questions": [{"question": "Where does a merchant change app language or notification preferences?", "options": ["In the Offers carousel", "On the QR sticker", "In the Settings section of the app", "On the SoundBox device itself"], "correct_index": 2}]}, {"title": "Finding your way around", "languages": ["English", "Hindi"], "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}]}, {"title": "Daily check-in", "languages": ["English"], "questions": [{"question": "On the Merchant Detail screen, which tab holds the merchant's open tasks?", "options": ["Details", "Tasks", "Interactions", "Offers"], "correct_index": 1}]}, {"title": "Reading your dashboard", "languages": ["English"], "questions": [{"question": "Which three tabs make up the Team Performance view?", "options": ["Participation, Productivity, Leaderboard", "Sales, Refunds, Payouts", "Attendance, Salary, Incentive", "Tasks, Merchants, Devices"], "correct_index": 0}]}], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}, {"question": "Where does a merchant manage their business profile in the v2 app?", "options": ["Under the \"Manage your Business\" section", "Under Offers", "Under Refer & Earn", "Under chat support"], "correct_index": 0}, {"question": "A merchant cannot find a feature after the v2 update. What do you do?", "options": ["Ask them to downgrade the app", "Show them where it has moved to in the updated navigation", "Tell them the feature was removed", "Raise a device replacement request"], "correct_index": 1}], "pass": 80, "maxq": "", "mandatory": true}, "team": "", "aon": "new", "trigger": "", "maxViews": "", "expiry": "", "blocker": false, "self": false}, {"kind": "placed", "name": "Re-KYC walkthrough", "screen": "KYC", "widget": "bottom-sheet", "videos": [{"title": "Clearing Action Required items", "languages": ["English", "Hindi"], "questions": []}], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "On the Re-KYC check screen, which items sit under \"Action Required\"?", "options": ["Bank Details only", "KYC Details and Business Proof", "Device model and plan", "Nothing \u2014 Re-KYC completes automatically"], "correct_index": 1}, {"question": "The profile upgrade is pending on the P4B app. What do you ask the merchant to do?", "options": ["Visit the nearest bank branch", "Reinstall the consumer Paytm app", "Open Paytm for Business, scroll to \"Manage your Business\" and select \"Upgrade Profile\"", "Buy a new SoundBox"], "correct_index": 2}, {"question": "Bank Details already appears under \"Completed\". What does that mean?", "options": ["That part of the Re-KYC is done \u2014 only the pending items still need action", "The whole Re-KYC is finished", "The merchant's account has been blocked", "The bank account has to be entered again"], "correct_index": 0}], "pass": 70, "maxq": "", "mandatory": true}, "team": "", "aon": "", "trigger": "", "maxViews": "", "expiry": "", "blocker": false, "self": false}, {"kind": "placed", "name": "Reading your performance dashboard", "screen": "Dashboard", "widget": "inline-card", "videos": [{"title": "Participation, productivity, leaderboard", "languages": ["English"], "questions": []}], "perVideo": false, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "mandatory": false}, "team": "", "aon": "", "trigger": "", "maxViews": "", "expiry": 14, "blocker": false, "self": true}];
+const SEED = [{"kind": "placed", "name": "SoundBox pitch masterclass", "screen": "Home", "widget": "stories", "videos": [{"title": "Opening the conversation", "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}], "files": [{"lang": "English", "name": "soundbox_pitch_merchant.mp4"}, {"lang": "Hindi", "name": "soundbox_pitch_merchant_hi.mp4"}, {"lang": "Tamil", "name": "soundbox_pitch_merchant_ta.mp4"}]}, {"title": "Explaining the plan", "questions": [{"question": "A merchant asks what the \u20b9125 a month actually covers. What is the accurate answer?", "options": ["A one-time purchase of the device", "The monthly rental for the SB-V2 Music 4G, GST included", "A refundable deposit returned after a year", "Unlimited free QR stickers"], "correct_index": 1}], "files": [{"lang": "English", "name": "soundbox_plans.mp4"}, {"lang": "Hindi", "name": "soundbox_plans_hi.mp4"}]}, {"title": "Handling the price objection", "questions": [{"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_objection_price.mp4"}]}], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}, {"question": "What real-time benefit does SoundBox give a merchant?", "options": ["Free advertising on the box", "Instant voice and display confirmation for every payment", "Unlimited free phone calls", "A physical cash register"], "correct_index": 1}, {"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "pass": 70, "maxq": "", "mandatory": true}, "team": "", "aon": "", "trigger": "onboarding_short", "maxViews": 5, "expiry": "", "blocker": false, "self": false}, {"kind": "placed", "name": "SoundBox device setup", "screen": "Payments", "widget": "carousel", "videos": [{"title": "Adding a new device", "questions": [{"question": "On the Add Device Details screen, which device type do you select for a monthly rental plan?", "options": ["Purchase", "Rental", "Demo", "Replacement"], "correct_index": 1}], "files": [{"lang": "English", "name": "soundbox_add_device.mp4"}, {"lang": "Hindi", "name": "soundbox_add_device_hi.mp4"}, {"lang": "Marathi", "name": "soundbox_add_device_mr.mp4"}]}, {"title": "Selecting the right plan", "questions": [{"question": "For the Monthly Subscription plan at \u20b9125/month, what does the screen say about UPI Autopay?", "options": ["It is optional for the merchant", "It is not supported on rental plans", "It is required \u2014 the screen shows Yes", "It replaces the monthly rental"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_plan_selection.mp4"}, {"lang": "Hindi", "name": "soundbox_plan_selection_hi.mp4"}]}, {"title": "Verifying the first payment", "questions": [{"question": "The screen shows \u20b9125 as the total amount to be collected. What does that figure include?", "options": ["Only the one-time charge", "A refundable security deposit", "The monthly rental, inclusive of 18% GST", "The full purchase price of the device"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_payment_verify.mp4"}]}], "perVideo": true, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "mandatory": false}, "team": "", "aon": "", "trigger": "sb_short", "maxViews": "", "expiry": "", "blocker": false, "self": false}, {"kind": "placed", "name": "QR mapping \u2014 revised SOP", "screen": "Home", "widget": "interstitial", "videos": [{"title": "What changed in the SOP", "questions": [], "files": [{"lang": "English", "name": "qr_mapping_sop_v4.mp4"}]}], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "What does QR mapping actually link?", "options": ["The FSE's phone to the TL's phone", "The merchant's QR to the correct MID, so payments settle to the right account", "The SoundBox to the shop's WiFi router", "The merchant's Aadhaar to their PAN"], "correct_index": 1}, {"question": "What do you verify immediately after mapping a new QR?", "options": ["Nothing \u2014 mapping is instant and never fails", "That the merchant has restarted the shop", "Do a small test payment and confirm the SoundBox announces it", "Peel off the old sticker before checking anything"], "correct_index": 2}, {"question": "The QR you are about to map is already mapped to a different MID. What is the correct action?", "options": ["Stop and raise a remapping request instead of forcing a new mapping", "Map it anyway and inform the TL later", "Peel the sticker off and reuse it at another shop", "Ask the merchant to create a new business account"], "correct_index": 0}], "pass": 70, "maxq": "", "mandatory": true}, "team": "", "aon": "", "trigger": "", "maxViews": "", "expiry": "", "blocker": true, "self": false}, {"kind": "module", "name": "New joiner essentials", "screen": "", "widget": "mini-banner", "videos": [{"title": "Your first login", "questions": [{"question": "Where does a merchant change app language or notification preferences?", "options": ["In the Offers carousel", "On the QR sticker", "In the Settings section of the app", "On the SoundBox device itself"], "correct_index": 2}], "files": [{"lang": "English", "name": "first_login_setup.mp4"}, {"lang": "Hindi", "name": "first_login_setup_hi.mp4"}, {"lang": "Tamil", "name": "first_login_setup_ta.mp4"}]}, {"title": "Finding your way around", "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}], "files": [{"lang": "English", "name": "app_navigation_tour.mp4"}, {"lang": "Hindi", "name": "app_navigation_tour_hi.mp4"}]}, {"title": "Daily check-in", "questions": [{"question": "On the Merchant Detail screen, which tab holds the merchant's open tasks?", "options": ["Details", "Tasks", "Interactions", "Offers"], "correct_index": 1}], "files": [{"lang": "English", "name": "daily_checkin.mp4"}]}, {"title": "Reading your dashboard", "questions": [{"question": "Which three tabs make up the Team Performance view?", "options": ["Participation, Productivity, Leaderboard", "Sales, Refunds, Payouts", "Attendance, Salary, Incentive", "Tasks, Merchants, Devices"], "correct_index": 0}], "files": [{"lang": "English", "name": "performance_dashboard.mp4"}]}], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}, {"question": "Where does a merchant manage their business profile in the v2 app?", "options": ["Under the \"Manage your Business\" section", "Under Offers", "Under Refer & Earn", "Under chat support"], "correct_index": 0}, {"question": "A merchant cannot find a feature after the v2 update. What do you do?", "options": ["Ask them to downgrade the app", "Show them where it has moved to in the updated navigation", "Tell them the feature was removed", "Raise a device replacement request"], "correct_index": 1}], "pass": 80, "maxq": "", "mandatory": true}, "team": "", "aon": "new", "trigger": "", "maxViews": "", "expiry": "", "blocker": false, "self": false}, {"kind": "placed", "name": "Re-KYC walkthrough", "screen": "KYC", "widget": "bottom-sheet", "videos": [{"title": "Clearing Action Required items", "questions": [], "files": [{"lang": "English", "name": "rekyc_completion.mp4"}, {"lang": "Hindi", "name": "rekyc_completion_hi.mp4"}]}], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "On the Re-KYC check screen, which items sit under \"Action Required\"?", "options": ["Bank Details only", "KYC Details and Business Proof", "Device model and plan", "Nothing \u2014 Re-KYC completes automatically"], "correct_index": 1}, {"question": "The profile upgrade is pending on the P4B app. What do you ask the merchant to do?", "options": ["Visit the nearest bank branch", "Reinstall the consumer Paytm app", "Open Paytm for Business, scroll to \"Manage your Business\" and select \"Upgrade Profile\"", "Buy a new SoundBox"], "correct_index": 2}, {"question": "Bank Details already appears under \"Completed\". What does that mean?", "options": ["That part of the Re-KYC is done \u2014 only the pending items still need action", "The whole Re-KYC is finished", "The merchant's account has been blocked", "The bank account has to be entered again"], "correct_index": 0}], "pass": 70, "maxq": "", "mandatory": true}, "team": "", "aon": "", "trigger": "", "maxViews": "", "expiry": "", "blocker": false, "self": false}, {"kind": "placed", "name": "Reading your performance dashboard", "screen": "Dashboard", "widget": "inline-card", "videos": [{"title": "Participation, productivity, leaderboard", "questions": [], "files": [{"lang": "English", "name": "performance_dashboard.mp4"}]}], "perVideo": false, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "mandatory": false}, "team": "", "aon": "", "trigger": "", "maxViews": "", "expiry": 14, "blocker": false, "self": true}];
 
 const SCREENS=['Home','Profile','Dashboard','Onboarding','KYC','Payments','Settings','Other'];
 const LANGS=['English','Hindi','Tamil','Telugu','Kannada','Bengali','Marathi'];
@@ -339,7 +362,43 @@ fill($('f_trigger'),TRIGGERS);
 let rows = SEED.map(r=>JSON.parse(JSON.stringify(r)));
 let editingId = null;
 const blankQ = () => ({question:'',options:['','','',''],correct_index:0});
-const blankVideo = n => ({title:`Video ${n}`,languages:['English'],questions:[]});
+const blankVideo = n => ({title:`Video ${n}`, files:[{lang:'English', name:''}], questions:[]});
+
+// The title is derived from the file the admin picks, so nobody has to type it twice.
+function titleFromFile(name){
+  return name.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' ').replace(/\s+/g,' ').trim()
+    .replace(/^./, c => c.toUpperCase());
+}
+// question,option1..4,correct_option — the same shape as the downloadable template.
+function parseCSV(text){
+  const rows=[]; let row=[], cell='', q=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(q){ if(c==='"'&&text[i+1]==='"'){cell+='"';i++;} else if(c==='"'){q=false;} else cell+=c; }
+    else if(c==='"') q=true;
+    else if(c===','){row.push(cell);cell='';}
+    else if(c==='\n'||c==='\r'){ if(cell!==''||row.length){row.push(cell);rows.push(row);row=[];cell='';}
+      if(c==='\r'&&text[i+1]==='\n') i++; }
+    else cell+=c;
+  }
+  if(cell!==''||row.length){row.push(cell);rows.push(row);}
+  return rows.filter(r=>r.some(c=>c.trim()));
+}
+function questionsFromRows(rows){
+  const out=[], errs=[];
+  rows.forEach((r,i)=>{
+    if(i===0 && /question/i.test(r[0]||'')) return;          // header
+    const [qt,a,b,c,d,correct]=r.map(x=>(x||'').trim());
+    if(!qt||!a||!b||!c||!d){ errs.push(`Row ${i+1}: needs a question and all four options.`); return; }
+    const n=parseInt(correct,10);
+    if(!(n>=1&&n<=4)){ errs.push(`Row ${i+1}: correct_option must be 1–4.`); return; }
+    out.push({question:qt, options:[a,b,c,d], correct_index:n-1});
+  });
+  return {out, errs};
+}
+const CSV_TEMPLATE = 'question,option1,option2,option3,option4,correct_option\n'
+  + '"What does the SoundBox confirm?","Nothing","Every payment, by voice","Only refunds","Stock levels",2\n';
+const CSV_HREF = 'data:text/csv;charset=utf-8,' + encodeURIComponent(CSV_TEMPLATE);
 
 let T = fresh();
 function fresh(){
@@ -380,7 +439,10 @@ function drawVideos(){
   $('addVideo').disabled = T.videos.length>=cap;
   $('addFromLib').disabled = T.videos.length>=cap;
 
-  $('vlist').innerHTML = T.videos.map((v,i)=>`
+  $('vlist').innerHTML = T.videos.map((v,i)=>{
+    const prim = v.files[0] || {lang:'English',name:''};
+    const spare = LANGS.filter(l => !v.files.some(f => f.lang === l));
+    return `
     <div class="vrow">
       <div class="top">
         ${cap>1?`<div class="ord">
@@ -389,25 +451,96 @@ function drawVideos(){
         <div class="vnum">${i+1}</div>
         <div class="vthumb">▶</div>
         <div class="vmeta">
-          <input type="text" data-vt="${i}" value="${esc(v.title)}" placeholder="Video title" style="font-weight:700;border:none;padding:2px 0;background:transparent">
-          <div class="s">${v.languages.map(l=>`<span class="badge lang">${esc(l)}</span>`).join('')}
-            ${T.perVideo?`<span class="badge ${v.questions.length?'grey':'warn'}">${v.questions.length} check Q${v.questions.length===1?'':'s'}</span>`:''}</div>
+          <input type="text" data-vt="${i}" value="${esc(v.title)}" placeholder="Video title"
+            style="font-weight:700;border:none;padding:2px 0;background:transparent">
+          <div class="filerow">
+            <label class="fpick">📁 ${prim.name?'Replace file':'Choose video file'}
+              <input type="file" accept="video/*,.pdf,.ppt,.pptx" data-vf="${i}"></label>
+            ${prim.name
+              ? `<span class="fname">${esc(prim.name)}</span>`
+              : '<span class="fname" style="color:var(--amber-fg)">No file yet — the title fills in from the filename</span>'}
+            ${T.perVideo?`<span class="badge ${v.questions.length?'grey':'warn'}">${v.questions.length} check Q${v.questions.length===1?'':'s'}</span>`:''}
+          </div>
         </div>
         ${T.videos.length>1?`<button class="btn btn-danger btn-sm" data-vrm="${i}">Remove</button>`:''}
       </div>
+
+      <div class="langs">
+        <div class="ttl">Language versions of video ${i+1}</div>
+        ${v.files.map((f,k)=>`
+          <div class="lrow">
+            <span class="lg">${esc(f.lang)}</span>
+            ${k===0?'<span class="pf">PRIMARY</span>':''}
+            <span class="fn">${f.name?esc(f.name):'— no file —'}</span>
+            <label class="fpick" style="padding:3px 9px;font-size:11px">${f.name?'Replace':'Choose'}
+              <input type="file" accept="video/*,.pdf,.ppt,.pptx" data-lf="${i}-${k}"></label>
+            ${k>0?`<button class="btn btn-danger btn-sm" data-lrm="${i}-${k}">×</button>`:''}
+          </div>`).join('')}
+        ${spare.length?`<div class="addlang">
+          <select data-ladd="${i}">${spare.map(l=>`<option>${esc(l)}</option>`).join('')}</select>
+          <button class="btn btn-ghost btn-sm" data-lgo="${i}">＋ Add language version</button>
+          <span style="font-size:11.5px;color:var(--faint)">The player offers only what is uploaded here.</span>
+        </div>`:'<div style="font-size:11.5px;color:var(--faint)">All languages added.</div>'}
+      </div>
+
       ${T.perVideo?`<div class="check">
         <div class="ttl">Check after video ${i+1}</div>
         ${v.questions.map((q,j)=>qEditor(q,`v${i}`,j)).join('')}
-        <button class="btn btn-ghost btn-sm" data-vaq="${i}">＋ Add question</button>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <button class="btn btn-ghost btn-sm" data-vaq="${i}">＋ Add question</button>
+          <label class="fpick">📤 Upload questions<input type="file" accept=".csv,.tsv,.txt" data-vqf="${i}"></label>
+          <a href="${CSV_HREF}" download="questions-template.csv" style="font-size:11.5px;color:var(--indigo)">Download template</a>
+        </div>
       </div>`:''}
-    </div>`).join('');
+    </div>`;
+  }).join('');
 
   $('vlist').querySelectorAll('[data-up]').forEach(b=>b.onclick=()=>{const i=+b.dataset.up;[T.videos[i-1],T.videos[i]]=[T.videos[i],T.videos[i-1]];render();});
   $('vlist').querySelectorAll('[data-dn]').forEach(b=>b.onclick=()=>{const i=+b.dataset.dn;[T.videos[i+1],T.videos[i]]=[T.videos[i],T.videos[i+1]];render();});
   $('vlist').querySelectorAll('[data-vrm]').forEach(b=>b.onclick=()=>{T.videos.splice(+b.dataset.vrm,1);render();});
   $('vlist').querySelectorAll('[data-vt]').forEach(i=>i.oninput=()=>{T.videos[+i.dataset.vt].title=i.value;drawFlow();});
   $('vlist').querySelectorAll('[data-vaq]').forEach(b=>b.onclick=()=>{T.videos[+b.dataset.vaq].questions.push(blankQ());render();});
+
+  // Primary file: name the video after it, unless the admin already typed a title.
+  $('vlist').querySelectorAll('[data-vf]').forEach(inp=>inp.onchange=e=>{
+    const f=e.target.files[0]; if(!f) return;
+    const v=T.videos[+inp.dataset.vf];
+    v.files[0].name=f.name;
+    if(!v.title.trim() || /^Video \d+$/.test(v.title)) v.title=titleFromFile(f.name);
+    render(); toast(`Named from file: “${v.title}”`);
+  });
+  $('vlist').querySelectorAll('[data-lf]').forEach(inp=>inp.onchange=e=>{
+    const f=e.target.files[0]; if(!f) return;
+    const [i,k]=inp.dataset.lf.split('-').map(Number);
+    T.videos[i].files[k].name=f.name;
+    if(k===0 && /^Video \d+$/.test(T.videos[i].title)) T.videos[i].title=titleFromFile(f.name);
+    render();
+  });
+  $('vlist').querySelectorAll('[data-lgo]').forEach(b=>b.onclick=()=>{
+    const i=+b.dataset.lgo, sel=$('vlist').querySelector(`[data-ladd="${i}"]`);
+    T.videos[i].files.push({lang:sel.value, name:''}); render();
+    toast(`${sel.value} version added — choose its file`);
+  });
+  $('vlist').querySelectorAll('[data-lrm]').forEach(b=>b.onclick=()=>{
+    const [i,k]=b.dataset.lrm.split('-').map(Number); T.videos[i].files.splice(k,1); render();
+  });
+  $('vlist').querySelectorAll('[data-vqf]').forEach(inp=>inp.onchange=e=>{
+    loadQuestions(e.target.files[0], T.videos[+inp.dataset.vqf].questions);
+  });
   wireQ($('vlist'));
+}
+
+// Shared by the per-video checks and the combined assessment.
+function loadQuestions(file, target){
+  if(!file) return;
+  const r=new FileReader();
+  r.onload=()=>{
+    const {out,errs}=questionsFromRows(parseCSV(String(r.result)));
+    if(!out.length) return toast(errs[0] || 'No usable questions in that file.');
+    target.push(...out); render();
+    toast(errs.length ? `Added ${out.length}, skipped ${errs.length} — ${errs[0]}` : `Added ${out.length} question${out.length>1?'s':''}`);
+  };
+  r.readAsText(file);
 }
 
 function qEditor(q,scope,j){
@@ -549,6 +682,8 @@ $('addVideo').onclick=()=>{
 };
 $('addFromLib').onclick=()=>toast('The reusable video library is out of scope for this prototype.');
 $('addFinalQ').onclick=()=>{T.final.questions.push(blankQ());render();};
+$('finalQFile').onchange=e=>loadQuestions(e.target.files[0], T.final.questions);
+$('tplLink').href = CSV_HREF;
 
 /* ── library ────────────────────────────────────────────────────────────── */
 function structOf(t){
