@@ -179,8 +179,7 @@
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 <style>
-  .sectionbar{display:flex;gap:0;background:var(--card);border-bottom:1px solid var(--line);
-    padding:0 24px;overflow-x:auto}
+  .sectionbar{display:flex;gap:0;background:var(--card);border-bottom:1px solid var(--line);padding:0 24px;overflow-x:auto}
   .sectionbar .sec{background:none;border:none;border-bottom:3px solid transparent;padding:14px 18px 12px;
     font:inherit;font-size:14px;font-weight:600;color:var(--dim);cursor:pointer;text-align:left;white-space:nowrap}
   .sectionbar .sec small{display:block;font-weight:400;font-size:11.5px;color:var(--faint);margin-top:2px}
@@ -284,6 +283,10 @@
         <select id="p_training"></select>
       </div>
       <div class="form-group">
+        <label>App <span style="color:#e53e3e">*</span></label>
+        <select id="p_app"></select>
+      </div>
+      <div class="form-group full">
         <label>Screen <span style="color:#e53e3e">*</span></label>
         <select id="p_screen"></select>
       </div>
@@ -318,8 +321,10 @@
         <input type="number" min="1" id="p_expiry" placeholder="e.g. 14"></div>
     </div>
     <div style="margin-top:16px;border-top:1px solid var(--line);padding-top:16px">
+      <label class="toggle-row" id="p_hubRow"><input type="checkbox" id="p_hub">
+        <span>Also list this in <b>Trainings &amp; Assessment</b><small id="p_hubHint">The FSE can find and complete it from the hub as well as on the screen.</small></span></label>
       <label class="toggle-row" id="p_blockRow"><input type="checkbox" id="p_blocker">
-        <span>Homepage blocker<small id="p_blockHint">A gate on the home screen sends the FSE to Trainings &amp; Assessment, with no way past it until this is done.</small></span></label>
+        <span>Homepage blocker<small id="p_blockHint">A gate on the home screen sends the FSE to Trainings &amp; Assessment, with no way past it until this is done. Available whatever screen the training sits on.</small></span></label>
       <label class="toggle-row" id="p_selfRow"><input type="checkbox" id="p_self">
         <span>Let the FSE mark videos watched without finishing them<small id="p_selfHint">Adds an “I’ve watched this” button.</small></span></label>
     </div>
@@ -333,7 +338,7 @@
   <div class="card">
     <div class="hd"><h2 id="pLibTitle">Placements</h2><span class="sub">Each row is one training on one screen for one segment.</span></div>
     <div class="tw"><table>
-      <thead><tr><th>Training</th><th>Screen &amp; view</th><th>Segment</th><th>Rules</th><th></th></tr></thead>
+      <thead><tr><th>Training</th><th>App</th><th>Screen &amp; view</th><th>Segment</th><th>Rules</th><th></th></tr></thead>
       <tbody id="pLib"></tbody>
     </table></div>
   </div>
@@ -342,9 +347,33 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const SEED = {"trainings": [{"id": "tr1", "name": "SoundBox pitch masterclass", "widget": "stories", "videos": [{"title": "Opening the conversation", "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}], "files": [{"lang": "English", "name": "soundbox_pitch_merchant.mp4"}, {"lang": "Hindi", "name": "soundbox_pitch_merchant_hi.mp4"}, {"lang": "Tamil", "name": "soundbox_pitch_merchant_ta.mp4"}], "pass": 60, "maxq": ""}, {"title": "Explaining the plan", "questions": [{"question": "A merchant asks what the \u20b9125 a month actually covers. What is the accurate answer?", "options": ["A one-time purchase of the device", "The monthly rental for the SB-V2 Music 4G, GST included", "A refundable deposit returned after a year", "Unlimited free QR stickers"], "correct_index": 1}], "files": [{"lang": "English", "name": "soundbox_plans.mp4"}, {"lang": "Hindi", "name": "soundbox_plans_hi.mp4"}], "pass": 60, "maxq": ""}, {"title": "Handling the price objection", "questions": [{"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_objection_price.mp4"}], "pass": 60, "maxq": ""}], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}, {"question": "What real-time benefit does SoundBox give a merchant?", "options": ["Free advertising on the box", "Instant voice and display confirmation for every payment", "Unlimited free phone calls", "A physical cash register"], "correct_index": 1}, {"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "pass": 70, "maxq": "", "mandatory": true}}, {"id": "tr2", "name": "SoundBox device setup", "widget": "carousel", "videos": [{"title": "Adding a new device", "questions": [{"question": "On the Add Device Details screen, which device type do you select for a monthly rental plan?", "options": ["Purchase", "Rental", "Demo", "Replacement"], "correct_index": 1}], "files": [{"lang": "English", "name": "soundbox_add_device.mp4"}, {"lang": "Hindi", "name": "soundbox_add_device_hi.mp4"}, {"lang": "Marathi", "name": "soundbox_add_device_mr.mp4"}], "pass": 70, "maxq": ""}, {"title": "Selecting the right plan", "questions": [{"question": "For the Monthly Subscription plan at \u20b9125/month, what does the screen say about UPI Autopay?", "options": ["It is optional for the merchant", "It is not supported on rental plans", "It is required \u2014 the screen shows Yes", "It replaces the monthly rental"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_plan_selection.mp4"}, {"lang": "Hindi", "name": "soundbox_plan_selection_hi.mp4"}], "pass": 70, "maxq": ""}, {"title": "Verifying the first payment", "questions": [{"question": "The screen shows \u20b9125 as the total amount to be collected. What does that figure include?", "options": ["Only the one-time charge", "A refundable security deposit", "The monthly rental, inclusive of 18% GST", "The full purchase price of the device"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_payment_verify.mp4"}], "pass": 70, "maxq": ""}], "perVideo": true, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "mandatory": false}}, {"id": "tr3", "name": "QR mapping \u2014 revised SOP", "widget": "interstitial", "videos": [{"title": "What changed in the SOP", "questions": [], "files": [{"lang": "English", "name": "qr_mapping_sop_v4.mp4"}], "pass": 70, "maxq": ""}], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "What does QR mapping actually link?", "options": ["The FSE's phone to the TL's phone", "The merchant's QR to the correct MID, so payments settle to the right account", "The SoundBox to the shop's WiFi router", "The merchant's Aadhaar to their PAN"], "correct_index": 1}, {"question": "What do you verify immediately after mapping a new QR?", "options": ["Nothing \u2014 mapping is instant and never fails", "That the merchant has restarted the shop", "Do a small test payment and confirm the SoundBox announces it", "Peel off the old sticker before checking anything"], "correct_index": 2}, {"question": "The QR you are about to map is already mapped to a different MID. What is the correct action?", "options": ["Stop and raise a remapping request instead of forcing a new mapping", "Map it anyway and inform the TL later", "Peel the sticker off and reuse it at another shop", "Ask the merchant to create a new business account"], "correct_index": 0}], "pass": 70, "maxq": "", "mandatory": true}}, {"id": "tr4", "name": "New joiner essentials", "widget": "module", "videos": [{"title": "Your first login", "questions": [{"question": "Where does a merchant change app language or notification preferences?", "options": ["In the Offers carousel", "On the QR sticker", "In the Settings section of the app", "On the SoundBox device itself"], "correct_index": 2}], "files": [{"lang": "English", "name": "first_login_setup.mp4"}, {"lang": "Hindi", "name": "first_login_setup_hi.mp4"}, {"lang": "Tamil", "name": "first_login_setup_ta.mp4"}], "pass": 70, "maxq": ""}, {"title": "Finding your way around", "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}], "files": [{"lang": "English", "name": "app_navigation_tour.mp4"}, {"lang": "Hindi", "name": "app_navigation_tour_hi.mp4"}], "pass": 70, "maxq": ""}, {"title": "Daily check-in", "questions": [{"question": "On the Merchant Detail screen, which tab holds the merchant's open tasks?", "options": ["Details", "Tasks", "Interactions", "Offers"], "correct_index": 1}], "files": [{"lang": "English", "name": "daily_checkin.mp4"}], "pass": 70, "maxq": ""}, {"title": "Reading your dashboard", "questions": [{"question": "Which three tabs make up the Team Performance view?", "options": ["Participation, Productivity, Leaderboard", "Sales, Refunds, Payouts", "Attendance, Salary, Incentive", "Tasks, Merchants, Devices"], "correct_index": 0}], "files": [{"lang": "English", "name": "performance_dashboard.mp4"}], "pass": 70, "maxq": ""}], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}, {"question": "Where does a merchant manage their business profile in the v2 app?", "options": ["Under the \"Manage your Business\" section", "Under Offers", "Under Refer & Earn", "Under chat support"], "correct_index": 0}, {"question": "A merchant cannot find a feature after the v2 update. What do you do?", "options": ["Ask them to downgrade the app", "Show them where it has moved to in the updated navigation", "Tell them the feature was removed", "Raise a device replacement request"], "correct_index": 1}], "pass": 80, "maxq": 2, "mandatory": true}}, {"id": "tr5", "name": "Re-KYC walkthrough", "widget": "bottom-sheet", "videos": [{"title": "Clearing Action Required items", "questions": [], "files": [{"lang": "English", "name": "rekyc_completion.mp4"}, {"lang": "Hindi", "name": "rekyc_completion_hi.mp4"}], "pass": 70, "maxq": ""}], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "On the Re-KYC check screen, which items sit under \"Action Required\"?", "options": ["Bank Details only", "KYC Details and Business Proof", "Device model and plan", "Nothing \u2014 Re-KYC completes automatically"], "correct_index": 1}, {"question": "The profile upgrade is pending on the P4B app. What do you ask the merchant to do?", "options": ["Visit the nearest bank branch", "Reinstall the consumer Paytm app", "Open Paytm for Business, scroll to \"Manage your Business\" and select \"Upgrade Profile\"", "Buy a new SoundBox"], "correct_index": 2}, {"question": "Bank Details already appears under \"Completed\". What does that mean?", "options": ["That part of the Re-KYC is done \u2014 only the pending items still need action", "The whole Re-KYC is finished", "The merchant's account has been blocked", "The bank account has to be entered again"], "correct_index": 0}], "pass": 70, "maxq": "", "mandatory": true}}, {"id": "tr6", "name": "Reading your performance dashboard", "widget": "inline-card", "videos": [{"title": "Participation, productivity, leaderboard", "questions": [], "files": [{"lang": "English", "name": "performance_dashboard.mp4"}], "pass": 70, "maxq": ""}], "perVideo": false, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "mandatory": false}}], "placements": [{"id": "pl1", "trainingId": "tr1", "screen": "Home", "team": "", "subteam": "", "aon": "", "trigger": "onboarding_short", "ecodes": 0, "maxViews": 5, "expiry": "", "blocker": false, "self": false}, {"id": "pl2", "trainingId": "tr2", "screen": "Payments", "team": "", "subteam": "", "aon": "", "trigger": "sb_short", "ecodes": 0, "maxViews": "", "expiry": "", "blocker": false, "self": false}, {"id": "pl3", "trainingId": "tr3", "screen": "Home", "team": "", "subteam": "", "aon": "", "trigger": "", "ecodes": 0, "maxViews": "", "expiry": "", "blocker": true, "self": false}, {"id": "pl4", "trainingId": "tr5", "screen": "KYC", "team": "", "subteam": "", "aon": "", "trigger": "", "ecodes": 0, "maxViews": "", "expiry": "", "blocker": false, "self": false}, {"id": "pl5", "trainingId": "tr6", "screen": "Dashboard", "team": "", "subteam": "", "aon": "", "trigger": "", "ecodes": 0, "maxViews": "", "expiry": 14, "blocker": false, "self": true}, {"id": "pl6", "trainingId": "tr1", "screen": "Onboarding", "team": "Sales", "subteam": "Merchant Acquisition", "aon": "new", "trigger": "", "ecodes": 0, "maxViews": "", "expiry": 30, "blocker": false, "self": false}, {"id": "pl7", "trainingId": "tr6", "screen": "Profile", "team": "", "subteam": "", "aon": "", "trigger": "nap_allocation", "ecodes": 0, "maxViews": 2, "expiry": "", "blocker": false, "self": true}]};
+const SEED = {"trainings": [{"id": "tr1", "name": "SoundBox pitch masterclass", "widget": "stories", "videos": [{"title": "Opening the conversation", "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}], "files": [{"lang": "English", "name": "soundbox_pitch_merchant.mp4"}, {"lang": "Hindi", "name": "soundbox_pitch_merchant_hi.mp4"}, {"lang": "Tamil", "name": "soundbox_pitch_merchant_ta.mp4"}], "pass": 60, "maxq": ""}, {"title": "Explaining the plan", "questions": [{"question": "A merchant asks what the \u20b9125 a month actually covers. What is the accurate answer?", "options": ["A one-time purchase of the device", "The monthly rental for the SB-V2 Music 4G, GST included", "A refundable deposit returned after a year", "Unlimited free QR stickers"], "correct_index": 1}], "files": [{"lang": "English", "name": "soundbox_plans.mp4"}, {"lang": "Hindi", "name": "soundbox_plans_hi.mp4"}], "pass": 60, "maxq": ""}, {"title": "Handling the price objection", "questions": [{"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_objection_price.mp4"}], "pass": 60, "maxq": ""}], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}, {"question": "What real-time benefit does SoundBox give a merchant?", "options": ["Free advertising on the box", "Instant voice and display confirmation for every payment", "Unlimited free phone calls", "A physical cash register"], "correct_index": 1}, {"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "pass": 70, "maxq": "", "mandatory": true}}, {"id": "tr2", "name": "SoundBox device setup", "widget": "carousel", "videos": [{"title": "Adding a new device", "questions": [{"question": "On the Add Device Details screen, which device type do you select for a monthly rental plan?", "options": ["Purchase", "Rental", "Demo", "Replacement"], "correct_index": 1}], "files": [{"lang": "English", "name": "soundbox_add_device.mp4"}, {"lang": "Hindi", "name": "soundbox_add_device_hi.mp4"}, {"lang": "Marathi", "name": "soundbox_add_device_mr.mp4"}], "pass": 70, "maxq": ""}, {"title": "Selecting the right plan", "questions": [{"question": "For the Monthly Subscription plan at \u20b9125/month, what does the screen say about UPI Autopay?", "options": ["It is optional for the merchant", "It is not supported on rental plans", "It is required \u2014 the screen shows Yes", "It replaces the monthly rental"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_plan_selection.mp4"}, {"lang": "Hindi", "name": "soundbox_plan_selection_hi.mp4"}], "pass": 70, "maxq": ""}, {"title": "Verifying the first payment", "questions": [{"question": "The screen shows \u20b9125 as the total amount to be collected. What does that figure include?", "options": ["Only the one-time charge", "A refundable security deposit", "The monthly rental, inclusive of 18% GST", "The full purchase price of the device"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_payment_verify.mp4"}], "pass": 70, "maxq": ""}], "perVideo": true, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "mandatory": false}}, {"id": "tr3", "name": "QR mapping \u2014 revised SOP", "widget": "interstitial", "videos": [{"title": "What changed in the SOP", "questions": [], "files": [{"lang": "English", "name": "qr_mapping_sop_v4.mp4"}], "pass": 70, "maxq": ""}], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "What does QR mapping actually link?", "options": ["The FSE's phone to the TL's phone", "The merchant's QR to the correct MID, so payments settle to the right account", "The SoundBox to the shop's WiFi router", "The merchant's Aadhaar to their PAN"], "correct_index": 1}, {"question": "What do you verify immediately after mapping a new QR?", "options": ["Nothing \u2014 mapping is instant and never fails", "That the merchant has restarted the shop", "Do a small test payment and confirm the SoundBox announces it", "Peel off the old sticker before checking anything"], "correct_index": 2}, {"question": "The QR you are about to map is already mapped to a different MID. What is the correct action?", "options": ["Stop and raise a remapping request instead of forcing a new mapping", "Map it anyway and inform the TL later", "Peel the sticker off and reuse it at another shop", "Ask the merchant to create a new business account"], "correct_index": 0}], "pass": 70, "maxq": "", "mandatory": true}}, {"id": "tr4", "name": "New joiner essentials", "widget": "module", "videos": [{"title": "Your first login", "questions": [{"question": "Where does a merchant change app language or notification preferences?", "options": ["In the Offers carousel", "On the QR sticker", "In the Settings section of the app", "On the SoundBox device itself"], "correct_index": 2}], "files": [{"lang": "English", "name": "first_login_setup.mp4"}, {"lang": "Hindi", "name": "first_login_setup_hi.mp4"}, {"lang": "Tamil", "name": "first_login_setup_ta.mp4"}], "pass": 70, "maxq": ""}, {"title": "Finding your way around", "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}], "files": [{"lang": "English", "name": "app_navigation_tour.mp4"}, {"lang": "Hindi", "name": "app_navigation_tour_hi.mp4"}], "pass": 70, "maxq": ""}, {"title": "Daily check-in", "questions": [{"question": "On the Merchant Detail screen, which tab holds the merchant's open tasks?", "options": ["Details", "Tasks", "Interactions", "Offers"], "correct_index": 1}], "files": [{"lang": "English", "name": "daily_checkin.mp4"}], "pass": 70, "maxq": ""}, {"title": "Reading your dashboard", "questions": [{"question": "Which three tabs make up the Team Performance view?", "options": ["Participation, Productivity, Leaderboard", "Sales, Refunds, Payouts", "Attendance, Salary, Incentive", "Tasks, Merchants, Devices"], "correct_index": 0}], "files": [{"lang": "English", "name": "performance_dashboard.mp4"}], "pass": 70, "maxq": ""}], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}, {"question": "Where does a merchant manage their business profile in the v2 app?", "options": ["Under the \"Manage your Business\" section", "Under Offers", "Under Refer & Earn", "Under chat support"], "correct_index": 0}, {"question": "A merchant cannot find a feature after the v2 update. What do you do?", "options": ["Ask them to downgrade the app", "Show them where it has moved to in the updated navigation", "Tell them the feature was removed", "Raise a device replacement request"], "correct_index": 1}], "pass": 80, "maxq": 2, "mandatory": true}}, {"id": "tr5", "name": "Re-KYC walkthrough", "widget": "bottom-sheet", "videos": [{"title": "Clearing Action Required items", "questions": [], "files": [{"lang": "English", "name": "rekyc_completion.mp4"}, {"lang": "Hindi", "name": "rekyc_completion_hi.mp4"}], "pass": 70, "maxq": ""}], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "On the Re-KYC check screen, which items sit under \"Action Required\"?", "options": ["Bank Details only", "KYC Details and Business Proof", "Device model and plan", "Nothing \u2014 Re-KYC completes automatically"], "correct_index": 1}, {"question": "The profile upgrade is pending on the P4B app. What do you ask the merchant to do?", "options": ["Visit the nearest bank branch", "Reinstall the consumer Paytm app", "Open Paytm for Business, scroll to \"Manage your Business\" and select \"Upgrade Profile\"", "Buy a new SoundBox"], "correct_index": 2}, {"question": "Bank Details already appears under \"Completed\". What does that mean?", "options": ["That part of the Re-KYC is done \u2014 only the pending items still need action", "The whole Re-KYC is finished", "The merchant's account has been blocked", "The bank account has to be entered again"], "correct_index": 0}], "pass": 70, "maxq": "", "mandatory": true}}, {"id": "tr6", "name": "Reading your performance dashboard", "widget": "inline-card", "videos": [{"title": "Participation, productivity, leaderboard", "questions": [], "files": [{"lang": "English", "name": "performance_dashboard.mp4"}], "pass": 70, "maxq": ""}], "perVideo": false, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "mandatory": false}}], "placements": [{"id": "pl1", "trainingId": "tr1", "screen": "Home", "team": "", "subteam": "", "aon": "", "trigger": "onboarding_short", "ecodes": 0, "maxViews": 5, "expiry": "", "blocker": false, "self": false, "app": "gg", "hub": true}, {"id": "pl2", "trainingId": "tr2", "screen": "Payments", "team": "", "subteam": "", "aon": "", "trigger": "sb_short", "ecodes": 0, "maxViews": "", "expiry": "", "blocker": false, "self": false, "app": "gg", "hub": true}, {"id": "pl3", "trainingId": "tr3", "screen": "Home", "team": "", "subteam": "", "aon": "", "trigger": "", "ecodes": 0, "maxViews": "", "expiry": "", "blocker": true, "self": false, "app": "gg", "hub": true}, {"id": "pl4", "trainingId": "tr5", "screen": "KYC", "team": "", "subteam": "", "aon": "", "trigger": "", "ecodes": 0, "maxViews": "", "expiry": "", "blocker": false, "self": false, "app": "gg", "hub": true}, {"id": "pl5", "trainingId": "tr6", "screen": "Dashboard", "team": "", "subteam": "", "aon": "", "trigger": "", "ecodes": 0, "maxViews": "", "expiry": 14, "blocker": false, "self": true, "app": "gg", "hub": true}, {"id": "pl6", "trainingId": "tr1", "screen": "Onboarding", "team": "Sales", "subteam": "Merchant Acquisition", "aon": "new", "trigger": "", "ecodes": 0, "maxViews": "", "expiry": 30, "blocker": false, "self": false, "app": "gg", "hub": true}, {"id": "pl7", "trainingId": "tr6", "screen": "Profile", "team": "", "subteam": "", "aon": "", "trigger": "nap_allocation", "ecodes": 0, "maxViews": 2, "expiry": "", "blocker": false, "self": true, "app": "gg", "hub": true}, {"id": "plhtr4", "trainingId": "tr4", "app": "gg", "screen": "__hub__", "team": "", "subteam": "", "aon": "new", "trigger": "", "ecodes": 0, "maxViews": "", "expiry": "", "blocker": false, "hub": true, "self": false}, {"id": "plf1", "trainingId": "tr6", "app": "force", "screen": "Reports", "team": "", "subteam": "", "aon": "", "trigger": "", "ecodes": 0, "maxViews": "", "expiry": "", "blocker": false, "hub": true, "self": false}]};
 
-const SCREENS=['Home','Profile','Dashboard','Onboarding','KYC','Payments','Settings','Other'];
+const HUB='__hub__';   // not an app screen — the Trainings & Assessment section
+const APPS=[{id:'gg',label:'GG App'},{id:'force',label:'Force App'}];
+
+// Which widget slots the FE team has built into each screen, per app.
+// PLACEHOLDER for Force App — confirm the real screen list before build.
+const APP_SCREENS={
+  gg:{
+    'Home':['mini-banner','interstitial','stories'],
+    'Onboarding':['mini-banner','stories'],
+    'KYC':['bottom-sheet','accordion'],
+    'Dashboard':['accordion','inline-card','popup'],
+    'Payments':['pip','carousel','inline-card'],
+    'Profile':['accordion','inline-card'],
+    'Settings':['accordion'],
+  },
+  force:{
+    'Home':['mini-banner','interstitial','stories'],
+    'Leads':['carousel','inline-card'],
+    'Visits':['accordion','bottom-sheet'],
+    'Orders':['inline-card','pip'],
+    'Reports':['inline-card','popup'],
+    'Settings':['accordion'],
+  },
+};
+const LANGS_UNUSED=null;
 const LANGS=['English','Hindi','Tamil','Telugu','Kannada','Bengali','Marathi'];
 const TEAMS={'Sales':['Merchant Acquisition','Cross-sell & Upsell'],'Service':['Service & Support','Retention'],
   'Collections':['Field Collections','Tele-Collections'],'Onboarding & Compliance':['KYC & Onboarding','Risk & Compliance']};
@@ -355,8 +384,8 @@ const TRIGGERS=[{id:'',label:'No trigger'},{id:'nap_allocation',label:'Task or N
 // A widget's layout decides how many videos fit and whether the FSE reliably
 // reaches an end — which is what a combined assessment needs.
 const WIDGETS=[
-  {id:'module',      label:'Training module — My Trainings only', max:20, plays:true, combined:true, placeable:false,
-   note:'Not tied to a screen. Sub-videos completed in order from the hub, with one combined pass mark.'},
+  {id:'module',      label:'Hub only — no screen widget',  max:20, plays:true, combined:true, hubOnly:true,
+   note:'Never placed on an app screen. The FSE works through it in order from Trainings & Assessment, so a combined pass mark is available.'},
   {id:'mini-banner', label:'Mini Banner',              max:1,  plays:true,  combined:false, placeable:true,
    note:'Shows one collapsed strip. One video.'},
   {id:'interstitial',label:'Interstitial (Full-Screen)',max:1, plays:true,  combined:false, placeable:true,
@@ -383,18 +412,18 @@ const WIDGETS=[
 ];
 const W=Object.fromEntries(WIDGETS.map(w=>[w.id,w]));
 
-// Which screens the FE team has built each widget slot into.
-const SCREEN_WIDGETS={
-  'Home':['mini-banner','interstitial','stories'],
-  'KYC':['bottom-sheet','accordion'],
-  'Dashboard':['accordion','inline-card','popup'],
-  'Payments':['pip','carousel','inline-card'],
-  'Profile':['accordion','inline-card'],
-  'Onboarding':['mini-banner','stories'],
-  'Settings':['accordion'],
-  'Other':[],
-};
-const screensFor = wid => SCREENS.filter(s => (SCREEN_WIDGETS[s]||[]).includes(wid));
+// The hub is always an option: it renders trainings its own way and needs no slot.
+function screensFor(app, wid){
+  const list = Object.entries(APP_SCREENS[app]||{})
+    .filter(([,ws]) => ws.includes(wid)).map(([s])=>s);
+  return list;
+}
+function appLabel(id){ return (APPS.find(a=>a.id===id)||{}).label || id; }
+function screenLabel(v){ return v===HUB ? 'Trainings & Assessment only' : v; }
+// Every screen a training could live on, across both apps — used for guidance.
+function screensAnyApp(wid){
+  return [...new Set(APPS.flatMap(a=>screensFor(a.id,wid).map(s=>`${a.label} · ${s}`)))];
+}
 
 const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const $=id=>document.getElementById(id);
@@ -404,7 +433,7 @@ const capOf       = t => (W[t.widget]||{}).max ?? 1;
 const allowsCombined = t => !!(W[t.widget]||{}).combined;
 const allowsPerVideo = t => !!(W[t.widget]||{}).plays;
 const isSingle    = t => capOf(t)===1;
-const isModule    = t => t.widget==='module';
+const isModule    = t => t.widget==='module';   // hub-only
 
 const blankQ=()=>({question:'',options:['','','',''],correct_index:0});
 const blankVideo=n=>({title:`Video ${n}`,files:[{lang:'English',name:''}],questions:[],pass:70,maxq:''});
@@ -451,8 +480,8 @@ let editT = null, editP = null;
 
 function freshT(){ return {id:uid(),name:'',widget:'mini-banner',videos:[blankVideo(1)],
   perVideo:false,final:{enabled:false,questions:[],pass:70,maxq:'',mandatory:false}}; }
-function freshP(){ return {id:uid(),trainingId:'',screen:'',team:'',subteam:'',aon:'',trigger:'',
-  ecodes:0,maxViews:'',expiry:'',blocker:false,self:false}; }
+function freshP(){ return {id:uid(),trainingId:'',app:'gg',screen:'',team:'',subteam:'',aon:'',trigger:'',
+  ecodes:0,maxViews:'',expiry:'',blocker:false,hub:true,self:false}; }
 
 const trainingById = id => trainings.find(t=>t.id===id);
 const placementsFor = id => placements.filter(p=>p.trainingId===id);
@@ -703,30 +732,43 @@ function drawTLib(){
 
 /* ── section 2 · placement ─────────────────────────────────────────────── */
 function refreshTrainingPicker(){
-  const placeable=trainings.filter(t=>(W[t.widget]||{}).placeable!==false);
-  fill($('p_training'),[{id:'',label: placeable.length?'— choose a training —':'— no placeable trainings yet —'}]
-    .concat(placeable.map(t=>({id:t.id,label:`${t.name} · ${W[t.widget].label}`}))));
+  // Hub-only trainings are still placeable — into Trainings & Assessment.
+  fill($('p_training'),[{id:'',label: trainings.length?'— choose a training —':'— build a training first —'}]
+    .concat(trainings.map(t=>({id:t.id,label:`${t.name} · ${W[t.widget].label}`}))));
   $('p_training').value=P.trainingId;
+  fill($('p_app'),APPS);
+  $('p_app').value=P.app;
   syncScreens();
 }
 function syncScreens(){
   const t=trainingById(P.trainingId);
   if(!t){ fill($('p_screen'),[{id:'',label:'— choose a training first —'}]);
     $('pScreenNote').innerHTML='Pick a training and the screens carrying its widget appear here.'; return; }
-  const scr=screensFor(t.widget);
-  fill($('p_screen'),[{id:'',label:scr.length?'— select screen —':'— no screen carries this widget —'}]
-    .concat(scr.map(s=>({id:s,label:s}))));
-  if(!scr.includes(P.screen)) P.screen='';
+
+  const hubOpt={id:HUB,label:'Trainings & Assessment only — no app screen'};
+  const scr = isModule(t) ? [] : screensFor(P.app, t.widget);
+  fill($('p_screen'), [{id:'',label:'— select screen —'}]
+    .concat(scr.map(s=>({id:s,label:s})))
+    .concat([hubOpt]));
+  if(P.screen!==HUB && !scr.includes(P.screen)) P.screen = isModule(t) ? HUB : '';
   $('p_screen').value=P.screen;
-  $('pScreenNote').innerHTML=`<b>${esc(t.name)}</b> is a <b>${esc(W[t.widget].label)}</b>. `
-    + (scr.length?`Screens with that slot: ${scr.map(esc).join(', ')}.`:'<span style="color:var(--red-fg)">No screen carries that slot yet, so it cannot be placed.</span>')
+
+  $('pScreenNote').innerHTML = `<b>${esc(t.name)}</b> is a <b>${esc(W[t.widget].label)}</b>. `
+    + (isModule(t)
+        ? 'It has no screen widget, so it lives in Trainings &amp; Assessment.'
+        : (scr.length
+            ? `In ${esc(appLabel(P.app))} that slot exists on: ${scr.map(esc).join(', ')}.`
+            : `<span style="color:var(--red-fg)">No ${esc(appLabel(P.app))} screen carries that slot.</span> ${screensAnyApp(t.widget).length?`It is available on ${screensAnyApp(t.widget).map(esc).join(', ')}.`:''}`))
     + (t.final.mandatory?' <span class="badge red">This training is mandatory</span>':'');
-  $('p_blockRow').classList.toggle('off',P.screen!=='Home');
-  $('p_blocker').disabled=P.screen!=='Home';
-  if(P.screen!=='Home'){P.blocker=false;$('p_blocker').checked=false;}
-  $('p_blockHint').textContent=P.screen==='Home'
-    ?'A gate on the home screen sends the FSE to Trainings & Assessment, with no way past it until this is done.'
-    :'Only available when the screen is Home.';
+
+  // The hub listing is forced on when the hub *is* the placement.
+  const hubForced = P.screen===HUB;
+  if(hubForced) P.hub=true;
+  $('p_hub').checked=P.hub; $('p_hub').disabled=hubForced;
+  $('p_hubRow').classList.toggle('off',hubForced);
+  $('p_hubHint').textContent = hubForced
+    ? 'Always on — this placement is the hub.'
+    : 'The FSE can find and complete it from the hub as well as on the screen.';
 }
 function flowP(){
   const t=trainingById(P.trainingId);
@@ -740,18 +782,27 @@ function flowP(){
   const warns=[];
   if(!P.screen) warns.push('No screen chosen yet.');
   if(P.blocker&&!t.final.mandatory) warns.push('A homepage blocker on non-mandatory content will let the FSE past after watching.');
-  const dupe=placements.find(p=>p.id!==P.id&&p.trainingId===P.trainingId&&p.screen===P.screen&&P.screen);
-  if(dupe) warns.push('This training is already placed on that screen — the two will compete.');
+  // The gate's only action is "Go to Trainings", so the training has to be there.
+  if(P.blocker&&!P.hub) warns.push('A homepage blocker sends the FSE to Trainings & Assessment — this training must be listed there or the gate is a dead end.');
+  const dupe=placements.find(p=>p.id!==P.id&&p.trainingId===P.trainingId&&p.screen===P.screen&&p.app===P.app&&P.screen);
+  if(dupe) warns.push(`Already placed on ${appLabel(P.app)} · ${screenLabel(P.screen)} — the two will compete.`);
+  if(t.final.mandatory&&!P.hub&&P.screen!==HUB)
+    warns.push('Mandatory but not listed in the hub — if the FSE never visits this screen they have no way to complete it.');
+  const where = P.screen===HUB
+    ? `in <b>Trainings &amp; Assessment</b> in <b>${esc(appLabel(P.app))}</b>`
+    : `as a <b>${esc(W[t.widget].label)}</b> on <b>${esc(appLabel(P.app))} · ${esc(P.screen||'— pick a screen —')}</b>`;
+  const also = (P.hub && P.screen!==HUB) ? ', and is listed in Trainings &amp; Assessment' : '';
   $('pFlow').innerHTML=`<div class="k">What this placement does</div>
-    <div class="v"><b>${esc(t.name)}</b> appears as a <b>${esc(W[t.widget].label)}</b> on <b>${esc(P.screen||'— pick a screen —')}</b>
-      for <b>${seg.length?esc(seg.join(' · ')):'everyone'}</b>${rules.length?`, and ${esc(rules.join(', '))}`:''}.</div>
+    <div class="v"><b>${esc(t.name)}</b> appears ${where}
+      for <b>${seg.length?esc(seg.join(' · ')):'everyone'}</b>${also}${rules.length?`, and ${esc(rules.join(', '))}`:''}.</div>
     ${warns.map(w=>`<div class="warnline">⚠ ${esc(w)}</div>`).join('')}`;
 }
 function renderP(){
   refreshTrainingPicker();
   $('p_team').value=P.team; $('p_aon').value=P.aon; $('p_trigger').value=P.trigger;
   $('p_maxviews').value=P.maxViews; $('p_expiry').value=P.expiry;
-  $('p_blocker').checked=P.blocker; $('p_self').checked=P.self;
+  $('p_blocker').checked=P.blocker; $('p_self').checked=P.self; $('p_hub').checked=P.hub;
+  $('p_app').value=P.app;
   const subs=TEAMS[P.team]||[];
   $('p_subteam').innerHTML='<option value="">All subteams</option>'+subs.map(s=>`<option>${esc(s)}</option>`).join('');
   $('p_subteam').disabled=!subs.length; $('p_subteam').value=P.subteam;
@@ -769,7 +820,7 @@ function renderP(){
 }
 function drawPLib(){
   $('pLibTitle').textContent=`Placements (${placements.length})`;
-  if(!placements.length){ $('pLib').innerHTML='<tr><td colspan="5" style="color:var(--faint);padding:22px">Nothing placed yet.</td></tr>'; return; }
+  if(!placements.length){ $('pLib').innerHTML='<tr><td colspan="6" style="color:var(--faint);padding:22px">Nothing placed yet.</td></tr>'; return; }
   $('pLib').innerHTML=placements.map(p=>{
     const t=trainingById(p.trainingId);
     const seg=[p.team&&`${p.team}${p.subteam?' · '+p.subteam:''}`,
@@ -781,7 +832,11 @@ function drawPLib(){
       <td class="t">${t?esc(t.name):'<span style="color:var(--red-fg)">Training deleted</span>'}
         ${t&&t.final.mandatory?' <span class="badge red">MANDATORY</span>':''}
         ${p.blocker?' <span class="badge red">⛔ Blocker</span>':''}</td>
-      <td><span class="badge">${esc(p.screen)}</span><br><span class="badge">${t?esc(W[t.widget].label):'—'}</span></td>
+      <td><span class="badge grey">${esc(appLabel(p.app))}</span></td>
+      <td>${p.screen===HUB
+        ? '<span class="badge grey">Trainings &amp; Assessment only</span>'
+        : `<span class="badge">${esc(p.screen)}</span><br><span class="badge">${t?esc(W[t.widget].label):'—'}</span>`}
+        ${p.hub&&p.screen!==HUB?'<br><span class="badge grey">＋ in hub</span>':''}</td>
       <td class="struct">${seg.length?seg.map(esc).join('<br>'):'<span style="color:var(--faint)">Everyone</span>'}
         ${trig?`<br><span class="badge warn">⚡ ${esc(trig)}</span>`:''}</td>
       <td class="struct">${rules.length?rules.join(' · '):'<span style="color:var(--faint)">No limit</span>'}
@@ -847,7 +902,17 @@ $('tSave').onclick=()=>{
 $('tReset').onclick=()=>{editT=null;T=freshT();renderT();toast('Cleared');};
 
 $('p_training').onchange=e=>{P.trainingId=e.target.value;renderP();};
+$('p_app').onchange=e=>{
+  P.app=e.target.value;
+  const t=trainingById(P.trainingId);
+  // A screen only exists inside one app, so switching app invalidates the choice.
+  if(t && P.screen!==HUB && !screensFor(P.app,t.widget).includes(P.screen)){
+    P.screen=''; toast(`Pick a screen in ${appLabel(P.app)}`);
+  }
+  syncScreens(); flowP();
+};
 $('p_screen').onchange=e=>{P.screen=e.target.value;syncScreens();flowP();};
+$('p_hub').onchange=e=>{P.hub=e.target.checked;flowP();};
 $('p_team').onchange=e=>{P.team=e.target.value;P.subteam='';renderP();};
 $('p_subteam').onchange=e=>{P.subteam=e.target.value;flowP();};
 ['aon','trigger'].forEach(k=>$('p_'+k).onchange=e=>{P[k]=e.target.value;flowP();});
@@ -867,6 +932,10 @@ $('p_ecodeClear').onclick=()=>{P.ecodes=0;renderP();};
 $('pSave').onclick=()=>{
   if(!P.trainingId) return toast('Choose a training.');
   if(!P.screen) return toast('Choose a screen.');
+  if(P.blocker&&!P.hub){
+    P.hub=true; $('p_hub').checked=true;
+    toast('A blocker routes to Trainings & Assessment, so hub listing was turned on');
+  }
   const copy=JSON.parse(JSON.stringify(P));
   if(editP){ placements=placements.map(x=>x.id===editP?copy:x); toast('Placement updated'); }
   else { placements.unshift(copy); toast('Placement saved'); }
