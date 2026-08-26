@@ -988,9 +988,9 @@ const VIEWS = [
                     ${!d&&t.final.mandatory?'<span style="font-size:8.5px;font-weight:800;padding:2px 6px;border-radius:4px;background:#fff0f0;color:#c53030;flex-shrink:0">MANDATORY</span>':''}
                   </div>
                   ${pips(t)}
-                  <div style="display:flex;gap:6px;align-items:center">
-                    <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;background:${s.bg};color:${s.c}">${s.t}</span>
-                    ${t.final.enabled?`<span style="font-size:9.5px;color:#a0aec0;font-weight:700">${t.final.questions.length}-question assessment</span>`:''}
+                  <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+                    <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;white-space:nowrap;background:${s.bg};color:${s.c}">${s.t}</span>
+                    ${t.final.enabled?`<span style="font-size:9.5px;color:#a0aec0;font-weight:700;white-space:nowrap">${t.final.questions.length}-question assessment</span>`:''}
                   </div>
                 </div></div>`;}).join('')
               :`<div style="text-align:center;padding:34px 16px">
