@@ -760,132 +760,249 @@ const VIEWS = [
   },
   {
     id:'hub', n:'Trainings & Assessment', on:'Hub', extra:true,
-    desc:'The hub lists trainings, not videos. A training is an ordered set — open one and work through its videos, its per-video checks, then the combined assessment.',
-    look:['Cards are <b>trainings</b>. “2 of 4 videos” is the real unit of progress.','Open a training to see its videos <b>in order</b>, each with its own check.','The combined assessment stays <b>locked until every video is done</b> — that is what makes it a fair test of the whole set.','Only trainings whose placement has “list in Trainings &amp; Assessment” appear here.'],
+    desc:'The hub answers one question first — what should I do right now. A "Next up" card resumes the training the FSE is mid-way through; everything else is sorted so mandatory and in-progress work sits at the top.',
+    look:['<b>Next up</b> is the whole point — one tap resumes the exact video or assessment the FSE stopped at.','Cards are <b>trainings</b>. The pips under each title are steps (videos + assessment), so progress moves with every action.','Order is <b>priority</b>, not upload date: mandatory first, then in progress, then not started, then done.','Inside a training the next step is ringed and labelled <b>NEXT</b> — nothing is locked, because the admin has no setting to lock it.'],
     render(app){
-      let filter='all', q='', openId=null;
+      let filter='all', openId=null;
 
-      const vDone   = v => { const p=prog(v.id); return v.questions.length ? p.passed : p.watched; };
-      const vidsDone = t => t.videos.filter(vDone).length;
+      /* ── state helpers ─────────────────────────────────────────────── */
+      // A video only needs an assessment when the training turns per-video
+      // checks on. Reading v.questions alone would strand a video the FSE
+      // can never clear, because the player is never handed those questions.
+      const vDone    = (t,v) => { const p=prog(v.id);
+                                  return (t.perVideo && v.questions.length) ? p.passed : p.watched; };
+      const vidsDone = t => t.videos.filter(v=>vDone(t,v)).length;
       const allVids  = t => vidsDone(t)===t.videos.length;
+      const steps     = t => t.videos.length + (t.final.enabled?1:0);
+      const stepsDone = t => vidsDone(t) + (t.final.enabled && prog(t.id+'-final').passed ? 1 : 0);
+      const started   = t => stepsDone(t)>0;
 
-      function statusOf(t){
-        const fin = prog(t.id+'-final');
-        if(tDone(t)) return {t:`✓ Passed${t.final.enabled?` · ${fin.score}/${fin.total}`:''}`,bg:'#e6faf0',c:'#0a7a42'};
-        if(allVids(t) && t.final.enabled) return fin.attempted
-          ? {t:'↻ Retry assessment',bg:'#fff0f0',c:'#c53030'}
-          : {t:'▶ Take assessment',bg:'#ebf4ff',c:'#004299'};
-        if(vidsDone(t)>0) return {t:`${vidsDone(t)} of ${t.videos.length} videos`,bg:'#fff4dc',c:'#9c5a00'};
-        return {t:'○ Not started',bg:'#f0f1f3',c:'#718096'};
+      // The single thing this training is waiting on.
+      function nextStep(t){
+        if(tDone(t)) return null;
+        // `short` fits the hero card's one line; `label` has room to breathe
+        // under the detail-view button.
+        const i = t.videos.findIndex(v=>!vDone(t,v));
+        if(i>=0) return { kind:'video', idx:i,
+                          short:`Video ${i+1} of ${t.videos.length}`,
+                          label:`Video ${i+1} of ${t.videos.length} · ${t.videos[i].title}`,
+                          cta: started(t)?'Continue':'Start' };
+        if(t.final.enabled) return { kind:'final',
+                          short:'Combined assessment',
+                          label:`Combined assessment · ${t.final.pass}% to pass`,
+                          cta: prog(t.id+'-final').attempted?'Retry assessment':'Take assessment' };
+        return null;
       }
 
-      /* ── detail: the ordered run through a training ── */
+      function go(t, step){
+        if(!step) return;
+        if(step.kind==='video'){
+          const v=t.videos[step.idx];
+          player({id:v.id,title:v.title,questions:t.perVideo?v.questions:[],
+                  pass_percent:v.pass,mandatory:t.final.mandatory,
+                  media_by_language:Object.fromEntries(v.langs.map(l=>[l,1]))}, ()=>detail(t));
+        } else {
+          assessment({id:t.id+'-final',title:t.name,questions:t.final.questions,
+                      pass_percent:t.final.pass,mandatory:t.final.mandatory}, ()=>detail(t));
+        }
+      }
+
+      // Sort key. Mandatory and half-finished work earns the top of the list;
+      // finished work sinks.
+      function rank(t){
+        if(tDone(t)) return 4;
+        const m=t.final.mandatory, s=started(t);
+        return m&&s ? 0 : m ? 1 : s ? 2 : 3;
+      }
+
+      function statusOf(t){
+        const fin=prog(t.id+'-final');
+        if(tDone(t)) return {t:`Passed${t.final.enabled?` · ${fin.score}/${fin.total}`:''}`,bg:'#e6faf0',c:'#0a7a42'};
+        if(allVids(t)&&t.final.enabled) return fin.attempted
+          ? {t:'Assessment not cleared',bg:'#fff0f0',c:'#c53030'}
+          : {t:'Assessment ready',bg:'#ebf4ff',c:'#004299'};
+        if(started(t)) return {t:`${vidsDone(t)} of ${t.videos.length} videos`,bg:'#fff4dc',c:'#9c5a00'};
+        return {t:'Not started',bg:'#f0f1f3',c:'#718096'};
+      }
+
+      // Steps as pips — at a glance you see both how long it is and how far in.
+      function pips(t){
+        const n=steps(t), d=stepsDone(t);
+        if(n>6) return `<div style="height:4px;border-radius:99px;background:#e7ecf3;overflow:hidden">
+          <div style="height:100%;width:${Math.round(d/n*100)}%;background:#004299;border-radius:99px"></div></div>`;
+        return `<div style="display:flex;gap:3px">${Array.from({length:n},(_,i)=>
+          `<div style="flex:1;height:4px;border-radius:99px;background:${i<d?'#004299':'#e7ecf3'}"></div>`).join('')}</div>`;
+      }
+
+      const thumb = (n,size) => `<div style="position:relative;width:${size}px;height:${size}px;border-radius:9px;
+        background:linear-gradient(135deg,#012b72,#00baf2);flex-shrink:0;display:flex;align-items:center;
+        justify-content:center;color:#fff;font-size:${size>50?16:13}px">▶${n>1?`
+        <span style="position:absolute;bottom:3px;right:4px;background:rgba(0,0,0,.72);color:#fff;font-size:8.5px;
+          font-weight:800;padding:1px 5px;border-radius:3px">${n}</span>`:''}</div>`;
+
+      /* ── detail: one training, its videos, its assessment ──────────── */
       function detail(t){
-        const fin = prog(t.id+'-final');
-        const locked = !allVids(t);
-        app.innerHTML = `
+        const fin=prog(t.id+'-final'), locked=!allVids(t), step=nextStep(t);
+        const nextIdx = step && step.kind==='video' ? step.idx : -1;
+
+        app.innerHTML=`
           <div style="background:#fff;padding:12px 14px;border-bottom:1px solid #eef1f4;display:flex;align-items:flex-start;gap:10px">
-            <button data-back style="background:none;border:none;font-size:19px;color:#3b4557;cursor:pointer;line-height:1;padding:1px 3px">←</button>
+            <button data-back aria-label="Back" style="background:none;border:none;font-size:19px;color:#3b4557;cursor:pointer;line-height:1;padding:4px 6px;margin:-4px 0 0 -6px">←</button>
             <div style="flex:1;min-width:0">
               <div style="font-size:15px;font-weight:800;line-height:1.3">${esc(t.name)}</div>
-              <div style="font-size:11px;color:#8a94a6;margin-top:3px">${t.videos.length} video${t.videos.length>1?'s':''} in order · ${vidsDone(t)} done${t.final.enabled?' · combined assessment at the end':''}</div>
+              <div style="font-size:11px;color:#8a94a6;margin-top:3px">${stepsDone(t)} of ${steps(t)} steps done${t.final.enabled?' · ends with a combined assessment':''}</div>
+              <div style="margin-top:7px">${pips(t)}</div>
             </div>
-            ${t.final.mandatory && !tDone(t)?'<span style="background:#fff0f0;color:#c53030;font-size:9px;font-weight:800;padding:3px 8px;border-radius:4px;flex-shrink:0">MANDATORY</span>':''}
+            ${t.final.mandatory&&!tDone(t)?'<span style="background:#fff0f0;color:#c53030;font-size:9px;font-weight:800;padding:3px 8px;border-radius:4px;flex-shrink:0">MANDATORY</span>':''}
           </div>
-          <div style="padding:13px 14px 22px;display:flex;flex-direction:column;gap:9px">
+
+          <div style="padding:13px 14px ${step?'86px':'22px'};display:flex;flex-direction:column;gap:9px">
             ${t.videos.map((v,i)=>{
-              const p=prog(v.id), ok=vDone(v);
-              const needCheck = t.perVideo && v.questions.length && p.watched && !p.passed;
-              return `<div data-v="${i}" style="display:flex;gap:10px;background:#fff;border-radius:11px;padding:10px;cursor:pointer;
-                box-shadow:0 1px 4px rgba(16,32,64,.07);border-left:3px solid ${ok?'#0a7a42':needCheck?'#004299':'transparent'}">
+              const p=prog(v.id), ok=vDone(t,v), isNext=i===nextIdx;
+              const needCheck=t.perVideo&&v.questions.length&&p.watched&&!p.passed;
+              return `<div data-v="${i}" role="button" tabindex="0" style="display:flex;gap:10px;background:#fff;border-radius:11px;padding:10px;cursor:pointer;min-height:56px;
+                box-shadow:${isNext?'0 0 0 2px #004299,0 2px 8px rgba(0,66,153,.16)':'0 1px 4px rgba(16,32,64,.07)'}">
                 <div style="width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;
-                  font-size:11px;font-weight:800;background:${ok?'#e6faf0':'#f0f1f3'};color:${ok?'#0a7a42':'#8a94a6'}">${ok?'✓':i+1}</div>
-                <div style="width:56px;height:42px;border-radius:7px;background:linear-gradient(135deg,#012b72,#00baf2);flex-shrink:0;
-                  display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px">▶</div>
+                  font-size:11px;font-weight:800;background:${ok?'#e6faf0':isNext?'#ebf4ff':'#f0f1f3'};color:${ok?'#0a7a42':isNext?'#004299':'#8a94a6'}">${ok?'✓':i+1}</div>
+                ${thumb(1,44)}
                 <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:3px">
                   <div style="font-size:12.5px;font-weight:700;line-height:1.3">${esc(v.title)}</div>
                   <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+                    ${isNext?'<span style="font-size:9px;font-weight:800;letter-spacing:.05em;padding:2px 6px;border-radius:4px;background:#004299;color:#fff">NEXT</span>':''}
                     ${v.langs.length>1?`<span style="font-size:9.5px;color:#a0aec0;font-weight:700">🌐 ${v.langs.length}</span>`:''}
-                    ${t.perVideo && v.questions.length?`<span style="font-size:9.5px;font-weight:700;color:${p.passed?'#0a7a42':needCheck?'#004299':'#a0aec0'}">${
-                      p.passed?`✓ check passed`:needCheck?'▶ take the check':`${v.questions.length}-question check`}</span>`:''}
+                    ${t.perVideo&&v.questions.length?`<span style="font-size:9.5px;font-weight:700;color:${p.passed?'#0a7a42':needCheck?'#004299':'#a0aec0'}">${
+                      p.passed?'✓ check passed':needCheck?'▶ take the check':`${v.questions.length}-question check`}</span>`:''}
                   </div></div></div>`;}).join('')}
 
             ${t.final.enabled?`
               <div data-final style="margin-top:6px;background:${locked?'#f7f9fc':'#fff'};border:1.5px ${locked?'dashed #dbe3ee':'solid #cfe0f5'};
                 border-radius:11px;padding:13px;${locked?'':'cursor:pointer;box-shadow:0 1px 4px rgba(16,32,64,.07)'}">
-                <div style="font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#8a94a6;margin-bottom:5px">Combined assessment</div>
+                <div style="display:flex;align-items:center;gap:7px;margin-bottom:5px">
+                  <span style="font-size:9.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#8a94a6">Combined assessment</span>
+                  ${locked?'<span style="font-size:11px">🔒</span>':''}
+                </div>
                 <div style="font-size:13px;font-weight:700;color:${locked?'#a0aec0':'#1a1a2e'}">
                   ${t.final.maxq?`${Math.min(+t.final.maxq,t.final.questions.length)} of ${t.final.questions.length}`:t.final.questions.length} question${t.final.questions.length>1?'s':''} · ${t.final.pass}% to pass</div>
                 <div style="font-size:11.5px;color:${locked?'#a0aec0':'#4a5568'};margin-top:4px;line-height:1.45">
                   ${tDone(t)?`✓ Passed · ${fin.score}/${fin.total}`
-                    :locked?`Unlocks when all ${t.videos.length} videos are done — ${t.videos.length-vidsDone(t)} to go.`
+                    :locked?`Finish the remaining ${t.videos.length-vidsDone(t)} video${t.videos.length-vidsDone(t)>1?'s':''} to unlock this.`
                     :fin.attempted?`Last attempt ${fin.score}/${fin.total}. Tap to retry.`:'Ready — tap to start.'}</div>
               </div>`:''}
-          </div>`;
 
-        app.querySelector('[data-back]').onclick = () => { openId=null; draw(); };
-        app.querySelectorAll('[data-v]').forEach(row=>row.onclick=()=>{
-          const v=t.videos[+row.dataset.v];
-          player({id:v.id,title:v.title,questions:t.perVideo?v.questions:[],
-                  pass_percent:v.pass,mandatory:t.final.mandatory,
-                  media_by_language:Object.fromEntries(v.langs.map(l=>[l,1]))}, ()=>detail(t));
-        });
+            ${tDone(t)?`<div style="margin-top:6px;background:#e6faf0;border-radius:11px;padding:14px;text-align:center">
+              <div style="font-size:22px">✓</div>
+              <div style="font-size:13px;font-weight:800;color:#0a7a42;margin-top:3px">Training complete</div>
+              <div style="font-size:11.5px;color:#0a7a42;opacity:.85;margin-top:2px">Rewatch any video any time.</div></div>`:''}
+          </div>
+
+          ${step?`<div style="position:sticky;bottom:0;background:linear-gradient(180deg,rgba(255,255,255,0),#fff 32%);padding:14px;margin-top:-72px">
+            <button data-go style="width:100%;border:none;border-radius:11px;padding:14px;font:inherit;font-size:13.5px;font-weight:800;
+              background:#004299;color:#fff;cursor:pointer;box-shadow:0 4px 14px rgba(0,66,153,.28)">${step.cta} →</button>
+            <div style="text-align:center;font-size:10.5px;color:#8a94a6;margin-top:6px">${esc(step.label)}</div>
+          </div>`:''}`;
+
+        app.querySelector('[data-back]').onclick=()=>{openId=null;draw();};
+        app.querySelectorAll('[data-v]').forEach(row=>row.onclick=()=>go(t,{kind:'video',idx:+row.dataset.v}));
         const f=app.querySelector('[data-final]');
-        if(f && !locked) f.onclick=()=>assessment(
-          {id:t.id+'-final',title:t.name,questions:t.final.questions,pass_percent:t.final.pass,mandatory:t.final.mandatory},
-          ()=>detail(t));
+        if(f&&!locked) f.onclick=()=>go(t,{kind:'final'});
+        const b=app.querySelector('[data-go]');
+        if(b) b.onclick=()=>go(t,step);
       }
 
-      /* ── list ── */
+      /* ── list ───────────────────────────────────────────────────────── */
       function draw(){
         if(openId) return detail(TRAININGS.find(t=>t.id===openId));
-        const inHub = TRAININGS.filter(t=>t.inHub);
-        const total=inHub.length, doneN=inHub.filter(tDone).length;
-        const pct=total?Math.round(doneN/total*100):0;
-        const mand=inHub.filter(t=>t.final.mandatory&&!tDone(t)).length;
-        const rows=inHub.filter(t=>{
-          if(filter==='completed'&&!tDone(t)) return false;
-          if(filter==='pending'&&tDone(t)) return false;
-          if(q&&!t.name.toLowerCase().includes(q.toLowerCase())) return false;
-          return true;
-        });
+
+        const inHub=TRAININGS.filter(t=>t.inHub);
+        const sorted=[...inHub].sort((a,b)=>rank(a)-rank(b));
+        const doneN=inHub.filter(tDone).length, total=inHub.length;
+        const mand=inHub.filter(t=>t.final.mandatory&&!tDone(t));
+
+        // Progress counts steps, not trainings — four videos into a five-video
+        // training reads as real movement instead of a flat zero.
+        const allSteps=inHub.reduce((n,t)=>n+steps(t),0);
+        const doneSteps=inHub.reduce((n,t)=>n+stepsDone(t),0);
+        const pct=allSteps?Math.round(doneSteps/allSteps*100):0;
+
+        const hero=sorted.find(t=>!tDone(t));
+        const heroStep=hero&&nextStep(hero);
+
+        const counts={all:inHub.length,pending:inHub.filter(t=>!tDone(t)).length,completed:doneN};
+        const rows=sorted.filter(t=> filter==='completed'?tDone(t) : filter==='pending'?!tDone(t) : true);
+
         app.innerHTML=`
-          <div style="background:#fff;padding:14px 15px 0"><div style="font-size:18px;font-weight:800">My Trainings</div>
-          <div style="font-size:11.5px;color:#8a94a6;margin-top:2px">Work through each training in order, then clear its assessment.</div></div>
-          <div style="background:#fff;padding:12px 15px;border-bottom:1px solid #eef1f4">
-            <div style="display:flex;align-items:center;justify-content:space-between">
-              <div><div style="font-size:14px;font-weight:800">My Trainings</div>
-                <div style="font-size:11px;color:#8a94a6;margin-top:1px">${doneN} of ${total} completed</div></div>
-              <div style="width:42px;height:42px;border-radius:50%;background:conic-gradient(#004299 ${pct*3.6}deg,#e7ecf3 0);display:flex;align-items:center;justify-content:center">
-                <div style="width:32px;height:32px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:800;color:#004299">${pct}%</div></div></div>
-            ${mand?`<div style="margin-top:9px;background:#fff4dc;color:#9c5a00;font-size:11px;font-weight:700;padding:7px 10px;border-radius:8px">⚠ ${mand} mandatory training${mand>1?'s':''} pending</div>`:''}
+          <div style="background:#fff;padding:14px 15px 13px;border-bottom:1px solid #eef1f4">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px">
+              <div style="min-width:0">
+                <div style="font-size:18px;font-weight:800">My Trainings</div>
+                <div style="font-size:11.5px;color:#8a94a6;margin-top:2px">${doneN} of ${total} complete · ${doneSteps} of ${allSteps} steps</div>
+              </div>
+              <div style="width:44px;height:44px;border-radius:50%;flex-shrink:0;background:conic-gradient(#004299 ${pct*3.6}deg,#e7ecf3 0);display:flex;align-items:center;justify-content:center">
+                <div style="width:34px;height:34px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#004299">${pct}%</div>
+              </div>
+            </div>
+            ${mand.length?`<button data-mand style="margin-top:10px;width:100%;text-align:left;border:none;cursor:pointer;
+              background:#fff4dc;color:#9c5a00;font:inherit;font-size:11.5px;font-weight:700;padding:9px 11px;border-radius:9px;
+              display:flex;align-items:center;gap:7px">
+              <span>⚠</span><span style="flex:1">${mand.length} mandatory training${mand.length>1?'s':''} still to clear</span>
+              <span style="opacity:.7">View →</span></button>`:''}
           </div>
-          <div style="background:#fff;padding:10px 15px;border-bottom:1px solid #eef1f4">
-            <input data-q value="${esc(q)}" placeholder="Search trainings…" style="width:100%;border:1.5px solid #e2e8f0;border-radius:8px;padding:8px 10px;font:inherit;font-size:12.5px;outline:none;margin-bottom:8px">
-            <div style="display:flex;gap:6px">${[['all','All'],['pending','Pending'],['completed','Completed']].map(([k,l])=>
-              `<button data-f="${k}" style="padding:5px 12px;border-radius:99px;border:none;font:inherit;font-size:11.5px;font-weight:700;cursor:pointer;background:${filter===k?'#004299':'#f0f2f5'};color:${filter===k?'#fff':'#718096'}">${l}</button>`).join('')}</div>
+
+          ${hero?`<div style="padding:13px 15px 0">
+            <div style="font-size:9.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#8a94a6;margin-bottom:7px">Next up</div>
+            <div data-hero style="background:linear-gradient(135deg,#012b72,#0b47a8);border-radius:14px;padding:14px;cursor:pointer;
+              box-shadow:0 6px 18px rgba(1,43,114,.24)">
+              <div style="display:flex;gap:11px;align-items:center">
+                ${thumb(hero.videos.length,52)}
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:13.5px;font-weight:800;color:#fff;line-height:1.3">${esc(hero.name)}</div>
+                  <div style="display:flex;align-items:center;gap:7px;margin-top:5px">
+                    ${hero.final.mandatory?'<span style="background:rgba(255,255,255,.18);color:#fff;font-size:8.5px;font-weight:800;padding:3px 7px;border-radius:4px;flex-shrink:0">MANDATORY</span>':''}
+                    <span style="font-size:10.5px;color:#a9c6ef;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(heroStep.short)}</span>
+                  </div>
+                </div>
+              </div>
+              <div style="margin-top:12px;background:#fff;color:#012b72;border-radius:9px;padding:11px;text-align:center;font-size:13px;font-weight:800">${heroStep.cta} →</div>
+            </div>
+          </div>`:''}
+
+          <div style="padding:${hero?'15px':'13px'} 15px 8px;display:flex;gap:7px">
+            ${[['all','All'],['pending','Pending'],['completed','Completed']].map(([k,l])=>
+              `<button data-f="${k}" style="padding:9px 14px;border-radius:99px;border:none;font:inherit;font-size:11.5px;font-weight:700;cursor:pointer;
+                background:${filter===k?'#004299':'#fff'};color:${filter===k?'#fff':'#718096'};box-shadow:${filter===k?'none':'0 1px 3px rgba(16,32,64,.09)'}">
+                ${l} ${counts[k]}</button>`).join('')}
           </div>
-          <div style="padding:13px 15px 24px;display:flex;flex-direction:column;gap:9px">
+
+          <div style="padding:5px 15px 24px;display:flex;flex-direction:column;gap:9px">
             ${rows.length?rows.map(t=>{
               const s=statusOf(t), d=tDone(t);
-              return `<div data-t="${t.id}" style="background:#fff;border-radius:11px;display:flex;gap:10px;padding:10px;cursor:pointer;
-                box-shadow:0 1px 4px rgba(0,0,0,.08);border-left:3px solid ${d?'#0a7a42':t.final.mandatory?'#fd5154':'transparent'}">
-                <div style="position:relative;width:60px;height:60px;border-radius:8px;background:linear-gradient(135deg,#012b72,#00baf2);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px">▶
-                  <span style="position:absolute;bottom:3px;right:4px;background:rgba(0,0,0,.72);color:#fff;font-size:8.5px;font-weight:800;padding:1px 5px;border-radius:3px">${t.videos.length}</span></div>
-                <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:4px">
-                  <div style="font-size:12.5px;font-weight:700;line-height:1.3">${esc(t.name)}</div>
-                  <div style="font-size:10.5px;color:#8a94a6">${t.videos.length} video${t.videos.length>1?'s':''}${t.final.enabled?` · ${t.final.questions.length}-question assessment`:''}</div>
-                  <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-                    ${d?'':t.final.mandatory?'<span style="font-size:9.5px;font-weight:800;padding:2px 8px;border-radius:99px;background:#fff0f0;color:#c53030">MANDATORY</span>':''}
+              return `<div data-t="${t.id}" role="button" tabindex="0" style="background:#fff;border-radius:11px;display:flex;gap:11px;padding:11px;cursor:pointer;
+                box-shadow:0 1px 4px rgba(0,0,0,.08);${d?'opacity:.72':''}">
+                ${thumb(t.videos.length,56)}
+                <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:5px">
+                  <div style="display:flex;align-items:center;gap:6px">
+                    <div style="font-size:12.5px;font-weight:700;line-height:1.3;flex:1;min-width:0">${esc(t.name)}</div>
+                    ${!d&&t.final.mandatory?'<span style="font-size:8.5px;font-weight:800;padding:2px 6px;border-radius:4px;background:#fff0f0;color:#c53030;flex-shrink:0">MANDATORY</span>':''}
+                  </div>
+                  ${pips(t)}
+                  <div style="display:flex;gap:6px;align-items:center">
                     <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;background:${s.bg};color:${s.c}">${s.t}</span>
-                  </div></div></div>`;}).join('')
-              :'<div style="text-align:center;color:#a0aec0;font-size:12.5px;padding:28px 0">Nothing here.</div>'}
+                    ${t.final.enabled?`<span style="font-size:9.5px;color:#a0aec0;font-weight:700">${t.final.questions.length}-question assessment</span>`:''}
+                  </div>
+                </div></div>`;}).join('')
+              :`<div style="text-align:center;padding:34px 16px">
+                 <div style="font-size:26px">${filter==='completed'?'📭':'✓'}</div>
+                 <div style="font-size:13px;font-weight:800;margin-top:6px">${filter==='completed'?'Nothing completed yet':'All clear'}</div>
+                 <div style="font-size:11.5px;color:#8a94a6;margin-top:3px">${filter==='completed'?'Finish a training and it will show up here.':'Every training assigned to you is done.'}</div>
+               </div>`}
           </div>`;
+
         app.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{filter=b.dataset.f;draw();});
-        const inp=app.querySelector('[data-q]');
-        inp.oninput=e=>{q=e.target.value;const pos=e.target.selectionStart;draw();
-          const n=app.querySelector('[data-q]');n.focus();n.setSelectionRange(pos,pos);};
         app.querySelectorAll('[data-t]').forEach(c=>c.onclick=()=>{openId=c.dataset.t;draw();});
+        const h=app.querySelector('[data-hero]');
+        if(h) h.onclick=()=>{openId=hero.id;draw();};
+        const m=app.querySelector('[data-mand]');
+        if(m) m.onclick=()=>{filter='pending';draw();};
       }
       draw();
     }

@@ -555,7 +555,7 @@ function flowT(){
     warns.push(`Video ${i+1} shows ${v.maxq} questions but only ${v.questions.length} are uploaded.`);});
   if(T.final.maxq&&+T.final.maxq>T.final.questions.length)
     warns.push(`The combined assessment shows ${T.final.maxq} questions but only ${T.final.questions.length} are uploaded.`);
-  if(!isModule(T)&&!screensFor(T.widget).length)
+  if(!isModule(T)&&!screensAnyApp(T.widget).length)
     warns.push(`No screen currently carries a ${W[T.widget].label} slot — this cannot be placed yet.`);
 
   $('tFlow').innerHTML=`<div class="k">What the FSE will experience</div>
@@ -648,7 +648,7 @@ function renderT(){
   $('f_pervideo').checked=T.perVideo; $('f_final').checked=T.final.enabled; $('f_mand').checked=T.final.mandatory;
 
   const w=W[T.widget], canCombine=allowsCombined(T), canPer=allowsPerVideo(T), single=isSingle(T);
-  const scr=screensFor(T.widget);
+  const scr=screensAnyApp(T.widget);
   $('capNote').innerHTML=`<b>${esc(w.label)}</b> — ${esc(w.note)}`
     + (isModule(T) ? '' : (scr.length
         ? ` <span class="badge">Available on: ${scr.map(esc).join(', ')}</span>`
