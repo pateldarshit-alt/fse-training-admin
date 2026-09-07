@@ -193,6 +193,14 @@
   .qhint.bad{color:var(--red-fg);font-weight:600}
   .kindsel{border:1px solid var(--line);border-radius:7px;padding:5px 8px;font:inherit;font-size:12px;
     background:var(--card);color:var(--ink)}
+  .ctbox{display:flex;gap:10px;align-items:center;padding:11px 13px;border-radius:9px;background:var(--wash);
+    border:1px solid var(--line);font-size:12px;color:var(--faint);line-height:1.5;margin-bottom:14px}
+  .ctbox.bad{background:var(--red-bg);border-color:transparent;color:var(--red-fg)}
+  .ctbox b{color:var(--ink)}
+  .ctbox.bad b{color:var(--red-fg)}
+  .spin{width:13px;height:13px;border-radius:50%;border:2px solid var(--line);border-top-color:var(--indigo);
+    display:inline-block;animation:sp .7s linear infinite;flex-shrink:0}
+  @keyframes sp{to{transform:rotate(360deg)}}
   .subfield{margin:-4px 0 14px 26px;padding:11px 13px;border-radius:9px;background:var(--wash);border:1px solid var(--line)}
   .subfield label{display:block;font-size:11.5px;font-weight:700;color:var(--faint);margin-bottom:5px}
   .subfield input{border:1px solid var(--line);border-radius:7px;padding:7px 9px;font:inherit;font-size:12.5px;
@@ -315,21 +323,23 @@
   </div>
 
   <div class="card">
-    <div class="hd"><span class="step">2</span><h2>Segmentation</h2><span class="sub">Who this reaches. Leave everything blank for the whole field force.</span></div>
+    <div class="hd"><span class="step">2</span><h2>Audience</h2><span class="sub">One source, optionally narrowed. Sources are alternatives — pick where the list of people comes from.</span></div>
     <div class="form-grid">
-      <div class="form-group"><label>Team</label><select id="p_team"></select></div>
-      <div class="form-group"><label>Subteam</label><select id="p_subteam"><option value="">All subteams</option></select></div>
-      <div class="form-group"><label>FSE stage (AON)</label><select id="p_aon"></select></div>
-      <div class="form-group"><label>Performance trigger</label><select id="p_trigger"></select></div>
       <div class="form-group full">
-        <label>Target specific ecodes <small>(CSV / Excel — overrides the fields above)</small></label>
-        <div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap">
-          <label class="fpick">📤 Upload ecode list<input type="file" accept=".csv,.txt" id="p_ecodeFile"></label>
-          <span id="p_ecodeInfo" style="font-size:12px;color:var(--faint)">No list uploaded</span>
-          <button class="btn btn-ghost btn-sm" type="button" id="p_ecodeClear" hidden>Clear</button>
-        </div>
+        <label>Audience source <span style="color:#e53e3e">*</span></label>
+        <select id="p_src"></select>
+        <div id="p_srcHint" style="font-size:11.5px;color:var(--faint);margin-top:6px;line-height:1.5"></div>
       </div>
     </div>
+    <div id="p_srcBody"></div>
+    <div id="p_refineBox" style="border-top:1px solid var(--line);padding-top:16px;margin-top:4px">
+      <div style="font-size:11.5px;font-weight:700;color:var(--faint);letter-spacing:.05em;text-transform:uppercase;margin-bottom:10px">Narrow it further <span style="text-transform:none;letter-spacing:0;font-weight:400">— optional, applied on top of the source</span></div>
+      <div class="form-grid">
+        <div class="form-group"><label>FSE stage (AON)</label><select id="p_aon"></select></div>
+        <div class="form-group"><label>Performance trigger</label><select id="p_trigger"></select></div>
+      </div>
+    </div>
+    <div class="slotnote" id="p_audNote" style="margin-top:14px;text-align:left"></div>
   </div>
 
   <div class="card">
@@ -372,7 +382,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const SEED = {"trainings": [{"id": "tr1", "name": "SoundBox pitch masterclass", "widget": "stories", "videos": [{"title": "Opening the conversation", "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}], "files": [{"lang": "English", "name": "soundbox_pitch_merchant.mp4"}, {"lang": "Hindi", "name": "soundbox_pitch_merchant_hi.mp4"}, {"lang": "Tamil", "name": "soundbox_pitch_merchant_ta.mp4"}], "pass": 60, "maxq": ""}, {"title": "Explaining the plan", "questions": [{"question": "A merchant asks what the \u20b9125 a month actually covers. What is the accurate answer?", "options": ["A one-time purchase of the device", "The monthly rental for the SB-V2 Music 4G, GST included", "A refundable deposit returned after a year", "Unlimited free QR stickers"], "correct_index": 1}], "files": [{"lang": "English", "name": "soundbox_plans.mp4"}, {"lang": "Hindi", "name": "soundbox_plans_hi.mp4"}], "pass": 60, "maxq": ""}, {"title": "Handling the price objection", "questions": [{"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_objection_price.mp4"}], "pass": 60, "maxq": ""}], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}, {"question": "What real-time benefit does SoundBox give a merchant?", "options": ["Free advertising on the box", "Instant voice and display confirmation for every payment", "Unlimited free phone calls", "A physical cash register"], "correct_index": 1}, {"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "pass": 70, "maxq": "", "mandatory": true}}, {"id": "tr2", "name": "SoundBox device setup", "widget": "carousel", "videos": [{"title": "Adding a new device", "questions": [{"question": "On the Add Device Details screen, which device type do you select for a monthly rental plan?", "options": ["Purchase", "Rental", "Demo", "Replacement"], "correct_index": 1}], "files": [{"lang": "English", "name": "soundbox_add_device.mp4"}, {"lang": "Hindi", "name": "soundbox_add_device_hi.mp4"}, {"lang": "Marathi", "name": "soundbox_add_device_mr.mp4"}], "pass": 70, "maxq": ""}, {"title": "Selecting the right plan", "questions": [{"question": "For the Monthly Subscription plan at \u20b9125/month, what does the screen say about UPI Autopay?", "options": ["It is optional for the merchant", "It is not supported on rental plans", "It is required \u2014 the screen shows Yes", "It replaces the monthly rental"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_plan_selection.mp4"}, {"lang": "Hindi", "name": "soundbox_plan_selection_hi.mp4"}], "pass": 70, "maxq": ""}, {"title": "Verifying the first payment", "questions": [{"question": "The screen shows \u20b9125 as the total amount to be collected. What does that figure include?", "options": ["Only the one-time charge", "A refundable security deposit", "The monthly rental, inclusive of 18% GST", "The full purchase price of the device"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_payment_verify.mp4"}], "pass": 70, "maxq": ""}], "perVideo": true, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "mandatory": false}}, {"id": "tr3", "name": "QR mapping \u2014 revised SOP", "widget": "interstitial", "videos": [{"title": "What changed in the SOP", "questions": [], "files": [{"lang": "English", "name": "qr_mapping_sop_v4.mp4"}], "pass": 70, "maxq": ""}], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "What does QR mapping actually link?", "options": ["The FSE's phone to the TL's phone", "The merchant's QR to the correct MID, so payments settle to the right account", "The SoundBox to the shop's WiFi router", "The merchant's Aadhaar to their PAN"], "correct_index": 1}, {"question": "What do you verify immediately after mapping a new QR?", "options": ["Nothing \u2014 mapping is instant and never fails", "That the merchant has restarted the shop", "Do a small test payment and confirm the SoundBox announces it", "Peel off the old sticker before checking anything"], "correct_index": 2}, {"question": "The QR you are about to map is already mapped to a different MID. What is the correct action?", "options": ["Stop and raise a remapping request instead of forcing a new mapping", "Map it anyway and inform the TL later", "Peel the sticker off and reuse it at another shop", "Ask the merchant to create a new business account"], "correct_index": 0}], "pass": 70, "maxq": "", "mandatory": true}}, {"id": "tr4", "name": "New joiner essentials", "widget": "module", "videos": [{"title": "Your first login", "questions": [{"question": "Where does a merchant change app language or notification preferences?", "options": ["In the Offers carousel", "On the QR sticker", "In the Settings section of the app", "On the SoundBox device itself"], "correct_index": 2}], "files": [{"lang": "English", "name": "first_login_setup.mp4"}, {"lang": "Hindi", "name": "first_login_setup_hi.mp4"}, {"lang": "Tamil", "name": "first_login_setup_ta.mp4"}], "pass": 70, "maxq": ""}, {"title": "Finding your way around", "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}], "files": [{"lang": "English", "name": "app_navigation_tour.mp4"}, {"lang": "Hindi", "name": "app_navigation_tour_hi.mp4"}], "pass": 70, "maxq": ""}, {"title": "Daily check-in", "questions": [{"question": "On the Merchant Detail screen, which tab holds the merchant's open tasks?", "options": ["Details", "Tasks", "Interactions", "Offers"], "correct_index": 1}], "files": [{"lang": "English", "name": "daily_checkin.mp4"}], "pass": 70, "maxq": ""}, {"title": "Reading your dashboard", "questions": [{"question": "Which three tabs make up the Team Performance view?", "options": ["Participation, Productivity, Leaderboard", "Sales, Refunds, Payouts", "Attendance, Salary, Incentive", "Tasks, Merchants, Devices"], "correct_index": 0}], "files": [{"lang": "English", "name": "performance_dashboard.mp4"}], "pass": 70, "maxq": ""}], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}, {"question": "Where does a merchant manage their business profile in the v2 app?", "options": ["Under the \"Manage your Business\" section", "Under Offers", "Under Refer & Earn", "Under chat support"], "correct_index": 0}, {"question": "A merchant cannot find a feature after the v2 update. What do you do?", "options": ["Ask them to downgrade the app", "Show them where it has moved to in the updated navigation", "Tell them the feature was removed", "Raise a device replacement request"], "correct_index": 1}], "pass": 80, "maxq": 2, "mandatory": true}}, {"id": "tr5", "name": "Re-KYC walkthrough", "widget": "bottom-sheet", "videos": [{"title": "Clearing Action Required items", "questions": [], "files": [{"lang": "English", "name": "rekyc_completion.mp4"}, {"lang": "Hindi", "name": "rekyc_completion_hi.mp4"}], "pass": 70, "maxq": ""}], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "On the Re-KYC check screen, which items sit under \"Action Required\"?", "options": ["Bank Details only", "KYC Details and Business Proof", "Device model and plan", "Nothing \u2014 Re-KYC completes automatically"], "correct_index": 1}, {"question": "The profile upgrade is pending on the P4B app. What do you ask the merchant to do?", "options": ["Visit the nearest bank branch", "Reinstall the consumer Paytm app", "Open Paytm for Business, scroll to \"Manage your Business\" and select \"Upgrade Profile\"", "Buy a new SoundBox"], "correct_index": 2}, {"question": "Bank Details already appears under \"Completed\". What does that mean?", "options": ["That part of the Re-KYC is done \u2014 only the pending items still need action", "The whole Re-KYC is finished", "The merchant's account has been blocked", "The bank account has to be entered again"], "correct_index": 0}], "pass": 70, "maxq": "", "mandatory": true}}, {"id": "tr6", "name": "Reading your performance dashboard", "widget": "inline-card", "videos": [{"title": "Participation, productivity, leaderboard", "questions": [], "files": [{"lang": "English", "name": "performance_dashboard.mp4"}], "pass": 70, "maxq": ""}], "perVideo": false, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "mandatory": false}}], "placements": [{"id": "pl1", "trainingId": "tr1", "screen": "Home", "team": "", "subteam": "", "aon": "", "trigger": "onboarding_short", "ecodes": 0, "maxViews": 5, "expiry": "", "blocker": false, "self": false, "app": "gg", "hub": true}, {"id": "pl2", "trainingId": "tr2", "screen": "Payments", "team": "", "subteam": "", "aon": "", "trigger": "sb_short", "ecodes": 0, "maxViews": "", "expiry": "", "blocker": false, "self": false, "app": "gg", "hub": true}, {"id": "pl3", "trainingId": "tr3", "screen": "Home", "team": "", "subteam": "", "aon": "", "trigger": "", "ecodes": 0, "maxViews": "", "expiry": "", "blocker": true, "self": false, "app": "gg", "hub": true}, {"id": "pl4", "trainingId": "tr5", "screen": "KYC", "team": "", "subteam": "", "aon": "", "trigger": "", "ecodes": 0, "maxViews": "", "expiry": "", "blocker": false, "self": false, "app": "gg", "hub": true}, {"id": "pl5", "trainingId": "tr6", "screen": "Dashboard", "team": "", "subteam": "", "aon": "", "trigger": "", "ecodes": 0, "maxViews": "", "expiry": 14, "blocker": false, "self": true, "app": "gg", "hub": true}, {"id": "pl6", "trainingId": "tr1", "screen": "Onboarding", "team": "Sales", "subteam": "Merchant Acquisition", "aon": "new", "trigger": "", "ecodes": 0, "maxViews": "", "expiry": 30, "blocker": false, "self": false, "app": "gg", "hub": true}, {"id": "pl7", "trainingId": "tr6", "screen": "Profile", "team": "", "subteam": "", "aon": "", "trigger": "nap_allocation", "ecodes": 0, "maxViews": 2, "expiry": "", "blocker": false, "self": true, "app": "gg", "hub": true}, {"id": "plhtr4", "trainingId": "tr4", "app": "gg", "screen": "__hub__", "team": "", "subteam": "", "aon": "new", "trigger": "", "ecodes": 0, "maxViews": "", "expiry": "", "blocker": false, "hub": true, "self": false}, {"id": "plf1", "trainingId": "tr6", "app": "force", "screen": "Reports", "team": "", "subteam": "", "aon": "", "trigger": "", "ecodes": 0, "maxViews": "", "expiry": "", "blocker": false, "hub": true, "self": false}]};
+const SEED = {"trainings": [{"id": "tr1", "name": "SoundBox pitch masterclass", "widget": "stories", "videos": [{"title": "Opening the conversation", "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}], "files": [{"lang": "English", "name": "soundbox_pitch_merchant.mp4"}, {"lang": "Hindi", "name": "soundbox_pitch_merchant_hi.mp4"}, {"lang": "Tamil", "name": "soundbox_pitch_merchant_ta.mp4"}], "pass": 60, "maxq": ""}, {"title": "Explaining the plan", "questions": [{"question": "A merchant asks what the ₹125 a month actually covers. What is the accurate answer?", "options": ["A one-time purchase of the device", "The monthly rental for the SB-V2 Music 4G, GST included", "A refundable deposit returned after a year", "Unlimited free QR stickers"], "correct_index": 1}], "files": [{"lang": "English", "name": "soundbox_plans.mp4"}, {"lang": "Hindi", "name": "soundbox_plans_hi.mp4"}], "pass": 60, "maxq": ""}, {"title": "Handling the price objection", "questions": [{"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_objection_price.mp4"}], "pass": 60, "maxq": ""}], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}, {"question": "What real-time benefit does SoundBox give a merchant?", "options": ["Free advertising on the box", "Instant voice and display confirmation for every payment", "Unlimited free phone calls", "A physical cash register"], "correct_index": 1}, {"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "pass": 70, "maxq": "", "mandatory": true}}, {"id": "tr2", "name": "SoundBox device setup", "widget": "carousel", "videos": [{"title": "Adding a new device", "questions": [{"question": "On the Add Device Details screen, which device type do you select for a monthly rental plan?", "options": ["Purchase", "Rental", "Demo", "Replacement"], "correct_index": 1}], "files": [{"lang": "English", "name": "soundbox_add_device.mp4"}, {"lang": "Hindi", "name": "soundbox_add_device_hi.mp4"}, {"lang": "Marathi", "name": "soundbox_add_device_mr.mp4"}], "pass": 70, "maxq": ""}, {"title": "Selecting the right plan", "questions": [{"question": "For the Monthly Subscription plan at ₹125/month, what does the screen say about UPI Autopay?", "options": ["It is optional for the merchant", "It is not supported on rental plans", "It is required — the screen shows Yes", "It replaces the monthly rental"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_plan_selection.mp4"}, {"lang": "Hindi", "name": "soundbox_plan_selection_hi.mp4"}], "pass": 70, "maxq": ""}, {"title": "Verifying the first payment", "questions": [{"question": "The screen shows ₹125 as the total amount to be collected. What does that figure include?", "options": ["Only the one-time charge", "A refundable security deposit", "The monthly rental, inclusive of 18% GST", "The full purchase price of the device"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_payment_verify.mp4"}], "pass": 70, "maxq": ""}], "perVideo": true, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "mandatory": false}}, {"id": "tr3", "name": "QR mapping — revised SOP", "widget": "interstitial", "videos": [{"title": "What changed in the SOP", "questions": [], "files": [{"lang": "English", "name": "qr_mapping_sop_v4.mp4"}], "pass": 70, "maxq": ""}], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "What does QR mapping actually link?", "options": ["The FSE's phone to the TL's phone", "The merchant's QR to the correct MID, so payments settle to the right account", "The SoundBox to the shop's WiFi router", "The merchant's Aadhaar to their PAN"], "correct_index": 1}, {"question": "What do you verify immediately after mapping a new QR?", "options": ["Nothing — mapping is instant and never fails", "That the merchant has restarted the shop", "Do a small test payment and confirm the SoundBox announces it", "Peel off the old sticker before checking anything"], "correct_index": 2}, {"question": "The QR you are about to map is already mapped to a different MID. What is the correct action?", "options": ["Stop and raise a remapping request instead of forcing a new mapping", "Map it anyway and inform the TL later", "Peel the sticker off and reuse it at another shop", "Ask the merchant to create a new business account"], "correct_index": 0}], "pass": 70, "maxq": "", "mandatory": true}}, {"id": "tr4", "name": "New joiner essentials", "widget": "module", "videos": [{"title": "Your first login", "questions": [{"question": "Where does a merchant change app language or notification preferences?", "options": ["In the Offers carousel", "On the QR sticker", "In the Settings section of the app", "On the SoundBox device itself"], "correct_index": 2}], "files": [{"lang": "English", "name": "first_login_setup.mp4"}, {"lang": "Hindi", "name": "first_login_setup_hi.mp4"}, {"lang": "Tamil", "name": "first_login_setup_ta.mp4"}], "pass": 70, "maxq": ""}, {"title": "Finding your way around", "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}], "files": [{"lang": "English", "name": "app_navigation_tour.mp4"}, {"lang": "Hindi", "name": "app_navigation_tour_hi.mp4"}], "pass": 70, "maxq": ""}, {"title": "Daily check-in", "questions": [{"question": "On the Merchant Detail screen, which tab holds the merchant's open tasks?", "options": ["Details", "Tasks", "Interactions", "Offers"], "correct_index": 1}], "files": [{"lang": "English", "name": "daily_checkin.mp4"}], "pass": 70, "maxq": ""}, {"title": "Reading your dashboard", "questions": [{"question": "Which three tabs make up the Team Performance view?", "options": ["Participation, Productivity, Leaderboard", "Sales, Refunds, Payouts", "Attendance, Salary, Incentive", "Tasks, Merchants, Devices"], "correct_index": 0}], "files": [{"lang": "English", "name": "performance_dashboard.mp4"}], "pass": 70, "maxq": ""}], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}, {"question": "Where does a merchant manage their business profile in the v2 app?", "options": ["Under the \"Manage your Business\" section", "Under Offers", "Under Refer & Earn", "Under chat support"], "correct_index": 0}, {"question": "A merchant cannot find a feature after the v2 update. What do you do?", "options": ["Ask them to downgrade the app", "Show them where it has moved to in the updated navigation", "Tell them the feature was removed", "Raise a device replacement request"], "correct_index": 1}], "pass": 80, "maxq": 2, "mandatory": true}}, {"id": "tr5", "name": "Re-KYC walkthrough", "widget": "bottom-sheet", "videos": [{"title": "Clearing Action Required items", "questions": [], "files": [{"lang": "English", "name": "rekyc_completion.mp4"}, {"lang": "Hindi", "name": "rekyc_completion_hi.mp4"}], "pass": 70, "maxq": ""}], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "On the Re-KYC check screen, which items sit under \"Action Required\"?", "options": ["Bank Details only", "KYC Details and Business Proof", "Device model and plan", "Nothing — Re-KYC completes automatically"], "correct_index": 1}, {"question": "The profile upgrade is pending on the P4B app. What do you ask the merchant to do?", "options": ["Visit the nearest bank branch", "Reinstall the consumer Paytm app", "Open Paytm for Business, scroll to \"Manage your Business\" and select \"Upgrade Profile\"", "Buy a new SoundBox"], "correct_index": 2}, {"question": "Bank Details already appears under \"Completed\". What does that mean?", "options": ["That part of the Re-KYC is done — only the pending items still need action", "The whole Re-KYC is finished", "The merchant's account has been blocked", "The bank account has to be entered again"], "correct_index": 0}], "pass": 70, "maxq": "", "mandatory": true}}, {"id": "tr6", "name": "Reading your performance dashboard", "widget": "inline-card", "videos": [{"title": "Participation, productivity, leaderboard", "questions": [], "files": [{"lang": "English", "name": "performance_dashboard.mp4"}], "pass": 70, "maxq": ""}], "perVideo": false, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "mandatory": false}}], "placements": [{"id": "pl1", "trainingId": "tr1", "screen": "Home", "maxViews": 5, "expiry": "", "blocker": false, "self": false, "app": "gg", "hub": true, "audience": {"source": "clevertap", "segmentId": "ct_sb_below", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}}, {"id": "pl2", "trainingId": "tr2", "screen": "Payments", "maxViews": "", "expiry": "", "blocker": false, "self": false, "app": "gg", "hub": true, "audience": {"source": "clevertap", "segmentId": "ct_retired_2024", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}}, {"id": "pl3", "trainingId": "tr3", "screen": "Home", "maxViews": "", "expiry": "", "blocker": true, "self": false, "app": "gg", "hub": true, "audience": {"source": "everyone", "segmentId": "", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}}, {"id": "pl4", "trainingId": "tr5", "screen": "KYC", "maxViews": "", "expiry": "", "blocker": false, "self": false, "app": "gg", "hub": true, "audience": {"source": "everyone", "segmentId": "", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}}, {"id": "pl5", "trainingId": "tr6", "screen": "Dashboard", "maxViews": "", "expiry": 14, "blocker": false, "self": true, "app": "gg", "hub": true, "audience": {"source": "everyone", "segmentId": "", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}}, {"id": "pl6", "trainingId": "tr1", "screen": "Onboarding", "maxViews": "", "expiry": 30, "blocker": false, "self": false, "app": "gg", "hub": true, "audience": {"source": "org", "segmentId": "", "team": "Sales", "subteam": "Merchant Acquisition", "ecodes": {"name": "", "count": 0}, "stage": "new", "trigger": ""}}, {"id": "pl7", "trainingId": "tr6", "screen": "Profile", "maxViews": 2, "expiry": "", "blocker": false, "self": true, "app": "gg", "hub": true, "audience": {"source": "ecodes", "segmentId": "", "team": "", "subteam": "", "ecodes": {"name": "pilot_cohort.csv", "count": 312}, "stage": "", "trigger": ""}}, {"id": "plhtr4", "trainingId": "tr4", "app": "gg", "screen": "__hub__", "maxViews": "", "expiry": "", "blocker": false, "hub": true, "self": false, "audience": {"source": "everyone", "segmentId": "", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}}, {"id": "plf1", "trainingId": "tr6", "app": "force", "screen": "Reports", "maxViews": "", "expiry": "", "blocker": false, "hub": true, "self": false, "audience": {"source": "everyone", "segmentId": "", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}}]};
 
 const HUB='__hub__';   // not an app screen — the Trainings & Assessment section
 const APPS=[{id:'gg',label:'GG App'},{id:'force',label:'Force App'}];
@@ -546,14 +556,27 @@ const CSV_HREF='data:text/csv;charset=utf-8,'+encodeURIComponent(CSV_TEMPLATE);
 
 /* ── state ─────────────────────────────────────────────────────────────── */
 let trainings = SEED.trainings.map(t=>normT(JSON.parse(JSON.stringify(t))));
-let placements = SEED.placements.map(p=>JSON.parse(JSON.stringify(p)));
+let placements = SEED.placements.map(p=>normP(JSON.parse(JSON.stringify(p))));
 let T = freshT(), P = freshP();
 let editT = null, editP = null;
 
 function freshT(){ return {id:uid(),name:'',widget:'mini-banner',videos:[blankVideo(1)],allowSeek:true,
   perVideo:false,final:{enabled:false,questions:[],pass:70,maxq:'',timer:'',passMsg:'',failMsg:'',mandatory:false}}; }
-function freshP(){ return {id:uid(),trainingId:'',app:'gg',screen:'',team:'',subteam:'',aon:'',trigger:'',
-  ecodes:0,maxViews:'',expiry:'',blocker:false,dueAt:'',hub:true,self:false}; }
+function freshP(){ return {id:uid(),trainingId:'',app:'gg',screen:'',audience:blankAudience(),
+  maxViews:'',expiry:'',blocker:false,dueAt:'',hub:true,self:false}; }
+
+// Placements saved before the audience model had five sibling fields whose
+// relationship lived only in a form label. Fold them into one source.
+function normP(p){
+  if(p.audience) return p;
+  const a = blankAudience();
+  if(p.ecodes) { a.source='ecodes'; a.ecodes={name:'imported list', count:p.ecodes}; }
+  else if(p.team) { a.source='org'; a.team=p.team; a.subteam=p.subteam||''; }
+  a.stage = p.aon || ''; a.trigger = p.trigger || '';
+  p.audience = a;
+  delete p.team; delete p.subteam; delete p.aon; delete p.trigger; delete p.ecodes;
+  return p;
+}
 
 const trainingById = id => trainings.find(t=>t.id===id);
 const placementsFor = id => placements.filter(p=>p.trainingId===id);
@@ -898,6 +921,126 @@ function refreshTrainingPicker(){
   $('p_app').value=P.app;
   syncScreens();
 }
+/* ── CleverTap ────────────────────────────────────────────────────────────
+   Segments are authored in CleverTap and read here. The panel never creates
+   or edits one — it only picks. Everything below the fetch is the contract
+   the real endpoint has to satisfy: id, name, size, updatedAt.            */
+const CT_ENDPOINT = '/api/clevertap/segments';   // swap the mock for this
+
+const CT_MOCK = [
+  {id:'ct_sb_below',    name:'SB deployment below target · 30d', size:12480, updatedAt:'2026-09-06T21:10'},
+  {id:'ct_onb_below',   name:'Onboarding below target · 30d',    size:8214,  updatedAt:'2026-09-06T21:10'},
+  {id:'ct_nap_idle',    name:'NAP allocated, no action in 48h',  size:3106,  updatedAt:'2026-09-07T04:00'},
+  {id:'ct_new_joiner',  name:'New joiners · first 15 days',      size:1902,  updatedAt:'2026-09-07T04:00'},
+  {id:'ct_qr_only',     name:'Manages QR-only merchants',        size:22740, updatedAt:'2026-09-05T18:30'},
+  {id:'ct_churn_risk',  name:'Portfolio at churn risk',          size:5530,  updatedAt:'2026-09-06T21:10'},
+  {id:'ct_edc_pilot',   name:'EDC pilot cities',                 size:740,   updatedAt:'2026-09-04T11:00'},
+];
+
+const CT = {
+  segments: null,        // null until a fetch has succeeded at least once
+  loading: false,
+  error: null,
+  syncedAt: null,
+  failNext: false,       // demo switch, exercised by the prototype's controls
+
+  byId(id){ return (this.segments || []).find(s => s.id === id) || null; },
+
+  // Resolves either way — callers re-render off the state, not the promise.
+  async load(force){
+    if(this.loading) return;
+    if(this.segments && !force) return;
+    this.loading = true; this.error = null; renderP();
+    try {
+      await new Promise(r => setTimeout(r, 700));
+      if(this.failNext){ this.failNext = false; throw new Error('CleverTap did not respond'); }
+      this.segments = CT_MOCK.map(s => ({...s}));
+      this.syncedAt = new Date();
+    } catch(e) {
+      this.error = e.message || 'Could not reach CleverTap';
+    } finally {
+      this.loading = false; renderP();
+    }
+  },
+};
+
+/* ── audience ─────────────────────────────────────────────────────────────
+   One source, optionally narrowed. Replaces five sibling fields whose
+   relationship was only ever described in a label.                        */
+const SOURCES = [
+  {id:'everyone',  label:'Everyone in the app',      hint:'No targeting — every FSE using this app.'},
+  {id:'clevertap', label:'CleverTap segment',        hint:'Behavioural segments authored in CleverTap and read here.'},
+  {id:'org',       label:'Team / subteam',           hint:'The reporting structure held in the app itself.'},
+  {id:'ecodes',    label:'Ecode list',               hint:'An explicit list of people. Nothing narrows it further.'},
+];
+const sourceLabel = id => (SOURCES.find(s => s.id === id) || {}).label || id;
+
+// A declaration, not a const arrow: freshP() and normP() both run during module
+// init, above this point, and a const would still be in its dead zone there.
+function blankAudience(){
+  return {source:'everyone', segmentId:'', team:'', subteam:'',
+          ecodes:{name:'', count:0}, stage:'', trigger:''};
+}
+
+// Ecode lists name people outright. Silently intersecting that with a tenure
+// or performance filter would drop people the admin explicitly listed.
+const takesRefiners = a => a.source !== 'ecodes';
+
+function resolveAudience(P){
+  const a = P.audience, chips = [], problems = [];
+  if(a.source === 'everyone'){
+    chips.push(`Everyone in ${appLabel(P.app)}`);
+  } else if(a.source === 'clevertap'){
+    if(!a.segmentId) problems.push('Choose a CleverTap segment.');
+    else {
+      const seg = CT.byId(a.segmentId);
+      if(seg) chips.push(`CleverTap · ${seg.name}`);
+      else if(CT.segments) problems.push(`The CleverTap segment saved here (${a.segmentId}) no longer exists. Pick another.`);
+      else chips.push(`CleverTap · ${a.segmentId}`);   // not fetched yet — not an error
+    }
+  } else if(a.source === 'org'){
+    if(!a.team) problems.push('Choose a team.');
+    else chips.push(a.team + (a.subteam ? ` · ${a.subteam}` : ' · all subteams'));
+  } else if(a.source === 'ecodes'){
+    if(!a.ecodes.count) problems.push('Upload an ecode list.');
+    else chips.push(`${a.ecodes.count} named ecode${a.ecodes.count===1?'':'s'}`);
+  }
+  if(takesRefiners(a)){
+    if(a.stage)   chips.push((AON.find(x=>x.id===a.stage)||{}).label);
+    if(a.trigger) chips.push((TRIGGERS.find(x=>x.id===a.trigger)||{}).label);
+  }
+  return {chips, problems, exact: a.source === 'ecodes',
+          label: chips.filter(Boolean).join(' ∩ ') || '—'};
+}
+
+/* ── one validator per object, used by the flow, the table and save ────── */
+function validateP(P){
+  const errors = [], warnings = [];
+  const t = trainingById(P.trainingId);
+  if(!t) { errors.push('Choose a training.'); return {errors, warnings, t}; }
+  if(!P.screen) errors.push('Choose a screen.');
+  errors.push(...resolveAudience(P).problems);
+
+  if(P.blocker && P.dueAt){
+    const d = new Date(P.dueAt);
+    if(isNaN(d)) errors.push('The complete-by time is not a valid date.');
+    else if(d <= new Date()) errors.push('The complete-by time is in the past — everyone in this audience would be blocked straight away.');
+  }
+  // The gate's only action is "Go to Trainings", so the training has to be there.
+  if(P.blocker && !P.hub)
+    warnings.push('A homepage blocker sends the FSE to Trainings & Assessment, so hub listing will be turned on when you save.');
+  if(P.blocker && !t.final.mandatory)
+    warnings.push('A homepage blocker on non-mandatory content will let the FSE past after watching.');
+  if(t.final.mandatory && !P.hub && P.screen !== HUB)
+    warnings.push('Mandatory but not listed in the hub — if the FSE never visits this screen they have no way to complete it.');
+  const dupe = placements.find(p => p.id!==P.id && p.trainingId===P.trainingId
+                                 && p.screen===P.screen && p.app===P.app && P.screen);
+  if(dupe) warnings.push(`Already placed on ${appLabel(P.app)} · ${screenLabel(P.screen)} — the two will compete.`);
+  if(P.audience.source==='clevertap' && P.audience.trigger)
+    warnings.push('A CleverTap segment already encodes behaviour — layering a performance trigger on top narrows it twice.');
+  return {errors, warnings, t};
+}
+
 function syncScreens(){
   const t=trainingById(P.trainingId);
   if(!t){ fill($('p_screen'),[{id:'',label:'— choose a training first —'}]);
@@ -929,64 +1072,142 @@ function syncScreens(){
     : 'The FSE can find and complete it from the hub as well as on the screen.';
 }
 function flowP(){
-  const t=trainingById(P.trainingId);
+  const {errors, warnings, t} = validateP(P);
   if(!t){ $('pFlow').innerHTML='<div class="k">Placement</div><div class="v">Choose a training to see what this will do.</div>'; return; }
-  const seg=[P.team&&`${P.team}${P.subteam?' · '+P.subteam:''}`,
-             P.aon&&(AON.find(a=>a.id===P.aon)||{}).label,
-             P.trigger&&(TRIGGERS.find(x=>x.id===P.trigger)||{}).label,
-             P.ecodes&&`${P.ecodes} named ecodes`].filter(Boolean);
+  const aud = resolveAudience(P);
   const rules=[P.maxViews&&`stops after ${P.maxViews} views`,P.expiry&&`stops after ${P.expiry} days`,
-               P.blocker&&'gates the home screen',P.self&&'self-marking allowed'].filter(Boolean);
-  const warns=[];
-  if(!P.screen) warns.push('No screen chosen yet.');
-  if(P.blocker&&!t.final.mandatory) warns.push('A homepage blocker on non-mandatory content will let the FSE past after watching.');
-  // The gate's only action is "Go to Trainings", so the training has to be there.
-  if(P.blocker&&!P.hub) warns.push('A homepage blocker sends the FSE to Trainings & Assessment — this training must be listed there or the gate is a dead end.');
-  const dupe=placements.find(p=>p.id!==P.id&&p.trainingId===P.trainingId&&p.screen===P.screen&&p.app===P.app&&P.screen);
-  if(dupe) warns.push(`Already placed on ${appLabel(P.app)} · ${screenLabel(P.screen)} — the two will compete.`);
-  if(t.final.mandatory&&!P.hub&&P.screen!==HUB)
-    warns.push('Mandatory but not listed in the hub — if the FSE never visits this screen they have no way to complete it.');
+               P.blocker&&(P.dueAt?`gates the home screen from ${new Date(P.dueAt).toLocaleString([],{dateStyle:'medium',timeStyle:'short'})}`:'gates the home screen immediately'),
+               P.self&&'self-marking allowed'].filter(Boolean);
   const where = P.screen===HUB
     ? `in <b>Trainings &amp; Assessment</b> in <b>${esc(appLabel(P.app))}</b>`
     : `as a <b>${esc(W[t.widget].label)}</b> on <b>${esc(appLabel(P.app))} · ${esc(P.screen||'— pick a screen —')}</b>`;
   const also = (P.hub && P.screen!==HUB) ? ', and is listed in Trainings &amp; Assessment' : '';
   $('pFlow').innerHTML=`<div class="k">What this placement does</div>
     <div class="v"><b>${esc(t.name)}</b> appears ${where}
-      for <b>${seg.length?esc(seg.join(' · ')):'everyone'}</b>${also}${rules.length?`, and ${esc(rules.join(', '))}`:''}.</div>
-    ${warns.map(w=>`<div class="warnline">⚠ ${esc(w)}</div>`).join('')}`;
+      for <b>${esc(aud.label)}</b>${also}${rules.length?`, and ${esc(rules.join(', '))}`:''}.</div>
+    ${errors.map(e=>`<div class="warnline" style="color:var(--red-fg)">✕ ${esc(e)}</div>`).join('')}
+    ${warnings.map(w=>`<div class="warnline">⚠ ${esc(w)}</div>`).join('')}`;
 }
+
+function audienceBody(){
+  const a = P.audience;
+  if(a.source === 'clevertap'){
+    if(CT.loading) return `<div class="ctbox"><span class="spin"></span> Fetching segments from CleverTap…</div>`;
+    if(CT.error) return `<div class="ctbox bad">
+        <div style="flex:1"><b>CleverTap unreachable</b><div style="margin-top:3px">${esc(CT.error)}. Existing placements keep working — only the picker is affected.</div></div>
+        <button class="btn btn-ghost btn-sm" type="button" data-ctretry>Retry</button></div>`;
+    if(!CT.segments) return `<div class="ctbox">
+        <div style="flex:1">Segments have not been fetched yet.</div>
+        <button class="btn btn-ghost btn-sm" type="button" data-ctload>Fetch from CleverTap</button></div>`;
+    const missing = a.segmentId && !CT.byId(a.segmentId);
+    return `<div class="form-grid"><div class="form-group full">
+        <label>Segment <span style="color:#e53e3e">*</span></label>
+        <select id="p_seg">
+          <option value="">— select a CleverTap segment —</option>
+          ${CT.segments.map(sg=>`<option value="${esc(sg.id)}" ${a.segmentId===sg.id?'selected':''}>${esc(sg.name)} · ${sg.size.toLocaleString()} FSEs</option>`).join('')}
+          ${missing?`<option value="${esc(a.segmentId)}" selected>${esc(a.segmentId)} — no longer in CleverTap</option>`:''}
+        </select>
+      </div></div>
+      ${missing?`<div class="ctbox bad" style="margin-top:-4px"><div style="flex:1">This placement points at a segment CleverTap no longer returns. Pick another before saving.</div></div>`:''}
+      <div class="ctbox" style="margin-top:-4px">
+        <div style="flex:1">${CT.segments.length} segments · last synced ${CT.syncedAt?CT.syncedAt.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'}):'—'}.
+          Segments are authored in CleverTap; this panel only reads them.</div>
+        <button class="btn btn-ghost btn-sm" type="button" data-ctrefresh>Refresh</button>
+      </div>`;
+  }
+  if(a.source === 'org'){
+    const subs = TEAMS[a.team] || [];
+    return `<div class="form-grid">
+      <div class="form-group"><label>Team <span style="color:#e53e3e">*</span></label>
+        <select id="p_team"><option value="">— select team —</option>
+          ${Object.keys(TEAMS).map(t=>`<option ${a.team===t?'selected':''}>${esc(t)}</option>`).join('')}</select></div>
+      <div class="form-group"><label>Subteam</label>
+        <select id="p_subteam" ${subs.length?'':'disabled'}>
+          <option value="">All subteams</option>
+          ${subs.map(x=>`<option ${a.subteam===x?'selected':''}>${esc(x)}</option>`).join('')}</select></div>
+    </div>`;
+  }
+  if(a.source === 'ecodes'){
+    return `<div class="form-grid"><div class="form-group full">
+      <label>Ecode list <span style="color:#e53e3e">*</span> <small>CSV or TXT, one ecode per row</small></label>
+      <div style="display:flex;gap:9px;align-items:center;flex-wrap:wrap">
+        <label class="fpick">📤 ${a.ecodes.count?'Replace list':'Upload ecode list'}<input type="file" accept=".csv,.txt" id="p_ecodeFile"></label>
+        <span style="font-size:12px;color:${a.ecodes.count?'var(--ink)':'var(--faint)'}">${a.ecodes.count
+          ? `<b>${a.ecodes.count.toLocaleString()}</b> ecodes from ${esc(a.ecodes.name)}` : 'No list uploaded'}</span>
+        ${a.ecodes.count?'<button class="btn btn-ghost btn-sm" type="button" id="p_ecodeClear">Clear</button>':''}
+      </div></div></div>`;
+  }
+  return '';
+}
+
 function renderP(){
   refreshTrainingPicker();
-  $('p_team').value=P.team; $('p_aon').value=P.aon; $('p_trigger').value=P.trigger;
+  const a = P.audience;
+  fill($('p_src'), SOURCES.map(x=>({id:x.id,label:x.label})));
+  $('p_src').value = a.source;
+  $('p_srcHint').textContent = (SOURCES.find(x=>x.id===a.source)||{}).hint || '';
+  $('p_srcBody').innerHTML = audienceBody();
+  $('p_app').value=P.app;
   $('p_maxviews').value=P.maxViews; $('p_expiry').value=P.expiry;
   $('p_blocker').checked=P.blocker; $('p_self').checked=P.self; $('p_hub').checked=P.hub;
   $('p_due').value=P.dueAt||''; $('p_dueBox').hidden=!P.blocker;
   $('p_dueNote').innerHTML=dueNote(P);
-  $('p_app').value=P.app;
-  const subs=TEAMS[P.team]||[];
-  $('p_subteam').innerHTML='<option value="">All subteams</option>'+subs.map(s=>`<option>${esc(s)}</option>`).join('');
-  $('p_subteam').disabled=!subs.length; $('p_subteam').value=P.subteam;
-  $('p_ecodeInfo').textContent=P.ecodes?`${P.ecodes} ecodes uploaded`:'No list uploaded';
-  $('p_ecodeClear').hidden=!P.ecodes;
+  $('p_aon').value=a.stage; $('p_trigger').value=a.trigger;
+
+  // An ecode list names people outright; narrowing it would drop names.
+  const refines = takesRefiners(a);
+  $('p_refineBox').hidden = !refines;
+
   const t=trainingById(P.trainingId);
-  $('p_selfRow').classList.toggle('off',!!(t&&t.final.mandatory));
-  $('p_self').disabled=!!(t&&t.final.mandatory);
-  if(t&&t.final.mandatory){P.self=false;$('p_self').checked=false;}
-  $('p_selfHint').textContent=t&&t.final.mandatory
-    ?'Not available — this training’s assessment is mandatory.':'Adds an “I’ve watched this” button.';
+  const locked = !!(t && t.final.mandatory);
+  $('p_selfRow').classList.toggle('off',locked);
+  $('p_self').disabled=locked;
+  $('p_self').checked = locked ? false : P.self;
+  $('p_selfHint').textContent = locked
+    ?'Not available — this training\u2019s assessment is mandatory.':'Adds an \u201cI\u2019ve watched this\u201d button.';
+
+  const aud=resolveAudience(P);
+  $('p_audNote').innerHTML = `<b>Reaches:</b> ${esc(aud.label)}`
+    + (aud.exact?' <span class="badge grey">exact list — refiners do not apply</span>':'');
+
+  wireAudience();
   flowP();
   $('pTitle').textContent=editP?'Edit placement':'Place a training';
   $('pSave').textContent=editP?'Update placement':'Save placement';
 }
+
+function wireAudience(){
+  const seg=$('p_seg'); if(seg) seg.onchange=e=>{P.audience.segmentId=e.target.value;renderP();};
+  const team=$('p_team'); if(team) team.onchange=e=>{P.audience.team=e.target.value;P.audience.subteam='';renderP();};
+  const sub=$('p_subteam'); if(sub) sub.onchange=e=>{P.audience.subteam=e.target.value;renderP();};
+  const f=$('p_ecodeFile'); if(f) f.onchange=e=>{
+    const file=e.target.files[0]; if(!file) return;
+    const r=new FileReader();
+    r.onload=()=>{ const rows=parseCSV(String(r.result))
+        .filter((row,i)=>!(i===0&&/ecode/i.test(row[0]||'')))
+        .filter(row=>(row[0]||'').trim());
+      if(!rows.length){ toast('That file has no ecodes in it.'); return; }
+      P.audience.ecodes={name:file.name,count:rows.length};
+      renderP(); toast(`${rows.length} ecodes loaded from ${file.name}`); };
+    r.readAsText(file);
+  };
+  const clr=$('p_ecodeClear'); if(clr) clr.onclick=()=>{P.audience.ecodes={name:'',count:0};renderP();};
+  const rl=document.querySelector('[data-ctload]');    if(rl) rl.onclick=()=>CT.load();
+  const rr=document.querySelector('[data-ctretry]');   if(rr) rr.onclick=()=>CT.load(true);
+  const rf=document.querySelector('[data-ctrefresh]'); if(rf) rf.onclick=()=>CT.load(true);
+}
+
 function drawPLib(){
   $('pLibTitle').textContent=`Placements (${placements.length})`;
   if(!placements.length){ $('pLib').innerHTML='<tr><td colspan="6" style="color:var(--faint);padding:22px">Nothing placed yet.</td></tr>'; return; }
   $('pLib').innerHTML=placements.map(p=>{
     const t=trainingById(p.trainingId);
-    const seg=[p.team&&`${p.team}${p.subteam?' · '+p.subteam:''}`,
-               p.aon&&(AON.find(a=>a.id===p.aon)||{}).label,
-               p.ecodes&&`${p.ecodes} ecodes`].filter(Boolean);
-    const trig=p.trigger&&(TRIGGERS.find(x=>x.id===p.trigger)||{}).label;
+    const aud=resolveAudience(p);
+    const src=p.audience.source;
+    const srcBadge=src==='clevertap'?'<span class="badge" style="background:#ede9fe;color:#5b21b6">CleverTap</span>'
+                 :src==='ecodes'   ?'<span class="badge grey">Ecode list</span>'
+                 :src==='org'      ?'<span class="badge grey">Team</span>'
+                 :'<span class="badge grey">Everyone</span>';
     const due=p.blocker?(p.dueAt
       ? `<span class="badge red">Blocks ${new Date(p.dueAt).toLocaleString([], {dateStyle:'medium',timeStyle:'short'})}</span>`
       : '<span class="badge red">Blocks immediately</span>'):'';
@@ -1000,8 +1221,8 @@ function drawPLib(){
         ? '<span class="badge grey">Trainings &amp; Assessment only</span>'
         : `<span class="badge">${esc(p.screen)}</span><br><span class="badge">${t?esc(W[t.widget].label):'—'}</span>`}
         ${p.hub&&p.screen!==HUB?'<br><span class="badge grey">＋ in hub</span>':''}</td>
-      <td class="struct">${seg.length?seg.map(esc).join('<br>'):'<span style="color:var(--faint)">Everyone</span>'}
-        ${trig?`<br><span class="badge warn">⚡ ${esc(trig)}</span>`:''}</td>
+      <td class="struct">${srcBadge}<br>${esc(aud.label)}
+        ${aud.problems.length?`<br><span class="badge red">⚠ ${esc(aud.problems[0])}</span>`:''}</td>
       <td class="struct">${rules.length?rules.join(' · '):'<span style="color:var(--faint)">No limit</span>'}
         ${due?`<br>${due}`:''}
         ${p.self?'<br><span class="badge grey">Self-mark</span>':''}</td>
@@ -1020,7 +1241,6 @@ function drawPLib(){
 
 /* ── wiring ────────────────────────────────────────────────────────────── */
 fill($('f_widget'),WIDGETS.map(w=>({id:w.id,label:w.id==='module'?w.label:`${w.label} · up to ${w.max} video${w.max>1?'s':''}`})));
-fill($('p_team'),[{id:'',label:'All teams'}].concat(Object.keys(TEAMS).map(t=>({id:t,label:t}))));
 fill($('p_aon'),AON); fill($('p_trigger'),TRIGGERS);
 $('tplLink').href=CSV_HREF;
 
@@ -1086,9 +1306,6 @@ $('p_app').onchange=e=>{
 };
 $('p_screen').onchange=e=>{P.screen=e.target.value;syncScreens();flowP();};
 $('p_hub').onchange=e=>{P.hub=e.target.checked;flowP();};
-$('p_team').onchange=e=>{P.team=e.target.value;P.subteam='';renderP();};
-$('p_subteam').onchange=e=>{P.subteam=e.target.value;flowP();};
-['aon','trigger'].forEach(k=>$('p_'+k).onchange=e=>{P[k]=e.target.value;flowP();});
 $('p_maxviews').oninput=e=>{P.maxViews=e.target.value;flowP();};
 $('p_expiry').oninput=e=>{P.expiry=e.target.value;flowP();};
 // A blocker with no deadline gates the FSE from the moment it is published.
@@ -1106,32 +1323,35 @@ function dueNote(P){
   return `The FSE can carry on as normal until then. Blocked from <b>${d.toLocaleString()}</b> — `
     + (h<24?`about ${h} hour${h===1?'':'s'} away.`:`about ${Math.round(h/24)} day${Math.round(h/24)===1?'':'s'} away.`);
 }
+$('p_src').onchange=e=>{
+  // Sources are alternatives, so switching drops the previous one's settings
+  // rather than leaving stale values to be silently saved.
+  const keep={stage:P.audience.stage,trigger:P.audience.trigger};
+  P.audience=Object.assign(blankAudience(),{source:e.target.value},keep);
+  if(P.audience.source==='clevertap') CT.load();
+  renderP();
+};
+['stage','trigger'].forEach(k=>{
+  const el=$(k==='stage'?'p_aon':'p_trigger');
+  el.onchange=ev=>{P.audience[k]=ev.target.value;renderP();};
+});
 $('p_blocker').onchange=e=>{P.blocker=e.target.checked; if(!P.blocker) P.dueAt=''; renderP();};
 $('p_due').oninput=e=>{P.dueAt=e.target.value; $('p_dueNote').innerHTML=dueNote(P); flowP();};
 $('f_seek').onchange=e=>{T.allowSeek=e.target.checked;renderT();};
 $('p_self').onchange=e=>{P.self=e.target.checked;flowP();};
-$('p_ecodeFile').onchange=e=>{
-  const f=e.target.files[0]; if(!f) return;
-  const r=new FileReader();
-  r.onload=()=>{ P.ecodes=parseCSV(String(r.result)).filter((row,i)=>!(i===0&&/ecode/i.test(row[0]||''))).length;
-    renderP(); toast(`${P.ecodes} ecodes loaded`); };
-  r.readAsText(f);
-};
-$('p_ecodeClear').onclick=()=>{P.ecodes=0;renderP();};
 
 $('pSave').onclick=()=>{
-  if(!P.trainingId) return toast('Choose a training.');
-  if(!P.screen) return toast('Choose a screen.');
-  if(P.blocker&&P.dueAt){
-    const d=new Date(P.dueAt);
-    if(isNaN(d)) return toast('The complete-by time is not a valid date.');
-    if(d<=new Date()) return toast('The complete-by time is in the past — everyone in this segment would be blocked straight away.');
-  }
+  const {errors} = validateP(P);
+  if(errors.length) return toast(errors[0]);
   if(P.blocker&&!P.hub){
-    P.hub=true; $('p_hub').checked=true;
+    P.hub=true;
     toast('A blocker routes to Trainings & Assessment, so hub listing was turned on');
   }
   const copy=JSON.parse(JSON.stringify(P));
+  // Refiners are kept in the editing session so toggling sources back restores
+  // them, but an exact list never applies them — don't persist a filter that
+  // silently does nothing.
+  if(!takesRefiners(copy.audience)){ copy.audience.stage=''; copy.audience.trigger=''; }
   if(editP){ placements=placements.map(x=>x.id===editP?copy:x); toast('Placement updated'); }
   else { placements.unshift(copy); toast('Placement saved'); }
   editP=null; P=freshP(); renderP(); drawPLib(); drawTLib();

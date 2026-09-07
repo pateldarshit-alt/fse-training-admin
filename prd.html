@@ -190,7 +190,7 @@
         <tr><td>Feature</td><td>Contextual Video Coaching — nine in-app widget views, Trainings &amp; Assessment hub, admin console</td></tr>
         <tr><td>Document owner</td><td>Product</td></tr>
         <tr><td>Status</td><td>Draft for review</td></tr>
-        <tr><td>Version</td><td>2.2</td></tr>
+        <tr><td>Version</td><td>2.3</td></tr>
         <tr><td>Date</td><td>7 September 2026</td></tr>
         <tr><td>Reviewers</td><td>Design, Frontend, Backend, Field Ops, L&amp;D</td></tr>
       </tbody>
@@ -629,6 +629,39 @@
 
   <p>Under <strong>Homepage blocker</strong> the console reveals a <strong>complete-by</strong> date and time, with live prose describing what will happen — how far away the deadline is, or that no deadline means an immediate gate. A deadline already in the past is refused at save, because it would block the whole segment the moment it is published.</p>
 
+  <h3>7.2a Audience</h3>
+  <p>Targeting is expressed as <strong>one source, optionally narrowed</strong>. The earlier form had five sibling fields — team, subteam, stage, trigger and an ecode upload — whose relationship existed only in a label reading <em>“overrides the fields above”</em>. Nothing enforced that, and the summary line rendered them as an intersection, so the console could describe an audience it would not actually deliver.</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Source</th><th>Comes from</th><th>Narrowing</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Everyone in the app</strong></td><td>No targeting</td><td>Stage and trigger may be applied</td></tr>
+        <tr><td><strong>CleverTap segment</strong></td><td>Segments authored in CleverTap, read over the API</td><td>Allowed, with a warning that a behavioural segment plus a performance trigger narrows twice</td></tr>
+        <tr><td><strong>Team / subteam</strong></td><td>The reporting structure held in the app</td><td>Stage and trigger may be applied</td></tr>
+        <tr><td><strong>Ecode list</strong></td><td>An uploaded CSV of named people</td><td><strong>None.</strong> The list is exact — narrowing it would silently drop people who were named deliberately. Refiners are hidden, and stripped on save so the stored record cannot imply a filter that never runs</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Sources are alternatives. Switching source clears the previous source's settings rather than leaving values that would be saved but never read. A live <em>Reaches:</em> line states the resolved audience as an explicit chain, and it is the same function the library table and the save guard use.</p>
+
+  <h3>7.2b CleverTap integration</h3>
+  <p>The panel <strong>reads</strong> segments and never creates or edits one — CleverTap stays the system of record. The contract is four fields per segment: id, name, size and last-updated.</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>State</th><th>Behaviour</th></tr></thead>
+      <tbody>
+        <tr><td>Not yet fetched</td><td>Selecting the CleverTap source triggers the fetch. A saved segment id still renders by id, and is not treated as an error before the list arrives.</td></tr>
+        <tr><td>Loading</td><td>Spinner in place of the picker.</td></tr>
+        <tr><td>Reachable</td><td>Segments listed with their size; footer shows the count and last sync time, with a manual refresh.</td></tr>
+        <tr><td>Unreachable</td><td>An error panel with retry. Cached segments are kept, and placements already saved keep working — only the picker is affected.</td></tr>
+        <tr><td><strong>Segment withdrawn</strong></td><td>A placement pointing at an id CleverTap no longer returns is flagged in the editor, flagged in the placements table, and refused at save. The dead id stays visible so the admin can see what it used to point at.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <p>Segment membership is resolved by CleverTap at delivery time, not stored here. The panel persists only the segment id, so a segment that changes shape in CleverTap changes who this training reaches without any edit in this console. That is the point of the integration, and it is also the reason the withdrawn-segment case has to be loud.</p>
+  </div>
+
   <h3>7.3 Rules the console enforces</h3>
   <ul>
     <li><strong>A blocker must be listed in the hub.</strong> The gate’s only action is “Go to Trainings”, so a blocker on a training absent from the hub is a dead end. Warned, and corrected on save.</li>
@@ -785,7 +818,11 @@
       <tr><td>app</td><td>text</td><td>gg | force</td></tr>
       <tr><td>screen</td><td>text</td><td>App screen, or <span class="mono">hub_only</span></td></tr>
       <tr><td>blocker_due_at</td><td>timestamptz, nullable</td><td>Complete-by moment. Null with the blocker on means gate immediately. Must be in the future at save</td></tr>
-      <tr><td>team, subteam</td><td>text, nullable</td><td>Null means all</td></tr>
+      <tr><td>audience_source</td><td>text</td><td>everyone | clevertap | org | ecodes</td></tr>
+      <tr><td>clevertap_segment_id</td><td>text, nullable</td><td>Set when the source is clevertap. Membership is resolved by CleverTap at delivery, never cached here</td></tr>
+      <tr><td>team, subteam</td><td>text, nullable</td><td>Set when the source is org. Null subteam means all</td></tr>
+      <tr><td>ecode_list_id</td><td>uuid, nullable</td><td>Set when the source is ecodes; points at the uploaded list</td></tr>
+      <tr><td>audience_stage, audience_trigger</td><td>text, nullable</td><td>Refiners. Always null when the source is ecodes</td></tr>
       <tr><td>fse_stage</td><td>text, nullable</td><td>AON bucket</td></tr>
       <tr><td>performance_trigger</td><td>text, nullable</td><td>Rule-driven assignment</td></tr>
       <tr><td>target_ecodes</td><td>text[]</td><td>Overrides the broader targeting</td></tr>
