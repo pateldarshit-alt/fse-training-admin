@@ -190,8 +190,8 @@
         <tr><td>Feature</td><td>Contextual Video Coaching — nine in-app widget views, Trainings &amp; Assessment hub, admin console</td></tr>
         <tr><td>Document owner</td><td>Product</td></tr>
         <tr><td>Status</td><td>Draft for review</td></tr>
-        <tr><td>Version</td><td>2.0</td></tr>
-        <tr><td>Date</td><td>5 August 2026</td></tr>
+        <tr><td>Version</td><td>2.1</td></tr>
+        <tr><td>Date</td><td>7 September 2026</td></tr>
         <tr><td>Reviewers</td><td>Design, Frontend, Backend, Field Ops, L&amp;D</td></tr>
       </tbody>
     </table>
@@ -444,24 +444,35 @@
   <p>The hub lists <strong>trainings</strong>, not videos. It is the destination the homepage gate routes to, and the only place training can be browsed rather than encountered.</p>
   <p>A training appears here when its placement has <strong>“Also list in Trainings &amp; Assessment”</strong> enabled, or when the placement <em>is</em> the hub.</p>
 
+  <p>The hub answers one question before any other: <strong>what should I do right now.</strong> An FSE opens it between merchant visits, not at a desk, so the design resolves that question above the fold and leaves browsing to the list underneath.</p>
+
   <h3>5.1 List view</h3>
   <div class="tw">
     <table>
       <thead><tr><th>Region</th><th>Content</th></tr></thead>
       <tbody>
-        <tr><td>Header</td><td>“X of Y completed” across trainings, with a percentage ring.</td></tr>
-        <tr><td>Alert strip</td><td>“N mandatory trainings pending”, shown only when above zero.</td></tr>
-        <tr><td>Search &amp; filters</td><td>Free-text search plus exactly three filters: All, Pending, Completed.</td></tr>
-        <tr><td>Cards</td><td>Training name, video count, assessment size, MANDATORY tag, and status.</td></tr>
+        <tr><td>Header</td><td>“X of Y complete · N of M steps”, with a percentage ring driven by steps.</td></tr>
+        <tr><td>Alert strip</td><td>“N mandatory trainings still to clear”, shown only when above zero. Tapping it switches to the Pending filter.</td></tr>
+        <tr><td><strong>Next up</strong></td><td>A single raised card resuming the exact video or assessment the FSE stopped at, with a one-tap call to action — <em>Start</em>, <em>Continue</em>, <em>Take assessment</em> or <em>Retry assessment</em>.</td></tr>
+        <tr><td>Filters</td><td>Exactly three, each carrying its count: All, Pending, Completed. There is no free-text search — at this list size, priority ordering replaces it.</td></tr>
+        <tr><td>Cards</td><td>Training name, step pips, status, assessment size and MANDATORY tag. Completed cards are de-emphasised.</td></tr>
       </tbody>
     </table>
   </div>
-  <p>Status is expressed in the unit that matters — <em>Not started</em>, <em>2 of 4 videos</em>, <em>Take assessment</em>, <em>Retry assessment</em>, <em>Passed · 3/3</em>.</p>
+
+  <h4>Progress is counted in steps, not trainings</h4>
+  <p>A step is one video, or the combined assessment. Counting whole trainings meant an FSE three videos into a four-video training still read as zero; counting steps makes every action move the number.</p>
+
+  <h4>Order is priority, not upload date</h4>
+  <p>Cards sort by what deserves attention: mandatory and in progress, then mandatory, then in progress, then not started, then completed. The <em>Next up</em> card is simply the first of that order. Status is expressed in the unit that matters — <em>Not started</em>, <em>2 of 3 videos</em>, <em>Assessment ready</em>, <em>Assessment not cleared</em>, <em>Passed · 3/3</em>.</p>
 
   <h3>5.2 Training detail — the ordered run</h3>
-  <p>Opening a training shows its videos in order. Each row carries its number, title, language count and the state of its check. Tapping one opens the player; where per-video checks are on, the check follows immediately.</p>
+  <p>Opening a training shows its videos in order. Each row carries its number, title, language count and the state of its check. The next incomplete step is outlined and tagged <strong>NEXT</strong>, and a persistent button at the foot of the screen always names that step, so the FSE never has to work out where they were.</p>
   <div class="note">
-    <p><strong>The combined assessment is locked until every video is done</strong>, and says so — <em>“Unlocks when all 3 videos are done — 3 to go.”</em> That lock is what makes it a fair test of the whole set rather than of whichever videos the FSE happened to open.</p>
+    <p><strong>The combined assessment is locked until every video is done</strong>, and says why — <em>“Finish the remaining 1 video to unlock this.”</em> That lock is what makes it a fair test of the whole set rather than of whichever videos the FSE happened to open.</p>
+  </div>
+  <div class="note">
+    <p><strong>Individual videos are never locked.</strong> The FSE may open any of them in any order. Sequencing is expressed through emphasis — the NEXT tag and the footer button — rather than enforcement, because the admin console has no setting to enforce an order, and the app must not assert rules an administrator cannot see or change.</p>
   </div>
 
   <h2>6. Completion and assessment</h2>
@@ -741,7 +752,7 @@
     <table>
       <thead><tr><th>Phase</th><th>Scope</th></tr></thead>
       <tbody>
-        <tr><td><strong>1 — Foundation</strong></td><td>Nine widget views; training/placement split; training-centric hub; assessments with per-selection feedback; admin console with targeting, blocker, self-mark and assessment builder; language variants; captions.</td></tr>
+        <tr><td><strong>1 — Foundation</strong></td><td>Nine widget views; training/placement split; training-centric hub with Next-up resume and priority ordering; assessments with per-selection feedback; admin console with targeting, blocker, self-mark and assessment builder; language variants; captions.</td></tr>
         <tr><td><strong>2 — Field-readiness</strong></td><td>Server-side progress; offline pre-caching at check-in; resume from position; percentage-based completion; muted-with-captions default on in-flow views.</td></tr>
         <tr><td><strong>3 — Precision</strong></td><td>Chapters and key moments; trigger-reason copy; interruption budget and orchestration; TL / ASM dashboard; due dates and consequences.</td></tr>
         <tr><td><strong>4 — Automation</strong></td><td>Rule-driven auto-assignment from FSE state — AON bucket, invalid-activity flags, productivity state, earnings milestones.</td></tr>
