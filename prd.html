@@ -190,7 +190,7 @@
         <tr><td>Feature</td><td>Contextual Video Coaching — nine in-app widget views, My trainings hub, admin console</td></tr>
         <tr><td>Document owner</td><td>Product</td></tr>
         <tr><td>Status</td><td>Draft for review</td></tr>
-        <tr><td>Version</td><td>2.10</td></tr>
+        <tr><td>Version</td><td>2.11</td></tr>
         <tr><td>Date</td><td>7 September 2026</td></tr>
         <tr><td>Reviewers</td><td>Design, Frontend, Backend, Field Ops, L&amp;D</td></tr>
       </tbody>
@@ -548,6 +548,7 @@
         <tr><td>After a segment</td><td>The questions are answered and the score is banked. <strong>No verdict is shown</strong> — the FSE sees “Answers recorded”, because a single segment is never passed or failed on its own.</td></tr>
         <tr><td>Re-answering a segment</td><td>Replaces that segment's contribution rather than adding to it, so a segment can never be farmed for points.</td></tr>
         <tr><td>At the end</td><td>The closing set is added to what was banked, and the total is judged once against the pass mark. One result, one message.</td></tr>
+        <tr><td>Reaching the end early</td><td>The closing set is <strong>locked</strong> until every segment carrying questions has been answered. Scoring a partial story would judge it against a smaller pool than the pass mark was set for, making a skipped story easier than a complete one.</td></tr>
         <tr><td>On failure</td><td>Every segment reopens and the banked total is cleared. The story is retaken whole.</td></tr>
       </tbody>
     </table>
@@ -584,6 +585,9 @@
   <h3>6.6a One vocabulary, every widget</h3>
   <p>Every assessment reports itself the same way regardless of which widget it ran in: <strong>Assessment passed</strong> or <strong>Assessment failed</strong>, followed by the score and the pass mark. A timed attempt that expires reads <em>Assessment failed</em> with the reason underneath rather than a heading of its own.</p>
   <p>The surrounding calls to action match: <em>Take the assessment</em>, <em>N-question assessment</em>, <em>Assessment passed</em>. Earlier builds said “quick check” in a mini banner, “check after this segment” in Stories and “combined assessment” on the hub, which read as three different obligations to an FSE who meets all three in a week. They are one thing, and one thing should have one name.</p>
+
+  <h3>6.6b Sets with nothing to score</h3>
+  <p>A question set may contain only written answers. There is no score, so there is no pass mark to apply: the panel says <em>“nothing here is scored”</em> in place of the scoring fields, and the app reports <strong>Answers recorded</strong> rather than a verdict. Judging an unscored set against a pass mark produced <em>“Assessment failed · 0 of 0”</em>, which is meaningless, and it also reopened content the FSE had done nothing wrong with.</p>
 
   <h3>6.7 Result copy</h3>
   <p>Pass and fail messages are configured per question set. Defaults are used when left blank. The message is the last thing an FSE reads, so it carries the consequence — a fail on QR mapping says money settles to the wrong account, not <em>better luck next time</em>.</p>

@@ -263,8 +263,15 @@ TRAININGS.forEach(t => {
 
 const blockingTrainings = () => TRAININGS.filter(t => t.inHub && t.blocker && !tDone(t));
 
+function videoDone(t, v){
+  const p = prog(v.id);
+  // In an aggregate story a segment is answered, never passed — passing is a
+  // property of the story as a whole.
+  if(isAggregate(t)) return p.watched && (!v.questions.length || p.answered);
+  return (t.perVideo && v.questions.length) ? p.passed : p.watched;
+}
 const tDone = t => {
-  const vids = t.videos.every(v => t.perVideo && v.questions.length ? prog(v.id).passed : prog(v.id).watched);
+  const vids = t.videos.every(v => videoDone(t, v));
   return t.final.enabled ? (vids && prog(t.id+'-final').passed) : vids;
 };
 const VIDEO = ASSETS.video;
@@ -715,8 +722,10 @@ function assessment(v, onClose){
       const tally = aggTally(v.agg_training);
       gained = tally.g; possible = tally.p;
     }
-    // Pass is an absolute score against the paper actually sat.
-    const passed = gained >= (+v.pass_score || 1);
+    // A set of written answers alone has nothing to mark. Judging it against a
+    // pass mark produced "Assessment failed · 0 of 0", which is nonsense.
+    const scoreable = possible > 0;
+    const passed = scoreable ? gained >= (+v.pass_score || 1) : true;
     const weighted = qs.some(Q=>qWeight(Q)!==1);
     save(v.id,{attempted:true,score:gained,total:possible,passed});
 
@@ -736,11 +745,12 @@ function assessment(v, onClose){
 
     el.innerHTML = `
       <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;overflow-y:auto">
-        <div style="width:80px;height:80px;border-radius:50%;background:${passed?'#e6faf0':expired?'#fff4dc':'#fff5f5'};display:flex;align-items:center;justify-content:center;font-size:34px;margin-bottom:16px">${passed?'🎉':expired?'⏱':'📘'}</div>
-        <div style="font-size:17px;font-weight:800">${passed?'Assessment passed':'Assessment failed'}</div>
+        <div style="width:80px;height:80px;border-radius:50%;background:${passed?'#e6faf0':expired?'#fff4dc':'#fff5f5'};display:flex;align-items:center;justify-content:center;font-size:34px;margin-bottom:16px">${!scoreable?'✓':passed?'🎉':expired?'⏱':'📘'}</div>
+        <div style="font-size:17px;font-weight:800">${!scoreable?'Answers recorded':passed?'Assessment passed':'Assessment failed'}</div>
         <div style="font-size:12.5px;color:#718096;margin-top:6px;line-height:1.5">
-          <b>${gained} of ${possible}</b>${!v.agg_final&&weighted?` · ${rightN} of ${qs.length} questions correct`:''}<br>
-          ${v.pass_score} needed to pass
+          ${!scoreable ? 'Nothing here is scored — your answers have been saved.' : `
+          <b>${gained} of ${possible}</b>${!v.agg_final&&weighted?` · ${rightN} of ${scored(qs).length} questions correct`:''}<br>
+          ${v.pass_score} needed to pass`}
           ${expired?'<br><span style="color:#9c5a00;font-weight:700">Graded on what was answered before time ran out.</span>':''}
         </div>
         ${written.length?`<div style="margin-top:14px;font-size:11px;color:#8a94a6;line-height:1.5;max-width:280px">
@@ -1175,6 +1185,17 @@ const VIEWS = [
              agg_training:agg?t:null, agg_part:agg?v.id:null}, draw);
         } else if(i===t.videos.length-1 && t.final.enabled){
           const tally = agg?aggTally(t):null;
+          // Closing the story early would score against a smaller pool than the
+          // pass mark was set for, so an FSE who skips segments faces an easier
+          // paper. The hub already locks its combined assessment this way.
+          const owed = agg ? t.videos.filter(x=>x.questions.length && !prog(x.id).answered) : [];
+          if(owed.length){
+            cta.innerHTML = `<div style="background:rgba(255,255,255,.1);border:1px dashed rgba(255,255,255,.3);
+              border-radius:99px;padding:11px 14px;text-align:center;color:#c9d6ea;font-size:11.5px;line-height:1.45">
+              🔒 Answer the questions on ${owed.length} earlier segment${owed.length>1?'s':''} first —
+              the assessment covers the whole story.</div>`;
+            return;
+          }
           cta.innerHTML = `<button data-f style="width:100%;background:#fff;color:#04263f;border:none;border-radius:99px;padding:12px;font:inherit;font-size:13px;font-weight:800;cursor:pointer">${
             'Take the assessment'}</button>
             ${agg&&tally.p?`<div style="color:#c9d6ea;font-size:10.5px;text-align:center;margin-top:7px">${tally.g} of ${tally.p} carried forward so far</div>`:''}`;
@@ -1216,11 +1237,7 @@ const VIEWS = [
       // A video only needs an assessment when the training turns per-video
       // checks on. Reading v.questions alone would strand a video the FSE
       // can never clear, because the player is never handed those questions.
-      const vDone    = (t,v) => { const p=prog(v.id);
-        // In an aggregate story a segment is never passed on its own, so
-        // answering it is what completes it.
-        if(isAggregate(t)) return p.watched && (!v.questions.length || p.answered);
-        return (t.perVideo && v.questions.length) ? p.passed : p.watched; };
+      const vDone    = videoDone;   // one definition, shared with tDone
       const vidsDone = t => t.videos.filter(v=>vDone(t,v)).length;
       const allVids  = t => vidsDone(t)===t.videos.length;
       const steps     = t => t.videos.length + (t.final.enabled?1:0);

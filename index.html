@@ -710,7 +710,8 @@ function rulesRow(scope,set,count){
     <div class="fg"><label>Passing score</label>
       <input type="number" min="1" data-rpass="${scope}" value="${esc(set.pass)}"></div>
     <div class="of ${badTarget||badPass?'bad':''}">${
-      !count ? 'no questions uploaded yet'
+      !count && texts ? `${texts} written answer${texts===1?'':'s'} · nothing here is scored`
+      : !count ? 'no questions uploaded yet'
       : badPass ? `passing score cannot exceed ${target||pool}`
       : badTarget ? `${target} is not reachable from these weights${nearest?` — nearest is ${nearest}`:''}`
       : `${count} scored question${count===1?'':'s'} worth <b>${pool}</b> in total${texts?` · ${texts} written answer${texts===1?'':'s'}`:''}${
@@ -880,7 +881,7 @@ function flowT(){
   // A target the weights cannot add up to would leave the paper unbuildable.
   if(isAggregate(T)){
     const qs=aggQuestions(T), pool=totalWeight(qs), target=+T.final.total||0;
-    if(qs.length){
+    if(qs.length && pool){
       if(target && !reachableTotals(qs).includes(target))
         warns.push(`No combination of the story's questions adds up to ${target}.`);
       if(+T.final.pass > (target||pool))
@@ -891,6 +892,8 @@ function flowT(){
   sets.forEach(([label,set])=>{
     if(!set.questions||!set.questions.length) return;
     const pool=totalWeight(set.questions), target=+set.total||0;
+    // Written answers only — there is no score to pass, so no rules to check.
+    if(!pool) return;
     if(target && !reachableTotals(set.questions).includes(target))
       warns.push(`${label}: no combination of these questions adds up to ${target}.`);
     if(+set.pass > (target||pool))
@@ -1519,7 +1522,7 @@ $('tSave').onclick=()=>{
     return toast('Question weights must be greater than zero.');
   if(isAggregate(T)){
     const qs=aggQuestions(T), pool=totalWeight(qs), target=+T.final.total||0;
-    if(qs.length){
+    if(qs.length && pool){
       if(target && !reachableTotals(qs).includes(target))
         return toast(`No combination of the story's questions adds up to ${target}.`);
       if(+T.final.pass > (target||pool)) return toast('The passing score is above the story\u2019s total.');
@@ -1531,6 +1534,7 @@ $('tSave').onclick=()=>{
   for(const [label,set,active] of setsToCheck){
     if(!active||!set.questions.length) continue;
     const pool=totalWeight(set.questions), target=+set.total||0;
+    if(!pool) continue;                       // written answers only
     if(target && !reachableTotals(set.questions).includes(target))
       return toast(`${label}: no combination of these questions adds up to ${target}.`);
     if(+set.pass > (target||pool)) return toast(`${label}: the passing score is above the total.`);
