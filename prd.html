@@ -190,7 +190,7 @@
         <tr><td>Feature</td><td>Contextual Video Coaching — eight in-app widget views, My trainings hub, admin console</td></tr>
         <tr><td>Document owner</td><td>Product</td></tr>
         <tr><td>Status</td><td>Draft for review</td></tr>
-        <tr><td>Version</td><td>2.5</td></tr>
+        <tr><td>Version</td><td>2.6</td></tr>
         <tr><td>Date</td><td>7 September 2026</td></tr>
         <tr><td>Reviewers</td><td>Design, Frontend, Backend, Field Ops, L&amp;D</td></tr>
       </tbody>
@@ -564,16 +564,20 @@
 
   <h3>6.8 Feedback model</h3>
   <div class="note">
-    <p><strong>The correct answer is never revealed.</strong> Feedback is given per selection, on the FSE’s own choice only.</p>
+    <p><strong>Nothing is revealed during an attempt.</strong> Not the correct answer, and not whether the FSE's own selection was right. The only feedback is the score at the end.</p>
   </div>
   <ul>
-    <li>Selecting an option locks it for that question and marks it correct or not correct. On a multi-answer question, feedback follows the submitted set.</li>
-    <li>Feedback marks only what the FSE picked. A correct option they did not select is never highlighted, so the key cannot be reconstructed by elimination across retakes.</li>
-    <li>Remaining options are disabled and de-emphasised. The right answer is not highlighted.</li>
-    <li>An incorrect selection prompts a re-watch and notes the assessment can be retaken.</li>
-    <li>The result screen shows the score and the pass mark only — no question list, no answer key.</li>
+    <li>Selecting an option highlights it and nothing more. It can be changed freely until the FSE moves on.</li>
+    <li>No question is marked right or wrong mid-attempt, and no option is ever styled as the answer.</li>
+    <li>The result screen shows the score against the pass mark, plus the configured message. No question list, no answer key.</li>
   </ul>
-  <p>An end-of-quiz answer key would let an FSE memorise the options and clear a retake without engaging with the content, which defeats the purpose of gating anything on the result.</p>
+  <p>An earlier build marked each selection correct or not as it was made. That was worse than an end-of-quiz answer key: across two or three retakes an FSE could map the whole paper by elimination without ever engaging with the content, which defeats the point of gating anything on the result.</p>
+
+  <h3>6.8a A failed attempt reopens the content</h3>
+  <p>Failing does not offer an immediate retry. The videos the assessment covers are marked unwatched, so the assessment locks again until the FSE has been through them — a per-video check reopens its own video, a combined assessment reopens the whole set.</p>
+  <div class="note">
+    <p>This is what makes the pass mark mean something. Retrying straight away lets an FSE brute-force a paper by permutation, especially once questions are drawn at random. Sending them back to the content, with skipping already off wherever the training is mandatory (§6.3), makes a second attempt cost the same as the first.</p>
+  </div>
 
   <h3>6.9 The homepage blocker</h3>
   <p>A placement may mark a training as a homepage blocker. The home screen is then sealed until the training is finished — there is no dismiss and no timer.</p>
@@ -717,6 +721,7 @@
         <tr><td class="mono">assessment_question_answered</td><td>Each option selection</td><td>position, correct</td></tr>
         <tr><td class="mono">assessment_passed</td><td>Score is at or above the pass mark</td><td>score, total, percent, pass_mark, attempt</td></tr>
         <tr><td class="mono">assessment_failed</td><td>Score is below the pass mark</td><td>score, total, percent, pass_mark, attempt</td></tr>
+        <tr><td class="mono">assessment_reopened_content</td><td>A failure reset the videos the assessment covers</td><td>assessment_id, video_ids, attempt</td></tr>
         <tr><td class="mono">assessment_timed_out</td><td>The countdown reached zero and the attempt was auto-submitted</td><td>answered, total, seconds_limit, percent</td></tr>
         <tr><td class="mono">playback_resumed</td><td>Timed media opened at a stored position rather than the start</td><td>content_id, resume_seconds, duration</td></tr>
         <tr><td class="mono">playback_restarted</td><td>“Start over” chosen instead of resuming</td><td>content_id, discarded_seconds</td></tr>

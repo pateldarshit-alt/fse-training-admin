@@ -488,7 +488,8 @@ function player(v, onClose){
       box.innerHTML = `
         ${p.attempted?`<div style="color:#ffb1b3;font-size:11px;text-align:center;margin-bottom:8px">Last attempt ${p.score}/${p.total} — ${v.pass_score} needed.</div>`:''}
         <button data-a style="width:100%;background:#00baf2;color:#04263f;border:none;border-radius:9px;padding:12px;font:inherit;font-size:13px;font-weight:800;cursor:pointer">${v.mandatory?'Take Assessment (Required)':'Take Assessment'}${p.attempted?' · Retry':''}</button>`;
-      box.querySelector('[data-a]').onclick = () => assessment(v, cta);
+      box.querySelector('[data-a]').onclick = () =>
+        assessment(Object.assign({}, v, {rewatch_ids: v.rewatch_ids || [v.id]}), cta);
       return;
     }
     box.innerHTML = `
@@ -546,8 +547,7 @@ function assessment(v, onClose){
   if(!qs.length) return onClose && onClose();
 
   let i = 0;
-  const ans = new Array(qs.length).fill(null);   // null | number[] (settled)
-  let draft = [];                                // in-progress multi selection
+  const ans = new Array(qs.length).fill(null);   // null | number[]
   const limit = +v.timer_seconds || 0;
   let left = limit, tick = null, expired = false;
 
@@ -571,9 +571,12 @@ function assessment(v, onClose){
   }
 
   function q(){
-    const Q = qs[i], settled = ans[i] !== null;
-    const chosen = settled ? ans[i] : draft;
-    const right = settled && sameSet(ans[i], Q.correct);
+    const Q = qs[i];
+    // Nothing is marked right or wrong mid-attempt, and no answer key is ever
+    // shown. Per-question feedback let an FSE learn the paper by elimination
+    // across retakes, which is exactly what gating on a score is meant to stop.
+    const chosen = ans[i] || [];
+    const ready = chosen.length > 0;
     el.innerHTML = `
       <div style="display:flex;align-items:center;gap:9px;padding:12px 14px;border-bottom:1px solid #eef1f4">
         ${v.mandatory?'<span style="width:18px"></span>':'<button data-x style="background:none;border:none;font-size:18px;color:#555;cursor:pointer;line-height:1">✕</button>'}
@@ -591,49 +594,42 @@ function assessment(v, onClose){
         <div style="display:flex;flex-direction:column;gap:9px">
           ${Q.options.map((o,k)=>{
             const on = chosen.includes(k);
-            // Feedback marks only what they picked. Correct options they did
-            // not pick stay hidden, so the key is never handed over.
-            const ok = settled && on && Q.correct.includes(k);
-            const no = settled && on && !Q.correct.includes(k);
-            return `<button data-o="${k}" ${settled?'disabled':''} style="display:flex;gap:9px;align-items:center;text-align:left;padding:11px 13px;border-radius:9px;
-              border:1.5px solid ${ok?'#0a7a42':no?'#c53030':on?'#004299':'#e2e8f0'};
-              background:${ok?'#e6faf0':no?'#fff0f0':on?'#f2f7ff':'#fff'};
-              color:#1a1a2e;font:inherit;font-size:12.5px;font-weight:600;cursor:${settled?'default':'pointer'};opacity:${settled&&!on?.5:1}">
-              ${Q.multi?`<span style="width:17px;height:17px;border-radius:4px;flex-shrink:0;border:1.5px solid ${on?'#004299':'#cbd5e0'};background:${on?'#004299':'#fff'};color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center">${on?'✓':''}</span>`:''}
+            return `<button data-o="${k}" style="display:flex;gap:9px;align-items:center;text-align:left;padding:11px 13px;border-radius:9px;
+              border:1.5px solid ${on?'#004299':'#e2e8f0'};background:${on?'#f2f7ff':'#fff'};
+              color:#1a1a2e;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer">
+              <span style="width:17px;height:17px;flex-shrink:0;border:1.5px solid ${on?'#004299':'#cbd5e0'};
+                background:${on?'#004299':'#fff'};color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center;
+                border-radius:${Q.multi?'4px':'50%'}">${on?'✓':''}</span>
               <span style="flex:1">${esc(o)}</span>
-              ${ok?'<span style="color:#0a7a42;font-weight:800">✓</span>':''}${no?'<span style="color:#c53030;font-weight:800">✕</span>':''}
             </button>`;}).join('')}
         </div>
-        ${settled?`<div style="margin-top:13px;padding:10px 12px;border-radius:9px;background:${right?'#e6faf0':'#fff0f0'}">
-          <div style="font-size:12px;font-weight:800;color:${right?'#0a7a42':'#c53030'}">${right?'✓ Correct':'✕ Not correct'}</div>
-          ${right?'':`<div style="font-size:11px;color:#8a5555;margin-top:3px;line-height:1.45">${
-            Q.multi?'Every correct option has to be selected, and nothing else. ':''}Re-watch the training if you are unsure — the assessment can be retaken.</div>`}
-        </div>`:''}
+        <div style="margin-top:14px;font-size:11px;color:#a0aec0;line-height:1.5">
+          You can change your answer until you move on. Your score is shown at the end.
+        </div>
       </div>
       <div style="padding:12px 15px 18px;border-top:1px solid #eef1f4">
-        ${!settled && Q.multi
-          ? `<button data-check ${draft.length?'':'disabled'} style="width:100%;padding:12px;border-radius:8px;border:none;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;
-              background:${draft.length?'#004299':'#e2e8f0'};color:${draft.length?'#fff':'#a0aec0'}">Check answer${draft.length?` · ${draft.length} selected`:''}</button>`
-          : `<button data-n ${settled?'':'disabled'} style="width:100%;padding:12px;border-radius:8px;border:none;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;
-              background:${settled?'#004299':'#e2e8f0'};color:${settled?'#fff':'#a0aec0'}">${i===qs.length-1?'Submit':'Next'}</button>`}
+        <button data-n ${ready?'':'disabled'} style="width:100%;padding:12px;border-radius:8px;border:none;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;
+          background:${ready?'#004299':'#e2e8f0'};color:${ready?'#fff':'#a0aec0'}">${
+          i===qs.length-1?'Submit':'Next'}${Q.multi&&ready?` · ${chosen.length} selected`:''}</button>
       </div>`;
 
     const x = el.querySelector('[data-x]'); if(x) x.onclick = shut;
     el.querySelectorAll('[data-o]').forEach(b => b.onclick = () => {
-      if(ans[i] !== null) return;
       const k = +b.dataset.o;
+      const cur = ans[i] || [];
       if(Q.multi){
-        const at = draft.indexOf(k);
-        if(at >= 0) draft.splice(at,1); else draft.push(k);
-        q();
-      } else { ans[i] = [k]; q(); }
+        const at = cur.indexOf(k);
+        ans[i] = at >= 0 ? cur.filter(x=>x!==k) : [...cur, k].sort((a,b)=>a-b);
+        if(!ans[i].length) ans[i] = [];
+      } else {
+        ans[i] = [k];
+      }
+      q();
     });
-    const chk = el.querySelector('[data-check]');
-    if(chk) chk.onclick = () => { if(!draft.length) return; ans[i] = [...draft]; q(); };
     const nx = el.querySelector('[data-n]');
     if(nx) nx.onclick = () => {
-      if(ans[i] === null) return;
-      if(i < qs.length-1){ i++; draft = []; q(); } else fin();
+      if(!(ans[i]||[]).length) return;
+      if(i < qs.length-1){ i++; q(); } else fin();
     };
     startTimer();
   }
@@ -652,6 +648,13 @@ function assessment(v, onClose){
       ? (v.pass_message || 'Well done — you have cleared this assessment.')
       : (v.fail_message || 'You have not cleared it this time. Rewatch the content and try again.');
 
+    // A failed attempt reopens the content: the videos are marked unwatched, so
+    // the assessment locks again until they have been through them. Retrying
+    // straight away would let an FSE brute-force the paper without relearning.
+    if(!passed){
+      (v.rewatch_ids || []).forEach(id => save(id, {watched:false, pos:0}));
+    }
+
     el.innerHTML = `
       <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;overflow-y:auto">
         <div style="width:80px;height:80px;border-radius:50%;background:${passed?'#e6faf0':expired?'#fff4dc':'#fff5f5'};display:flex;align-items:center;justify-content:center;font-size:34px;margin-bottom:16px">${passed?'🎉':expired?'⏱':'📘'}</div>
@@ -666,18 +669,13 @@ function assessment(v, onClose){
           font-size:12.5px;font-weight:600;line-height:1.55">${esc(msg)}</div>
       </div>
       <div style="padding:12px 15px 18px;border-top:1px solid #eef1f4;display:flex;flex-direction:column;gap:7px">
-        <button data-p style="width:100%;padding:12px;border-radius:9px;border:none;background:#004299;color:#fff;font:inherit;font-size:13.5px;font-weight:800;cursor:pointer">${passed?'Done':'Retry assessment'}</button>
-        ${!passed && !v.mandatory?'<button data-c style="background:none;border:none;color:#718096;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;padding:8px">I&rsquo;ll try later</button>':''}
+        ${!passed?`<div style="font-size:11.5px;color:#8a5555;text-align:center;line-height:1.5;padding:0 4px 4px">
+          ${(v.rewatch_ids||[]).length>1?'The videos have been reopened.':'The video has been reopened.'}
+          Work through ${(v.rewatch_ids||[]).length>1?'them':'it'} again and the assessment will unlock.</div>`:''}
+        <button data-p style="width:100%;padding:12px;border-radius:9px;border:none;background:#004299;color:#fff;font:inherit;font-size:13.5px;font-weight:800;cursor:pointer">${passed?'Done':'Back to the video'+((v.rewatch_ids||[]).length>1?'s':'')}</button>
       </div>`;
-    el.querySelector('[data-p]').onclick = () => {
-      if(passed) return shut();
-      // A retry draws a fresh paper of the same worth, not the same questions.
-      const next = pickQuestions(v);
-      qs.length = 0; qs.push(...next);
-      ans.length = 0; for(let n=0;n<qs.length;n++) ans.push(null);
-      i = 0; draft = []; left = limit; expired = false; q();
-    };
-    const c = el.querySelector('[data-c]'); if(c) c.onclick = shut;
+    // Pass or fail, the only way out is back to the content.
+    el.querySelector('[data-p]').onclick = shut;
   }
   q();
 }
@@ -995,11 +993,12 @@ const VIEWS = [
           cta.innerHTML = `<button data-a style="width:100%;background:#fff;color:#04263f;border:none;border-radius:99px;padding:12px;font:inherit;font-size:13px;font-weight:800;cursor:pointer">Check after this segment</button>`;
           cta.querySelector('[data-a]').onclick = () => assessment(
             {id:v.id,title:v.title,questions:v.questions,pass_score:v.pass,total_score:v.total,
-             timer_seconds:t.timer,once_only:t.onceOnly,mandatory:t.mandatory}, draw);
+             rewatch_ids:[v.id],timer_seconds:t.timer,once_only:t.onceOnly,mandatory:t.mandatory}, draw);
         } else if(i===t.videos.length-1 && t.final.enabled){
           cta.innerHTML = `<button data-f style="width:100%;background:#fff;color:#04263f;border:none;border-radius:99px;padding:12px;font:inherit;font-size:13px;font-weight:800;cursor:pointer">Take the combined assessment</button>`;
           cta.querySelector('[data-f]').onclick = () => assessment(
             {id:t.id+'-final',title:t.name,questions:t.final.questions,pass_score:t.final.pass,
+             rewatch_ids:t.videos.map(x=>x.id),
              total_score:t.final.total,timer_seconds:t.timer,once_only:t.onceOnly,mandatory:t.mandatory}, draw);
         } else {
           cta.innerHTML = `<div style="color:#c9d6ea;font-size:11.5px">Tap the sides to move between segments.</div>`;
@@ -1051,6 +1050,7 @@ const VIEWS = [
           player({id:v.id,title:v.title,kind:v.kind||'video',
                   questions:t.perVideo?v.questions:[],
                   pass_score:v.pass,mandatory:t.mandatory,
+                  rewatch_ids:[v.id],
                   total_score:v.total,timer_seconds:t.timer,
                   pass_message:v.passMsg,fail_message:v.failMsg,
                   allow_seek:t.allowSeek!==false, once_only:t.onceOnly,
@@ -1058,6 +1058,7 @@ const VIEWS = [
         } else {
           assessment({id:t.id+'-final',title:t.name,questions:t.final.questions,
                       pass_score:t.final.pass,mandatory:t.mandatory,
+                      rewatch_ids:t.videos.map(x=>x.id),
                       total_score:t.final.total,timer_seconds:t.timer,
                       once_only:t.onceOnly,
                       pass_message:t.final.passMsg,fail_message:t.final.failMsg}, ()=>detail(t));
