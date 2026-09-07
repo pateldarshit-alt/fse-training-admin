@@ -265,18 +265,16 @@
   </div>
 
   <div class="card">
-    <div class="hd"><span class="step">3</span><h2>Assessment</h2><span class="sub">Checks can sit after each video, after all of them, or both.</span></div>
-    <div class="slotnote" id="noAssess" hidden style="text-align:left;margin-bottom:4px"></div>
+    <div class="hd"><span class="step">3</span><h2>Assessment</h2><span class="sub" id="assessSub"></span></div>
+    <div class="slotnote" id="assessNote" style="text-align:left;margin-bottom:14px"></div>
+    <label class="toggle-row"><input type="checkbox" id="f_mand">
+      <span>This training is mandatory<small>Adds the MANDATORY tag wherever it appears, and removes the “I’ve watched this” shortcut.</small></span></label>
     <label class="toggle-row" id="perRow"><input type="checkbox" id="f_pervideo">
-      <span>A quick check after <b>each</b> video<small id="perHint">Questions are edited inside each video row above.</small></span></label>
+      <span id="perLabel">A check after <b>each</b> video<small id="perHint">Questions are edited inside each video row above.</small></span></label>
     <label class="toggle-row" id="finalRow"><input type="checkbox" id="f_final">
-      <span id="finalLabel">A combined assessment after <b>all</b> videos<small>One question set covering the whole training, with a single pass mark.</small></span></label>
-    <div id="combinedWhy" hidden style="margin:-4px 0 14px 26px;padding:10px 13px;border-radius:9px;
-      background:var(--amber-bg);color:var(--amber-fg);font-size:14.5px;line-height:1.55"></div>
+      <span>One assessment after <b>all</b> the videos<small>The FSE works through the set in order, then takes a single question set covering the whole training.</small></span></label>
     <div id="finalBox" hidden style="border-top:1px solid var(--line);padding-top:16px;margin-top:6px">
       <div id="finalRules"></div>
-      <label class="toggle-row"><input type="checkbox" id="f_mand">
-        <span>Passing is mandatory<small>Adds the MANDATORY tag and a required call to action wherever this training is placed.</small></span></label>
       <div id="finalQs"></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
         <button class="btn btn-ghost btn-sm" type="button" id="addFinalQ">＋ Add question</button>
@@ -336,13 +334,6 @@
       </div>
     </div>
     <div id="p_srcBody"></div>
-    <div id="p_refineBox" style="border-top:1px solid var(--line);padding-top:16px;margin-top:4px">
-      <div style="font-size:13px;font-weight:700;color:var(--faint);letter-spacing:.05em;text-transform:uppercase;margin-bottom:10px">Narrow it further <span style="text-transform:none;letter-spacing:0;font-weight:400">— optional, applied on top of the source</span></div>
-      <div class="form-grid">
-        <div class="form-group"><label>FSE stage (AON)</label><select id="p_aon"></select></div>
-        <div class="form-group"><label>Performance trigger</label><select id="p_trigger"></select></div>
-      </div>
-    </div>
     <div class="slotnote" id="p_audNote" style="margin-top:14px;text-align:left"></div>
   </div>
 
@@ -356,14 +347,9 @@
     </div>
     <div style="margin-top:16px;border-top:1px solid var(--line);padding-top:16px">
       <label class="toggle-row" id="p_hubRow"><input type="checkbox" id="p_hub">
-        <span>Also list this in <b>Trainings &amp; Assessment</b><small id="p_hubHint">The FSE can find and complete it from the hub as well as on the screen.</small></span></label>
+        <span>Also list this in <b>My trainings</b><small id="p_hubHint">The FSE can find and complete it from the hub as well as on the screen.</small></span></label>
       <label class="toggle-row" id="p_blockRow"><input type="checkbox" id="p_blocker">
-        <span>Homepage blocker<small id="p_blockHint">A gate on the home screen sends the FSE to Trainings &amp; Assessment, with no way past it until this is done. Available whatever screen the training sits on.</small></span></label>
-      <div class="subfield" id="p_dueBox" hidden>
-        <label for="p_due">Complete by <small>— the app is blocked from this moment until the training is done</small></label>
-        <input type="datetime-local" id="p_due">
-        <div id="p_dueNote" style="font-size:13px;color:var(--faint);margin-top:7px;line-height:1.5"></div>
-      </div>
+        <span>Homepage blocker<small id="p_blockHint">A gate on the home screen sends the FSE to My trainings, with no way past it until this is done. Available whatever screen the training sits on.</small></span></label>
       <label class="toggle-row" id="p_selfRow"><input type="checkbox" id="p_self">
         <span>Let the FSE mark videos watched without finishing them<small id="p_selfHint">Adds an “I’ve watched this” button.</small></span></label>
     </div>
@@ -388,7 +374,7 @@
 <script>
 const SEED = {"trainings": [{"id": "tr1", "name": "SoundBox pitch masterclass", "widget": "stories", "videos": [{"title": "Opening the conversation", "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}], "files": [{"lang": "English", "name": "soundbox_pitch_merchant.mp4"}, {"lang": "Hindi", "name": "soundbox_pitch_merchant_hi.mp4"}, {"lang": "Tamil", "name": "soundbox_pitch_merchant_ta.mp4"}], "pass": 60, "maxq": ""}, {"title": "Explaining the plan", "questions": [{"question": "A merchant asks what the ₹125 a month actually covers. What is the accurate answer?", "options": ["A one-time purchase of the device", "The monthly rental for the SB-V2 Music 4G, GST included", "A refundable deposit returned after a year", "Unlimited free QR stickers"], "correct_index": 1}], "files": [{"lang": "English", "name": "soundbox_plans.mp4"}, {"lang": "Hindi", "name": "soundbox_plans_hi.mp4"}], "pass": 60, "maxq": ""}, {"title": "Handling the price objection", "questions": [{"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_objection_price.mp4"}], "pass": 60, "maxq": ""}], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}, {"question": "What real-time benefit does SoundBox give a merchant?", "options": ["Free advertising on the box", "Instant voice and display confirmation for every payment", "Unlimited free phone calls", "A physical cash register"], "correct_index": 1}, {"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "pass": 70, "maxq": "", "mandatory": true}}, {"id": "tr2", "name": "SoundBox device setup", "widget": "carousel", "videos": [{"title": "Adding a new device", "questions": [{"question": "On the Add Device Details screen, which device type do you select for a monthly rental plan?", "options": ["Purchase", "Rental", "Demo", "Replacement"], "correct_index": 1}], "files": [{"lang": "English", "name": "soundbox_add_device.mp4"}, {"lang": "Hindi", "name": "soundbox_add_device_hi.mp4"}, {"lang": "Marathi", "name": "soundbox_add_device_mr.mp4"}], "pass": 70, "maxq": ""}, {"title": "Selecting the right plan", "questions": [{"question": "For the Monthly Subscription plan at ₹125/month, what does the screen say about UPI Autopay?", "options": ["It is optional for the merchant", "It is not supported on rental plans", "It is required — the screen shows Yes", "It replaces the monthly rental"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_plan_selection.mp4"}, {"lang": "Hindi", "name": "soundbox_plan_selection_hi.mp4"}], "pass": 70, "maxq": ""}, {"title": "Verifying the first payment", "questions": [{"question": "The screen shows ₹125 as the total amount to be collected. What does that figure include?", "options": ["Only the one-time charge", "A refundable security deposit", "The monthly rental, inclusive of 18% GST", "The full purchase price of the device"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_payment_verify.mp4"}], "pass": 70, "maxq": ""}], "perVideo": true, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "mandatory": false}}, {"id": "tr3", "name": "QR mapping — revised SOP", "widget": "interstitial", "videos": [{"title": "What changed in the SOP", "questions": [], "files": [{"lang": "English", "name": "qr_mapping_sop_v4.mp4"}], "pass": 70, "maxq": ""}], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "What does QR mapping actually link?", "options": ["The FSE's phone to the TL's phone", "The merchant's QR to the correct MID, so payments settle to the right account", "The SoundBox to the shop's WiFi router", "The merchant's Aadhaar to their PAN"], "correct_index": 1}, {"question": "What do you verify immediately after mapping a new QR?", "options": ["Nothing — mapping is instant and never fails", "That the merchant has restarted the shop", "Do a small test payment and confirm the SoundBox announces it", "Peel off the old sticker before checking anything"], "correct_index": 2}, {"question": "The QR you are about to map is already mapped to a different MID. What is the correct action?", "options": ["Stop and raise a remapping request instead of forcing a new mapping", "Map it anyway and inform the TL later", "Peel the sticker off and reuse it at another shop", "Ask the merchant to create a new business account"], "correct_index": 0}], "pass": 70, "maxq": "", "mandatory": true}}, {"id": "tr4", "name": "New joiner essentials", "widget": "module", "videos": [{"title": "Your first login", "questions": [{"question": "Where does a merchant change app language or notification preferences?", "options": ["In the Offers carousel", "On the QR sticker", "In the Settings section of the app", "On the SoundBox device itself"], "correct_index": 2}], "files": [{"lang": "English", "name": "first_login_setup.mp4"}, {"lang": "Hindi", "name": "first_login_setup_hi.mp4"}, {"lang": "Tamil", "name": "first_login_setup_ta.mp4"}], "pass": 70, "maxq": ""}, {"title": "Finding your way around", "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}], "files": [{"lang": "English", "name": "app_navigation_tour.mp4"}, {"lang": "Hindi", "name": "app_navigation_tour_hi.mp4"}], "pass": 70, "maxq": ""}, {"title": "Daily check-in", "questions": [{"question": "On the Merchant Detail screen, which tab holds the merchant's open tasks?", "options": ["Details", "Tasks", "Interactions", "Offers"], "correct_index": 1}], "files": [{"lang": "English", "name": "daily_checkin.mp4"}], "pass": 70, "maxq": ""}, {"title": "Reading your dashboard", "questions": [{"question": "Which three tabs make up the Team Performance view?", "options": ["Participation, Productivity, Leaderboard", "Sales, Refunds, Payouts", "Attendance, Salary, Incentive", "Tasks, Merchants, Devices"], "correct_index": 0}], "files": [{"lang": "English", "name": "performance_dashboard.mp4"}], "pass": 70, "maxq": ""}], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}, {"question": "Where does a merchant manage their business profile in the v2 app?", "options": ["Under the \"Manage your Business\" section", "Under Offers", "Under Refer & Earn", "Under chat support"], "correct_index": 0}, {"question": "A merchant cannot find a feature after the v2 update. What do you do?", "options": ["Ask them to downgrade the app", "Show them where it has moved to in the updated navigation", "Tell them the feature was removed", "Raise a device replacement request"], "correct_index": 1}], "pass": 80, "maxq": 2, "mandatory": true}}, {"id": "tr5", "name": "Re-KYC walkthrough", "widget": "bottom-sheet", "videos": [{"title": "Clearing Action Required items", "questions": [], "files": [{"lang": "English", "name": "rekyc_completion.mp4"}, {"lang": "Hindi", "name": "rekyc_completion_hi.mp4"}], "pass": 70, "maxq": ""}], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "On the Re-KYC check screen, which items sit under \"Action Required\"?", "options": ["Bank Details only", "KYC Details and Business Proof", "Device model and plan", "Nothing — Re-KYC completes automatically"], "correct_index": 1}, {"question": "The profile upgrade is pending on the P4B app. What do you ask the merchant to do?", "options": ["Visit the nearest bank branch", "Reinstall the consumer Paytm app", "Open Paytm for Business, scroll to \"Manage your Business\" and select \"Upgrade Profile\"", "Buy a new SoundBox"], "correct_index": 2}, {"question": "Bank Details already appears under \"Completed\". What does that mean?", "options": ["That part of the Re-KYC is done — only the pending items still need action", "The whole Re-KYC is finished", "The merchant's account has been blocked", "The bank account has to be entered again"], "correct_index": 0}], "pass": 70, "maxq": "", "mandatory": true}}, {"id": "tr6", "name": "Reading your performance dashboard", "widget": "inline-card", "videos": [{"title": "Participation, productivity, leaderboard", "questions": [], "files": [{"lang": "English", "name": "performance_dashboard.mp4"}], "pass": 70, "maxq": ""}], "perVideo": false, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "mandatory": false}}], "placements": [{"id": "pl1", "trainingId": "tr1", "screen": "Home", "maxViews": 5, "expiry": "", "blocker": false, "self": false, "app": "gg", "hub": true, "audience": {"source": "clevertap", "segmentId": "ct_sb_below", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}}, {"id": "pl2", "trainingId": "tr2", "screen": "Payments", "maxViews": "", "expiry": "", "blocker": false, "self": false, "app": "gg", "hub": true, "audience": {"source": "clevertap", "segmentId": "ct_retired_2024", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}}, {"id": "pl3", "trainingId": "tr3", "screen": "Home", "maxViews": "", "expiry": "", "blocker": true, "self": false, "app": "gg", "hub": true, "audience": {"source": "everyone", "segmentId": "", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}}, {"id": "pl4", "trainingId": "tr5", "screen": "KYC", "maxViews": "", "expiry": "", "blocker": false, "self": false, "app": "gg", "hub": true, "audience": {"source": "everyone", "segmentId": "", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}}, {"id": "pl5", "trainingId": "tr6", "screen": "Dashboard", "maxViews": "", "expiry": 14, "blocker": false, "self": true, "app": "gg", "hub": true, "audience": {"source": "everyone", "segmentId": "", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}}, {"id": "pl6", "trainingId": "tr1", "screen": "Onboarding", "maxViews": "", "expiry": 30, "blocker": false, "self": false, "app": "gg", "hub": true, "audience": {"source": "org", "segmentId": "", "team": "Sales", "subteam": "Merchant Acquisition", "ecodes": {"name": "", "count": 0}, "stage": "new", "trigger": ""}}, {"id": "pl7", "trainingId": "tr6", "screen": "Profile", "maxViews": 2, "expiry": "", "blocker": false, "self": true, "app": "gg", "hub": true, "audience": {"source": "ecodes", "segmentId": "", "team": "", "subteam": "", "ecodes": {"name": "pilot_cohort.csv", "count": 312}, "stage": "", "trigger": ""}}, {"id": "plhtr4", "trainingId": "tr4", "app": "gg", "screen": "__hub__", "maxViews": "", "expiry": "", "blocker": false, "hub": true, "self": false, "audience": {"source": "everyone", "segmentId": "", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}}, {"id": "plf1", "trainingId": "tr6", "app": "force", "screen": "Reports", "maxViews": "", "expiry": "", "blocker": false, "hub": true, "self": false, "audience": {"source": "everyone", "segmentId": "", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}}]};
 
-const HUB='__hub__';   // not an app screen — the Trainings & Assessment section
+const HUB='__hub__';   // not an app screen — the My trainings section
 const APPS=[{id:'gg',label:'GG App'},{id:'force',label:'Force App'}];
 
 // Which widget slots the FE team has built into each screen, per app.
@@ -416,15 +402,12 @@ const LANGS_UNUSED=null;
 const LANGS=['English','Hindi','Tamil','Telugu','Kannada','Bengali','Marathi'];
 const TEAMS={'Sales':['Merchant Acquisition','Cross-sell & Upsell'],'Service':['Service & Support','Retention'],
   'Collections':['Field Collections','Tele-Collections'],'Onboarding & Compliance':['KYC & Onboarding','Risk & Compliance']};
-const AON=[{id:'',label:'All stages'},{id:'new',label:'New — 0–15 days'},{id:'semi_new',label:'Semi-new — 15–45 days'},{id:'old',label:'Old — 45+ days'}];
-const TRIGGERS=[{id:'',label:'No trigger'},{id:'nap_allocation',label:'Task or NAP allocation'},
-  {id:'onboarding_short',label:'Onboarding target not met'},{id:'sb_short',label:'SB deployment target not met'}];
 
 // A widget's layout decides how many videos fit and whether the FSE reliably
 // reaches an end — which is what a combined assessment needs.
 const WIDGETS=[
-  {id:'module',      label:'Hub only — no screen widget',  max:20, plays:true, combined:true, hubOnly:true,
-   note:'Never placed on an app screen. The FSE works through it in order from Trainings & Assessment, so a combined pass mark is available.'},
+  {id:'module',      label:'My trainings page',        max:20, plays:false, combined:true, hubOnly:true,
+   note:'Never placed on an app screen. The FSE works through the videos in order from My trainings, then takes one assessment at the end.'},
   {id:'mini-banner', label:'Mini Banner',              max:1,  plays:true,  combined:false, placeable:true,
    note:'Shows one collapsed strip. One video.'},
   {id:'interstitial',label:'Interstitial (Full-Screen)',max:1, plays:true,  combined:false, placeable:true,
@@ -432,23 +415,22 @@ const WIDGETS=[
   {id:'pip',         label:'Picture-in-Picture',       max:1,  plays:true,  combined:false, placeable:true,
    note:'A single floating player.'},
   {id:'bottom-sheet',label:'Bottom Sheet',             max:8,  plays:true,  combined:false, placeable:true,
-   note:'Lists videos in a sheet. Order is the list order.',
-   why:'The FSE opens one video and closes the sheet. Nothing guarantees they reach the last one, so a combined assessment has no moment to fire.'},
+   note:'Lists videos in a sheet. Order is the list order.'},
   {id:'accordion',   label:'Inline Accordion',         max:8,  plays:true,  combined:false, placeable:true,
-   note:'Numbered pills switch between videos, in order.',
-   why:'Pills are browsed in any order and the row can be collapsed at any point — there is no reliable end of the set.'},
+   note:'Numbered pills switch between videos, in order.'},
   {id:'carousel',    label:'Carousel',                 max:12, plays:true,  combined:false, placeable:true,
-   note:'Horizontal cards, swiped in order.',
-   why:'The FSE picks the one card that matches the merchant in front of them. Asking about all three afterwards would test videos they never opened.'},
+   note:'Horizontal cards, swiped in order.'},
   {id:'inline-card', label:'Inline Embedded Card',     max:8,  plays:true,  combined:false, placeable:true,
-   note:'Stacked cards in the page flow, in order.',
-   why:'Each card is opened on its own from the page. There is no point at which the set is finished.'},
-  {id:'stories',     label:'Stories',                  max:10, plays:true,  combined:true,  placeable:true, perVideo:true,
-   note:'One segment per video, auto-advancing. A check after each segment is the norm, and the last segment is a real ending.'},
-  {id:'popup',       label:'Popup Modal',              max:6,  plays:false, combined:false, placeable:true,
-   note:'Lists what is outstanding and hands off to the hub. It plays nothing itself.',
-   why:'This view routes rather than plays, so any assessment belongs to the training it sends the FSE to.'},
+   note:'Stacked cards in the page flow, in order.'},
+  {id:'stories',     label:'Stories',                  max:10, plays:true,  combined:false, placeable:true,
+   note:'One segment per video, auto-advancing.'},
+  {id:'popup',       label:'Popup Modal',              max:6,  plays:true,  combined:false, placeable:true,
+   note:'Stacked cards in a modal, opened one at a time.'},
 ];
+// An assessment sits directly after the video that taught it, on every widget
+// except My trainings page. On a screen widget there is no dependable moment at
+// which "the set is finished", so a combined pass mark has nothing to fire on.
+
 const W=Object.fromEntries(WIDGETS.map(w=>[w.id,w]));
 
 // The hub is always an option: it renders trainings its own way and needs no slot.
@@ -458,7 +440,7 @@ function screensFor(app, wid){
   return list;
 }
 function appLabel(id){ return (APPS.find(a=>a.id===id)||{}).label || id; }
-function screenLabel(v){ return v===HUB ? 'Trainings & Assessment only' : v; }
+function screenLabel(v){ return v===HUB ? 'My trainings only' : v; }
 // Every screen a training could live on, across both apps — used for guidance.
 function screensAnyApp(wid){
   return [...new Set(APPS.flatMap(a=>screensFor(a.id,wid).map(s=>`${a.label} · ${s}`)))];
@@ -469,8 +451,8 @@ const $=id=>document.getElementById(id);
 const fill=(el,items)=>el.innerHTML=items.map(i=>`<option value="${esc(i.id)}">${esc(i.label)}</option>`).join('');
 
 const capOf       = t => (W[t.widget]||{}).max ?? 1;
-const allowsCombined = t => !!(W[t.widget]||{}).combined;
-const allowsPerVideo = t => !!(W[t.widget]||{}).plays;
+const allowsCombined = t => !!(W[t.widget]||{}).combined;   // My trainings page only
+const allowsPerVideo = t => !isModule(t);                   // everywhere else
 const isSingle    = t => capOf(t)===1;
 const isModule    = t => t.widget==='module';   // hub-only
 
@@ -510,6 +492,13 @@ function normSet(set){
 }
 function normT(t){
   if(typeof t.allowSeek!=='boolean') t.allowSeek=true;
+  // Mandatory used to hang off the combined assessment. Only My trainings page
+  // has one now, so it lives on the training instead.
+  if(typeof t.mandatory!=='boolean') t.mandatory = !!(t.final && t.final['mandatory']);
+  if(t.final) delete t.final['mandatory'];
+  // A combined assessment is only meaningful on My trainings page.
+  if(t.widget!=='module' && t.final) t.final.enabled = false;
+  if(t.widget==='module') t.perVideo = false;
   t.videos.forEach(v=>{ v.kind=v.kind||'video'; normSet(v); });
   normSet(t.final);
   return t;
@@ -565,9 +554,10 @@ let T = freshT(), P = freshP();
 let editT = null, editP = null;
 
 function freshT(){ return {id:uid(),name:'',widget:'mini-banner',videos:[blankVideo(1)],allowSeek:true,
-  perVideo:false,final:{enabled:false,questions:[],pass:70,maxq:'',timer:'',passMsg:'',failMsg:'',mandatory:false}}; }
+  mandatory:false,perVideo:false,
+  final:{enabled:false,questions:[],pass:70,maxq:'',timer:'',passMsg:'',failMsg:''}}; }
 function freshP(){ return {id:uid(),trainingId:'',app:'gg',screen:'',audience:blankAudience(),
-  maxViews:'',expiry:'',blocker:false,dueAt:'',hub:true,self:false}; }
+  maxViews:'',expiry:'',blocker:false,hub:true,self:false}; }
 
 // Placements saved before the audience model had five sibling fields whose
 // relationship lived only in a form label. Fold them into one source.
@@ -576,7 +566,6 @@ function normP(p){
   const a = blankAudience();
   if(p.ecodes) { a.source='ecodes'; a.ecodes={name:'imported list', count:p.ecodes}; }
   else if(p.team) { a.source='org'; a.team=p.team; a.subteam=p.subteam||''; }
-  a.stage = p.aon || ''; a.trigger = p.trigger || '';
   p.audience = a;
   delete p.team; delete p.subteam; delete p.aon; delete p.trigger; delete p.ecodes;
   return p;
@@ -725,7 +714,7 @@ function flowT(){
     warns.push(`No screen currently carries a ${W[T.widget].label} slot — this cannot be placed yet.`);
 
   $('tFlow').innerHTML=`<div class="k">What the FSE will experience</div>
-    <div class="v">${bits.join(' → ')}.${T.final.mandatory?' <span class="badge red">MANDATORY</span>':''}</div>
+    <div class="v">${bits.join(' → ')}.${T.mandatory?' <span class="badge red">MANDATORY</span>':''}</div>
     ${warns.map(w=>`<div class="warnline">⚠ ${esc(w)}</div>`).join('')}`;
 }
 
@@ -824,11 +813,11 @@ function drawVideos(){
 
 function renderT(){
   $('f_name').value=T.name; $('f_widget').value=T.widget;
-  $('f_pervideo').checked=T.perVideo; $('f_final').checked=T.final.enabled; $('f_mand').checked=T.final.mandatory;
+  $('f_pervideo').checked=T.perVideo; $('f_final').checked=T.final.enabled; $('f_mand').checked=T.mandatory;
   $('f_seek').checked=T.allowSeek!==false;
   const timed=T.videos.some(v=>kindOf(v).timed);
   $('seekRow').hidden=!timed;
-  $('seekHint').textContent = T.final.mandatory && T.allowSeek!==false
+  $('seekHint').textContent = T.mandatory && T.allowSeek!==false
     ? 'This training is mandatory. Leaving skip-ahead on means an FSE can jump to the end and be marked as having watched it.'
     : 'Scrubbing and 2× playback stay available either way; turning this off only stops them jumping past content they have not reached.';
 
@@ -840,18 +829,20 @@ function renderT(){
         : ' <span class="badge red">No screen carries this slot yet</span>'))
     + (w.perVideo?' <span class="badge warn">per-video checks recommended</span>':'');
 
-  $('noAssess').hidden=canPer; $('perRow').hidden=!canPer||single; $('finalRow').hidden=!canPer;
-  if(!canPer){ T.perVideo=false; T.final.enabled=false;
-    $('noAssess').innerHTML=`<b>${esc(w.label)}</b> carries no assessment. ${esc(w.why||'')}`; }
-  $('finalLabel').innerHTML = single
-    ? 'Add an assessment<small>Shown right after the video. One question set and one pass mark.</small>'
-    : 'A combined assessment after <b>all</b> videos<small>One question set covering the whole training, with a single pass mark.</small>';
-  $('f_final').disabled=!canCombine&&!single;
-  $('finalRow').classList.toggle('off',!canCombine&&!single);
-  if(!canCombine&&!single&&T.final.enabled) T.final.enabled=false;
-  $('combinedWhy').hidden=canCombine||single||!canPer;
-  if(!$('combinedWhy').hidden) $('combinedWhy').innerHTML=
-    `<b>Not available for ${esc(w.label)}.</b> ${esc(w.why||'')}<br><br>Need one combined pass mark across these videos? Set the widget view to <b>Training module</b> instead — the hub is where an FSE completes a set in order.`;
+  // Exactly one shape is offered, decided by the widget view.
+  if(canCombine){ T.perVideo=false; } else { T.final.enabled=false; }
+  $('perRow').hidden   = canCombine;
+  $('finalRow').hidden = !canCombine;
+  $('assessSub').textContent = canCombine
+    ? 'One assessment at the end of the set.'
+    : 'A check sits directly after the video it belongs to.';
+  $('assessNote').innerHTML = canCombine
+    ? `<b>${esc(w.label)}</b> is the only view that carries a combined assessment. The FSE opens it from My trainings, works through the videos in order, then takes one question set at the end.`
+    : `<b>${esc(w.label)}</b> puts the check <b>immediately after the video</b>. On a screen widget there is no dependable point at which the set is finished, so a single pass mark across several videos has nothing to fire on.`
+      + (isSingle(T) ? '' : ' Each video carries its own questions, edited in its row above.');
+  $('perLabel').innerHTML = isSingle(T)
+    ? 'Add an assessment after the video<small>Shown as soon as the video ends. One question set and one pass mark.</small>'
+    : 'A check after <b>each</b> video<small>Questions are edited inside each video row above.</small>';
   $('f_pervideo').checked=T.perVideo; $('f_final').checked=T.final.enabled;
 
   drawVideos();
@@ -884,7 +875,7 @@ function drawTLib(){
   $('tLib').innerHTML=trainings.map(t=>{
     const used=placementsFor(t.id);
     return `<tr>
-      <td class="t">${esc(t.name)}${t.final.mandatory?' <span class="badge red">MANDATORY</span>':''}</td>
+      <td class="t">${esc(t.name)}${t.mandatory?' <span class="badge red">MANDATORY</span>':''}</td>
       <td><span class="badge">${esc(W[t.widget]?.label||t.widget)}</span></td>
       <td class="struct"><b>${t.videos.length}</b> in order<br>${t.videos.slice(0,3).map((v,n)=>`${n+1}. ${esc(v.title)}`).join('<br>')}${t.videos.length>3?`<br>+${t.videos.length-3} more`:''}</td>
       <td class="struct">${structOf(t)}</td>
@@ -917,7 +908,7 @@ function drawTLib(){
 
 /* ── section 2 · placement ─────────────────────────────────────────────── */
 function refreshTrainingPicker(){
-  // Hub-only trainings are still placeable — into Trainings & Assessment.
+  // Hub-only trainings are still placeable — into My trainings.
   fill($('p_training'),[{id:'',label: trainings.length?'— choose a training —':'— build a training first —'}]
     .concat(trainings.map(t=>({id:t.id,label:`${t.name} · ${W[t.widget].label}`}))));
   $('p_training').value=P.trainingId;
@@ -982,13 +973,8 @@ const sourceLabel = id => (SOURCES.find(s => s.id === id) || {}).label || id;
 // A declaration, not a const arrow: freshP() and normP() both run during module
 // init, above this point, and a const would still be in its dead zone there.
 function blankAudience(){
-  return {source:'everyone', segmentId:'', team:'', subteam:'',
-          ecodes:{name:'', count:0}, stage:'', trigger:''};
+  return {source:'everyone', segmentId:'', team:'', subteam:'', ecodes:{name:'', count:0}};
 }
-
-// Ecode lists name people outright. Silently intersecting that with a tenure
-// or performance filter would drop people the admin explicitly listed.
-const takesRefiners = a => a.source !== 'ecodes';
 
 function resolveAudience(P){
   const a = P.audience, chips = [], problems = [];
@@ -1009,12 +995,8 @@ function resolveAudience(P){
     if(!a.ecodes.count) problems.push('Upload an ecode list.');
     else chips.push(`${a.ecodes.count} named ecode${a.ecodes.count===1?'':'s'}`);
   }
-  if(takesRefiners(a)){
-    if(a.stage)   chips.push((AON.find(x=>x.id===a.stage)||{}).label);
-    if(a.trigger) chips.push((TRIGGERS.find(x=>x.id===a.trigger)||{}).label);
-  }
   return {chips, problems, exact: a.source === 'ecodes',
-          label: chips.filter(Boolean).join(' ∩ ') || '—'};
+          label: chips.filter(Boolean).join(' · ') || '—'};
 }
 
 /* ── one validator per object, used by the flow, the table and save ────── */
@@ -1025,23 +1007,16 @@ function validateP(P){
   if(!P.screen) errors.push('Choose a screen.');
   errors.push(...resolveAudience(P).problems);
 
-  if(P.blocker && P.dueAt){
-    const d = new Date(P.dueAt);
-    if(isNaN(d)) errors.push('The complete-by time is not a valid date.');
-    else if(d <= new Date()) errors.push('The complete-by time is in the past — everyone in this audience would be blocked straight away.');
-  }
   // The gate's only action is "Go to Trainings", so the training has to be there.
   if(P.blocker && !P.hub)
-    warnings.push('A homepage blocker sends the FSE to Trainings & Assessment, so hub listing will be turned on when you save.');
-  if(P.blocker && !t.final.mandatory)
+    warnings.push('A homepage blocker sends the FSE to My trainings, so hub listing will be turned on when you save.');
+  if(P.blocker && !t.mandatory)
     warnings.push('A homepage blocker on non-mandatory content will let the FSE past after watching.');
-  if(t.final.mandatory && !P.hub && P.screen !== HUB)
+  if(t.mandatory && !P.hub && P.screen !== HUB)
     warnings.push('Mandatory but not listed in the hub — if the FSE never visits this screen they have no way to complete it.');
   const dupe = placements.find(p => p.id!==P.id && p.trainingId===P.trainingId
                                  && p.screen===P.screen && p.app===P.app && P.screen);
   if(dupe) warnings.push(`Already placed on ${appLabel(P.app)} · ${screenLabel(P.screen)} — the two will compete.`);
-  if(P.audience.source==='clevertap' && P.audience.trigger)
-    warnings.push('A CleverTap segment already encodes behaviour — layering a performance trigger on top narrows it twice.');
   return {errors, warnings, t};
 }
 
@@ -1050,7 +1025,7 @@ function syncScreens(){
   if(!t){ fill($('p_screen'),[{id:'',label:'— choose a training first —'}]);
     $('pScreenNote').innerHTML='Pick a training and the screens carrying its widget appear here.'; return; }
 
-  const hubOpt={id:HUB,label:'Trainings & Assessment only — no app screen'};
+  const hubOpt={id:HUB,label:'My trainings only — no app screen'};
   const scr = isModule(t) ? [] : screensFor(P.app, t.widget);
   fill($('p_screen'), [{id:'',label:'— select screen —'}]
     .concat(scr.map(s=>({id:s,label:s})))
@@ -1060,11 +1035,11 @@ function syncScreens(){
 
   $('pScreenNote').innerHTML = `<b>${esc(t.name)}</b> is a <b>${esc(W[t.widget].label)}</b>. `
     + (isModule(t)
-        ? 'It has no screen widget, so it lives in Trainings &amp; Assessment.'
+        ? 'It has no screen widget, so it lives in My trainings.'
         : (scr.length
             ? `In ${esc(appLabel(P.app))} that slot exists on: ${scr.map(esc).join(', ')}.`
             : `<span style="color:var(--red-fg)">No ${esc(appLabel(P.app))} screen carries that slot.</span> ${screensAnyApp(t.widget).length?`It is available on ${screensAnyApp(t.widget).map(esc).join(', ')}.`:''}`))
-    + (t.final.mandatory?' <span class="badge red">This training is mandatory</span>':'');
+    + (t.mandatory?' <span class="badge red">This training is mandatory</span>':'');
 
   // The hub listing is forced on when the hub *is* the placement.
   const hubForced = P.screen===HUB;
@@ -1080,12 +1055,12 @@ function flowP(){
   if(!t){ $('pFlow').innerHTML='<div class="k">Placement</div><div class="v">Choose a training to see what this will do.</div>'; return; }
   const aud = resolveAudience(P);
   const rules=[P.maxViews&&`stops after ${P.maxViews} views`,P.expiry&&`stops after ${P.expiry} days`,
-               P.blocker&&(P.dueAt?`gates the home screen from ${new Date(P.dueAt).toLocaleString([],{dateStyle:'medium',timeStyle:'short'})}`:'gates the home screen immediately'),
+               P.blocker&&'gates the home screen until it is done',
                P.self&&'self-marking allowed'].filter(Boolean);
   const where = P.screen===HUB
-    ? `in <b>Trainings &amp; Assessment</b> in <b>${esc(appLabel(P.app))}</b>`
+    ? `in <b>My trainings</b> in <b>${esc(appLabel(P.app))}</b>`
     : `as a <b>${esc(W[t.widget].label)}</b> on <b>${esc(appLabel(P.app))} · ${esc(P.screen||'— pick a screen —')}</b>`;
-  const also = (P.hub && P.screen!==HUB) ? ', and is listed in Trainings &amp; Assessment' : '';
+  const also = (P.hub && P.screen!==HUB) ? ', and is listed in My trainings' : '';
   $('pFlow').innerHTML=`<div class="k">What this placement does</div>
     <div class="v"><b>${esc(t.name)}</b> appears ${where}
       for <b>${esc(aud.label)}</b>${also}${rules.length?`, and ${esc(rules.join(', '))}`:''}.</div>
@@ -1154,16 +1129,8 @@ function renderP(){
   $('p_app').value=P.app;
   $('p_maxviews').value=P.maxViews; $('p_expiry').value=P.expiry;
   $('p_blocker').checked=P.blocker; $('p_self').checked=P.self; $('p_hub').checked=P.hub;
-  $('p_due').value=P.dueAt||''; $('p_dueBox').hidden=!P.blocker;
-  $('p_dueNote').innerHTML=dueNote(P);
-  $('p_aon').value=a.stage; $('p_trigger').value=a.trigger;
-
-  // An ecode list names people outright; narrowing it would drop names.
-  const refines = takesRefiners(a);
-  $('p_refineBox').hidden = !refines;
-
   const t=trainingById(P.trainingId);
-  const locked = !!(t && t.final.mandatory);
+  const locked = !!(t && t.mandatory);
   $('p_selfRow').classList.toggle('off',locked);
   $('p_self').disabled=locked;
   $('p_self').checked = locked ? false : P.self;
@@ -1212,17 +1179,15 @@ function drawPLib(){
                  :src==='ecodes'   ?'<span class="badge grey">Ecode list</span>'
                  :src==='org'      ?'<span class="badge grey">Team</span>'
                  :'<span class="badge grey">Everyone</span>';
-    const due=p.blocker?(p.dueAt
-      ? `<span class="badge red">Blocks ${new Date(p.dueAt).toLocaleString([], {dateStyle:'medium',timeStyle:'short'})}</span>`
-      : '<span class="badge red">Blocks immediately</span>'):'';
+    const due=p.blocker?'<span class="badge red">Blocks the app</span>':'';
     const rules=[p.maxViews&&`${p.maxViews} views`,p.expiry&&`${p.expiry} days`].filter(Boolean);
     return `<tr>
       <td class="t">${t?esc(t.name):'<span style="color:var(--red-fg)">Training deleted</span>'}
-        ${t&&t.final.mandatory?' <span class="badge red">MANDATORY</span>':''}
+        ${t&&t.mandatory?' <span class="badge red">MANDATORY</span>':''}
         ${p.blocker?' <span class="badge red">⛔ Blocker</span>':''}</td>
       <td><span class="badge grey">${esc(appLabel(p.app))}</span></td>
       <td>${p.screen===HUB
-        ? '<span class="badge grey">Trainings &amp; Assessment only</span>'
+        ? '<span class="badge grey">My trainings only</span>'
         : `<span class="badge">${esc(p.screen)}</span><br><span class="badge">${t?esc(W[t.widget].label):'—'}</span>`}
         ${p.hub&&p.screen!==HUB?'<br><span class="badge grey">＋ in hub</span>':''}</td>
       <td class="struct">${srcBadge}<br>${esc(aud.label)}
@@ -1245,25 +1210,37 @@ function drawPLib(){
 
 /* ── wiring ────────────────────────────────────────────────────────────── */
 fill($('f_widget'),WIDGETS.map(w=>({id:w.id,label:w.id==='module'?w.label:`${w.label} · up to ${w.max} video${w.max>1?'s':''}`})));
-fill($('p_aon'),AON); fill($('p_trigger'),TRIGGERS);
 $('tplLink').href=CSV_HREF;
 
 $('f_name').oninput=e=>{T.name=e.target.value;flowT();};
+function widgetChanged(prev){
+  // Moving between families discards the assessment the other shape used, and
+  // says so rather than leaving orphaned questions on the record.
+  const wasCombined = !!(W[prev]||{}).combined, nowCombined = allowsCombined(T);
+  if(wasCombined && !nowCombined && T.final.questions.length){
+    T.final={enabled:false,questions:[],pass:70,maxq:'',timer:'',passMsg:'',failMsg:''};
+    toast('Combined assessment removed — this view puts checks after each video');
+  }
+  if(!wasCombined && nowCombined && T.videos.some(v=>v.questions.length)){
+    T.videos.forEach(v=>{v.questions=[];});
+    T.perVideo=false;
+    toast('Per-video checks removed — My trainings page uses one assessment at the end');
+  }
+}
 $('f_widget').onchange=e=>{
+  const prev=T.widget;
   T.widget=e.target.value;
   const cap=capOf(T);
   if(T.videos.length>cap){const d=T.videos.length-cap;T.videos=T.videos.slice(0,cap);
     toast(`${W[T.widget].label} holds ${cap} — removed ${d} video${d>1?'s':''}`);}
-  if(W[T.widget].perVideo&&!T.perVideo){T.perVideo=true;toast('Stories: per-video checks turned on');}
-  if(T.final.enabled&&!allowsCombined(T)&&!isSingle(T)){T.final.enabled=false;
-    toast(`${W[T.widget].label} cannot host a combined assessment — switched off`);}
+  widgetChanged(prev);
   renderT();
 };
 $('f_pervideo').onchange=e=>{T.perVideo=e.target.checked;
   if(T.perVideo) T.videos.forEach(v=>{if(!v.questions.length) v.questions.push(blankQ());}); renderT();};
 $('f_final').onchange=e=>{T.final.enabled=e.target.checked;
   if(T.final.enabled&&!T.final.questions.length) T.final.questions.push(blankQ()); renderT();};
-$('f_mand').onchange=e=>{T.final.mandatory=e.target.checked;renderT();};
+$('f_mand').onchange=e=>{T.mandatory=e.target.checked;renderT();};
 $('addVideo').onclick=()=>{T.videos.push(blankVideo(T.videos.length+1));
   if(T.perVideo) T.videos[T.videos.length-1].questions.push(blankQ()); renderT();};
 $('addFinalQ').onclick=()=>{T.final.questions.push(blankQ());renderT();};
@@ -1312,35 +1289,14 @@ $('p_screen').onchange=e=>{P.screen=e.target.value;syncScreens();flowP();};
 $('p_hub').onchange=e=>{P.hub=e.target.checked;flowP();};
 $('p_maxviews').oninput=e=>{P.maxViews=e.target.value;flowP();};
 $('p_expiry').oninput=e=>{P.expiry=e.target.value;flowP();};
-// A blocker with no deadline gates the FSE from the moment it is published.
-// A blocker with one is a countdown they can see and plan around.
-function dueNote(P){
-  if(!P.blocker) return '';
-  if(!P.dueAt) return 'No deadline set — the gate applies immediately and stays up until the training is done. '
-    + 'Set a time to give the FSE a window instead.';
-  const d=new Date(P.dueAt);
-  if(isNaN(d)) return '<span style="color:var(--red-fg)">That is not a valid date and time.</span>';
-  const ms=d-new Date();
-  if(ms<=0) return '<span style="color:var(--red-fg)">That time has already passed — '
-    + 'anyone in this segment is blocked the moment this is saved.</span>';
-  const h=Math.round(ms/36e5);
-  return `The FSE can carry on as normal until then. Blocked from <b>${d.toLocaleString()}</b> — `
-    + (h<24?`about ${h} hour${h===1?'':'s'} away.`:`about ${Math.round(h/24)} day${Math.round(h/24)===1?'':'s'} away.`);
-}
 $('p_src').onchange=e=>{
   // Sources are alternatives, so switching drops the previous one's settings
   // rather than leaving stale values to be silently saved.
-  const keep={stage:P.audience.stage,trigger:P.audience.trigger};
-  P.audience=Object.assign(blankAudience(),{source:e.target.value},keep);
+  P.audience=Object.assign(blankAudience(),{source:e.target.value});
   if(P.audience.source==='clevertap') CT.load();
   renderP();
 };
-['stage','trigger'].forEach(k=>{
-  const el=$(k==='stage'?'p_aon':'p_trigger');
-  el.onchange=ev=>{P.audience[k]=ev.target.value;renderP();};
-});
-$('p_blocker').onchange=e=>{P.blocker=e.target.checked; if(!P.blocker) P.dueAt=''; renderP();};
-$('p_due').oninput=e=>{P.dueAt=e.target.value; $('p_dueNote').innerHTML=dueNote(P); flowP();};
+$('p_blocker').onchange=e=>{P.blocker=e.target.checked;renderP();};
 $('f_seek').onchange=e=>{T.allowSeek=e.target.checked;renderT();};
 $('p_self').onchange=e=>{P.self=e.target.checked;flowP();};
 
@@ -1349,13 +1305,9 @@ $('pSave').onclick=()=>{
   if(errors.length) return toast(errors[0]);
   if(P.blocker&&!P.hub){
     P.hub=true;
-    toast('A blocker routes to Trainings & Assessment, so hub listing was turned on');
+    toast('A blocker routes to My trainings, so hub listing was turned on');
   }
   const copy=JSON.parse(JSON.stringify(P));
-  // Refiners are kept in the editing session so toggling sources back restores
-  // them, but an exact list never applies them — don't persist a filter that
-  // silently does nothing.
-  if(!takesRefiners(copy.audience)){ copy.audience.stage=''; copy.audience.trigger=''; }
   if(editP){ placements=placements.map(x=>x.id===editP?copy:x); toast('Placement updated'); }
   else { placements.unshift(copy); toast('Placement saved'); }
   editP=null; P=freshP(); renderP(); drawPLib(); drawTLib();

@@ -187,10 +187,10 @@
     <table class="meta">
       <tbody>
         <tr><td>Product</td><td>GG App — Field Sales Executive (FSE) mobile application</td></tr>
-        <tr><td>Feature</td><td>Contextual Video Coaching — nine in-app widget views, Trainings &amp; Assessment hub, admin console</td></tr>
+        <tr><td>Feature</td><td>Contextual Video Coaching — nine in-app widget views, My trainings hub, admin console</td></tr>
         <tr><td>Document owner</td><td>Product</td></tr>
         <tr><td>Status</td><td>Draft for review</td></tr>
-        <tr><td>Version</td><td>2.3</td></tr>
+        <tr><td>Version</td><td>2.4</td></tr>
         <tr><td>Date</td><td>7 September 2026</td></tr>
         <tr><td>Reviewers</td><td>Design, Frontend, Backend, Field Ops, L&amp;D</td></tr>
       </tbody>
@@ -272,7 +272,7 @@
   <p>The feature has three parts:</p>
   <ol>
     <li>Nine widget views that render training inside existing app screens without altering those screens.</li>
-    <li>A Trainings &amp; Assessment hub listing everything assigned to the FSE with its status.</li>
+    <li>A My trainings hub listing everything assigned to the FSE with its status.</li>
     <li>An admin console where every behaviour the FSE sees is configured.</li>
   </ol>
 
@@ -381,7 +381,7 @@
   </div>
 
   <h3>3.4 Homepage mandatory gate</h3>
-  <p>When mandatory trainings are outstanding, the home screen presents a gate. The gate does not play content. Its only job is to name what is pending and hand off to the Trainings &amp; Assessment hub — deliberately moving the interruption off the workflow and into the surface built for it.</p>
+  <p>When mandatory trainings are outstanding, the home screen presents a gate. The gate does not play content. Its only job is to name what is pending and hand off to the My trainings hub — deliberately moving the interruption off the workflow and into the surface built for it.</p>
   <div class="tw">
     <table>
       <thead><tr><th>Tier</th><th>Trigger</th><th>Behaviour</th></tr></thead>
@@ -434,15 +434,15 @@
         <tr><td>Inline Embedded Card</td><td class="num">8</td><td class="p0">Not available</td><td>Each card is opened independently from the page.</td></tr>
         <tr><td><strong>Stories</strong></td><td class="num">10</td><td><strong>Available</strong></td><td>Sequential and auto-advancing. The last segment is a real ending.</td></tr>
         <tr><td>Popup Modal</td><td class="num">6</td><td class="p0">No assessment at all</td><td>It routes rather than plays, so any assessment belongs to the training it sends the FSE to.</td></tr>
-        <tr><td><strong>Hub only</strong> — no screen widget</td><td class="num">20</td><td><strong>Available</strong></td><td>Completed in order from Trainings &amp; Assessment, which is a committed, sequential context.</td></tr>
+        <tr><td><strong>My trainings page</strong> — no screen widget</td><td class="num">20</td><td><strong>Available</strong></td><td>Completed in order from My trainings, which is a committed, sequential context.</td></tr>
       </tbody>
     </table>
   </div>
   <p>Where a browse-style view needs one combined pass mark, the answer is to build it as a <strong>hub-only</strong> training rather than to weaken the rule.</p>
 
-  <h2>5. App — Trainings &amp; Assessment hub</h2>
+  <h2>5. App — My trainings hub</h2>
   <p>The hub lists <strong>trainings</strong>, not videos. It is the destination the homepage gate routes to, and the only place training can be browsed rather than encountered.</p>
-  <p>A training appears here when its placement has <strong>“Also list in Trainings &amp; Assessment”</strong> enabled, or when the placement <em>is</em> the hub.</p>
+  <p>A training appears here when its placement has <strong>“Also list in My trainings”</strong> enabled, or when the placement <em>is</em> the hub.</p>
 
   <p>The hub answers one question before any other: <strong>what should I do right now.</strong> An FSE opens it between merchant visits, not at a desk, so the design resolves that question above the fold and leaves browsing to the list underneath.</p>
 
@@ -453,11 +453,8 @@
       <tbody>
         <tr><td>Header</td><td>“X of Y complete · N of M steps”, with a percentage ring driven by steps.</td></tr>
         <tr><td>Alert strip</td><td>“N mandatory trainings still to clear”, shown only when above zero. Tapping it switches to the Pending filter.</td></tr>
-        <tr><td><strong>Next up</strong></td><td>A single raised card resuming the exact video or assessment the FSE stopped at, with a one-tap call to action — <em>Start</em>, <em>Continue</em>, <em>Take assessment</em> or <em>Retry assessment</em>.</td></tr>
-        <tr><td>Filters</td><td>Exactly three, each carrying its count: All, Pending, Completed. There is no free-text search — at this list size, priority ordering replaces it.</td></tr>
-        <tr><td>Cards</td><td>Training name, step pips, status, assessment size and MANDATORY tag. Completed cards are de-emphasised.</td></tr>
-        <tr><td>Source tag</td><td>Every card says where it comes from: <strong>HUB ONLY</strong> for a training whose widget view is Hub only, or <strong>Also on {screen}</strong> for one that is additionally running on a screen. Nothing appears in the hub without one of those two reasons.</td></tr>
-        <tr><td>Deadline tag</td><td>Trainings under a blocker show <strong>by {time} · {n} left</strong>, amber inside four hours, and <strong>OVERDUE</strong> once the moment passes.</td></tr>
+        <tr><td>Filters</td><td>Four, each carrying its count: <strong>All</strong>, <strong>Pending</strong>, <strong>Pending mandatory</strong>, <strong>Completed</strong>. There is no free-text search — at this list size, priority ordering replaces it.</td></tr>
+        <tr><td>Cards</td><td>Training name, step pips, status, assessment size and MANDATORY tag. Nothing else — no source or deadline tags. Completed cards are de-emphasised.</td></tr>
       </tbody>
     </table>
   </div>
@@ -466,7 +463,7 @@
   <p>A step is one video, or the combined assessment. Counting whole trainings meant an FSE three videos into a four-video training still read as zero; counting steps makes every action move the number.</p>
 
   <h4>Order is priority, not upload date</h4>
-  <p>Cards sort by what deserves attention: mandatory and in progress, then mandatory, then in progress, then not started, then completed. The <em>Next up</em> card is simply the first of that order. Status is expressed in the unit that matters — <em>Not started</em>, <em>2 of 3 videos</em>, <em>Assessment ready</em>, <em>Assessment not cleared</em>, <em>Passed · 3/3</em>.</p>
+  <p>Cards sort by what deserves attention: mandatory and in progress, then mandatory, then in progress, then not started, then completed. Status is expressed in the unit that matters — <em>Not started</em>, <em>2 of 3 videos</em>, <em>Assessment ready</em>, <em>Assessment not cleared</em>, <em>Passed · 3/3</em>.</p>
 
   <h3>5.2 Training detail — the ordered run</h3>
   <p>Opening a training shows its videos in order. Each row carries its number, title, language count and the state of its check. The next incomplete step is outlined and tagged <strong>NEXT</strong>, and a persistent button at the foot of the screen always names that step, so the FSE never has to work out where they were.</p>
@@ -523,6 +520,22 @@
     <p><strong>Skipping and mandatory content pull in opposite directions.</strong> With skipping on, an FSE can drag to the end and be recorded as having watched. The console therefore exposes the toggle per training and warns when a mandatory training leaves it on. Until completion is measured as a percentage of the timeline rather than an ended event (§10.1), that toggle is the only real defence.</p>
   </div>
 
+  <h3>6.3a Where an assessment sits</h3>
+  <p>Assessment shape is decided by the widget view, and the two are mutually exclusive.</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Widget view</th><th>Assessment</th></tr></thead>
+      <tbody>
+        <tr><td><strong>My trainings page</strong></td><td>One assessment after <strong>all</strong> the videos. The FSE opens the training from My trainings, works through the set in order, then takes a single question set covering the whole thing.</td></tr>
+        <tr><td><strong>Every other view</strong></td><td>A check sits <strong>directly after the video it belongs to</strong>. No combined assessment.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>A screen widget has no dependable moment at which the set is finished — an FSE opens the one card that matches the merchant in front of them and closes the sheet. A single pass mark across several videos has nothing to fire on, and would test content that was never opened. Putting the check next to the video that taught it is also far easier to author and to reason about.</p>
+  <div class="note">
+    <p><strong>Mandatory is a property of the training, not of its assessment.</strong> It used to hang off the combined assessment, which no longer exists on most views — so a mandatory interstitial would have had nowhere to record it. Switching a training between the two families discards the assessment the other shape used, and says so.</p>
+  </div>
+
   <h3>6.4 Question types and weighting</h3>
   <ul>
     <li><strong>Single answer</strong> — one option is correct; selecting it settles the question.</li>
@@ -565,22 +578,18 @@
   </ul>
   <p>An end-of-quiz answer key would let an FSE memorise the options and clear a retake without engaging with the content, which defeats the purpose of gating anything on the result.</p>
 
-  <h3>6.9 The homepage blocker and its deadline</h3>
-  <p>A placement may mark a training as a homepage blocker, and give it a <strong>complete-by</strong> date and time. The deadline turns a permanent gate into a window the FSE can plan around.</p>
+  <h3>6.9 The homepage blocker</h3>
+  <p>A placement may mark a training as a homepage blocker. The home screen is then sealed until the training is finished — there is no dismiss and no timer.</p>
   <div class="tw">
     <table>
       <thead><tr><th>State</th><th>What the FSE sees</th></tr></thead>
       <tbody>
-        <tr><td>Blocker, deadline in the future</td><td>A dismissible card on the home screen listing each training with its deadline and how long is left, plus <em>Remind me later</em>. Work continues normally.</td></tr>
-        <tr><td>Blocker, deadline passed</td><td>A sealed gate. Every overdue training is listed with how long it has been outstanding and how many steps remain. There is no dismiss and no <em>later</em> — the only action is to go and finish it.</td></tr>
-        <tr><td>Blocker, no deadline set</td><td>Gates immediately on publish and stays up until the training is done. The console warns about this, because it is rarely what is intended.</td></tr>
+        <tr><td>Blocker, training outstanding</td><td>A gate listing every blocking training with how many steps remain. The only action is <em>Complete now</em>, which hands off to My trainings.</td></tr>
         <tr><td>Nothing outstanding</td><td>No gate at all.</td></tr>
       </tbody>
     </table>
   </div>
-  <div class="note">
-    <p>A deadline passing while an FSE is part-way through does not eject them. The gate is evaluated on the home screen, so a training already open stays open and can be finished.</p>
-  </div>
+  <p>Blocking is a property of the <strong>placement</strong>, so the same training can gate one audience and merely appear for another.</p>
 
   <h2>7. Admin console</h2>
   <p>Two sections, matching the content model. Everything the FSE sees is configured in one of them, and neither shows a control the app does not honour.</p>
@@ -591,7 +600,7 @@
       <thead><tr><th>Field</th><th>Type</th><th>Purpose</th></tr></thead>
       <tbody>
         <tr><td>Training name</td><td>Text, required</td><td>Displayed everywhere the training appears.</td></tr>
-        <tr><td>Widget view</td><td>Select — one of nine, or Hub only</td><td>Sets video capacity and assessment capability. Also determines which screens can host it.</td></tr>
+        <tr><td>Widget view</td><td>Select — one of nine, or My trainings page</td><td>Sets video capacity and assessment capability. Also determines which screens can host it.</td></tr>
         <tr><td>Videos</td><td>Ordered list, reorderable</td><td>Capacity enforced by the widget view. Reducing capacity trims the list and says what it removed.</td></tr>
         <tr><td>— Content type</td><td>Select — video, audio, PDF/slides, image</td><td>Drives the accepted file types, the player, and what counts as finishing the item. Changing it clears the uploaded files, since they no longer match.</td></tr>
         <tr><td>— Video file</td><td>Upload</td><td>The <strong>title is derived from the filename</strong> unless one has been typed.</td></tr>
@@ -614,35 +623,35 @@
       <tbody>
         <tr><td>Training</td><td>Select from section 1</td><td>The content being placed.</td></tr>
         <tr><td>App</td><td>Select — GG App or Force App</td><td>Screens differ per app.</td></tr>
-        <tr><td>Screen</td><td>Select</td><td>Filtered to screens in that app carrying the training’s widget, plus <strong>“Trainings &amp; Assessment only”</strong> for content with no screen presence.</td></tr>
+        <tr><td>Screen</td><td>Select</td><td>Filtered to screens in that app carrying the training’s widget, plus <strong>“My trainings only”</strong> for content with no screen presence.</td></tr>
         <tr><td>Team / Subteam</td><td>Select</td><td>Blank means all.</td></tr>
         <tr><td>FSE stage (AON)</td><td>Dropdown</td><td>New 0–15 d, Semi-new 15–45 d, Old 45+ d.</td></tr>
         <tr><td>Performance trigger</td><td>Dropdown</td><td>Rule-driven assignment on FSE state: Task or NAP allocation, Onboarding target not met, SB deployment target not met. Designed to extend.</td></tr>
         <tr><td>Target specific ecodes</td><td>CSV upload</td><td>Overrides the broader targeting.</td></tr>
         <tr><td>Stop after N views / N days</td><td>Number</td><td>Frequency cap on workflow surfacing. The training stays reachable in the hub.</td></tr>
-        <tr><td>Also list in Trainings &amp; Assessment</td><td>Checkbox</td><td>Whether the training is findable in the hub as well as on the screen. Forced on when the screen is the hub.</td></tr>
+        <tr><td>Also list in My trainings</td><td>Checkbox</td><td>Whether the training is findable in the hub as well as on the screen. Forced on when the screen is the hub.</td></tr>
         <tr><td>Homepage blocker</td><td>Checkbox</td><td>Gates the home screen until this is done. <strong>Available on any screen</strong> — the gate is about the home screen, not about where the training sits.</td></tr>
         <tr><td>Allow self-marking</td><td>Checkbox</td><td>Disabled while the training’s assessment is mandatory.</td></tr>
       </tbody>
     </table>
   </div>
 
-  <p>Under <strong>Homepage blocker</strong> the console reveals a <strong>complete-by</strong> date and time, with live prose describing what will happen — how far away the deadline is, or that no deadline means an immediate gate. A deadline already in the past is refused at save, because it would block the whole segment the moment it is published.</p>
+  <p><strong>Homepage blocker</strong> is a single switch. The home screen is sealed until the training is finished, with no timer and no dismiss. Turning it on forces the training to be listed in My trainings, since that is where the gate hands off to.</p>
 
   <h3>7.2a Audience</h3>
   <p>Targeting is expressed as <strong>one source, optionally narrowed</strong>. The earlier form had five sibling fields — team, subteam, stage, trigger and an ecode upload — whose relationship existed only in a label reading <em>“overrides the fields above”</em>. Nothing enforced that, and the summary line rendered them as an intersection, so the console could describe an audience it would not actually deliver.</p>
   <div class="tw">
     <table>
-      <thead><tr><th>Source</th><th>Comes from</th><th>Narrowing</th></tr></thead>
+      <thead><tr><th>Source</th><th>Comes from</th><th>Notes</th></tr></thead>
       <tbody>
-        <tr><td><strong>Everyone in the app</strong></td><td>No targeting</td><td>Stage and trigger may be applied</td></tr>
-        <tr><td><strong>CleverTap segment</strong></td><td>Segments authored in CleverTap, read over the API</td><td>Allowed, with a warning that a behavioural segment plus a performance trigger narrows twice</td></tr>
-        <tr><td><strong>Team / subteam</strong></td><td>The reporting structure held in the app</td><td>Stage and trigger may be applied</td></tr>
-        <tr><td><strong>Ecode list</strong></td><td>An uploaded CSV of named people</td><td><strong>None.</strong> The list is exact — narrowing it would silently drop people who were named deliberately. Refiners are hidden, and stripped on save so the stored record cannot imply a filter that never runs</td></tr>
+        <tr><td><strong>Everyone in the app</strong></td><td colspan="2">No targeting — every FSE using this app</td></tr>
+        <tr><td><strong>CleverTap segment</strong></td><td>Segments authored in CleverTap, read over the API</td><td>Membership is resolved by CleverTap at delivery</td></tr>
+        <tr><td><strong>Team / subteam</strong></td><td>The reporting structure held in the app</td><td>The reporting structure held in the app</td></tr>
+        <tr><td><strong>Ecode list</strong></td><td>An uploaded CSV of named people</td><td>An exact list of people</td></tr>
       </tbody>
     </table>
   </div>
-  <p>Sources are alternatives. Switching source clears the previous source's settings rather than leaving values that would be saved but never read. A live <em>Reaches:</em> line states the resolved audience as an explicit chain, and it is the same function the library table and the save guard use.</p>
+  <p>Sources are alternatives. Switching source clears the previous source's settings rather than leaving values that would be saved but never read. A live <em>Reaches:</em> line states the resolved audience, and it is the same function the library table and the save guard use. There are no additional filters layered on top — the source is the audience.</p>
 
   <h3>7.2b CleverTap integration</h3>
   <p>The panel <strong>reads</strong> segments and never creates or edits one — CleverTap stays the system of record. The contract is four fields per segment: id, name, size and last-updated.</p>
@@ -672,7 +681,7 @@
     <li><strong>Switching app clears an out-of-app screen</strong> rather than leaving an invalid pairing.</li>
   </ul>
 
-  <p>Added with this revision: a question with nothing marked correct cannot be saved; weights must be positive; a complete-by time in the past is refused; changing a content type clears files that no longer match; and warnings fire for a tight time limit, for widely varying weights inside a rotating set, and for a mandatory training that still allows skipping ahead.</p>
+  <p>Added with this revision: a question with nothing marked correct cannot be saved; weights must be positive; changing a content type clears files that no longer match; and warnings fire for a tight time limit, for widely varying weights inside a rotating set, and for a mandatory training that still allows skipping ahead.</p>
 
   <h3>7.4 Managing what exists</h3>
   <p>Both sections carry a list. <strong>Trainings</strong> shows widget view, the ordered video titles, the assessment structure, and a <em>Placed in</em> column with the screens and a count — so reuse and orphans are both visible at a glance. Rows support edit, duplicate and delete. <strong>Placements</strong> shows training, app, screen and view, segment, and rules, with edit and delete.</p>
@@ -767,7 +776,7 @@
     <tbody>
       <tr><td>id</td><td>uuid</td><td>Primary key</td></tr>
       <tr><td>name</td><td>text</td><td></td></tr>
-      <tr><td>widget_view</td><td>text</td><td>One of nine, or <span class="mono">hub_only</span></td></tr>
+      <tr><td>widget_view</td><td>text</td><td>One of nine, or <span class="mono">my_trainings_page</span></td></tr>
       <tr><td>per_video_checks</td><td>boolean</td><td>Whether each video carries its own check</td></tr>
       <tr><td>final_enabled</td><td>boolean</td><td>Combined assessment on. Rejected where the widget view cannot support one</td></tr>
       <tr><td>final_pass_percent</td><td>int</td><td>Default 70</td></tr>
@@ -776,7 +785,7 @@
       <tr><td>final_pass_message</td><td>text, nullable</td><td>Shown on the result screen when cleared. Null falls back to the default</td></tr>
       <tr><td>final_fail_message</td><td>text, nullable</td><td>Shown when not cleared</td></tr>
       <tr><td>allow_seek</td><td>boolean</td><td>Default true. False clamps seeking to the furthest point reached</td></tr>
-      <tr><td>final_mandatory</td><td>boolean</td><td>Drives the MANDATORY tag everywhere the training is placed</td></tr>
+      <tr><td>mandatory</td><td>boolean</td><td>On the training, not the assessment. Drives the MANDATORY tag everywhere it appears</td></tr>
       <tr><td>created_at</td><td>timestamptz</td><td></td></tr>
     </tbody></table></div>
 
@@ -816,18 +825,15 @@
       <tr><td>id</td><td>uuid</td><td>Primary key</td></tr>
       <tr><td>training_id</td><td>uuid</td><td>Restrict on delete — a training in use cannot be removed</td></tr>
       <tr><td>app</td><td>text</td><td>gg | force</td></tr>
-      <tr><td>screen</td><td>text</td><td>App screen, or <span class="mono">hub_only</span></td></tr>
-      <tr><td>blocker_due_at</td><td>timestamptz, nullable</td><td>Complete-by moment. Null with the blocker on means gate immediately. Must be in the future at save</td></tr>
+      <tr><td>screen</td><td>text</td><td>App screen, or <span class="mono">my_trainings_page</span></td></tr>
       <tr><td>audience_source</td><td>text</td><td>everyone | clevertap | org | ecodes</td></tr>
       <tr><td>clevertap_segment_id</td><td>text, nullable</td><td>Set when the source is clevertap. Membership is resolved by CleverTap at delivery, never cached here</td></tr>
       <tr><td>team, subteam</td><td>text, nullable</td><td>Set when the source is org. Null subteam means all</td></tr>
       <tr><td>ecode_list_id</td><td>uuid, nullable</td><td>Set when the source is ecodes; points at the uploaded list</td></tr>
-      <tr><td>audience_stage, audience_trigger</td><td>text, nullable</td><td>Refiners. Always null when the source is ecodes</td></tr>
-      <tr><td>fse_stage</td><td>text, nullable</td><td>AON bucket</td></tr>
       <tr><td>performance_trigger</td><td>text, nullable</td><td>Rule-driven assignment</td></tr>
       <tr><td>target_ecodes</td><td>text[]</td><td>Overrides the broader targeting</td></tr>
       <tr><td>max_views, expiry_days</td><td>int, nullable</td><td>Frequency cap on workflow surfacing only</td></tr>
-      <tr><td>show_in_hub</td><td>boolean</td><td>Forced true when screen is <span class="mono">hub_only</span> or the blocker is on</td></tr>
+      <tr><td>show_in_hub</td><td>boolean</td><td>Forced true when screen is <span class="mono">my_trainings_page</span> or the blocker is on</td></tr>
       <tr><td>homepage_blocker</td><td>boolean</td><td>Gates the home screen, whatever screen this placement targets</td></tr>
       <tr><td>allow_manual_complete</td><td>boolean</td><td>Forced false while the training is mandatory</td></tr>
     </tbody></table></div>

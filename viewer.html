@@ -235,7 +235,7 @@ const ASSETS = {"video": "data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28y
 const CATALOG = ASSETS.catalog;
 // A training is an ordered set of videos plus its assessment rules — the unit the
 // FSE completes. Mirrors exactly what the admin panel publishes.
-const TRAININGS = [{"id": "tr1", "name": "SoundBox pitch masterclass", "widget": "stories", "inHub": true, "where": ["Home", "Onboarding"], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}, {"question": "What real-time benefit does SoundBox give a merchant?", "options": ["Free advertising on the box", "Instant voice and display confirmation for every payment", "Unlimited free phone calls", "A physical cash register"], "correct_index": 1}, {"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "pass": 70, "maxq": "", "mandatory": true, "passMsg": "Nicely done. Use the objection lines from video 3 on your next visit.", "failMsg": "Not cleared. The objection-handling video is the one to rewatch.", "timer": ""}, "videos": [{"id": "tr1v0", "title": "Opening the conversation", "langs": ["English", "Hindi", "Tamil"], "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0, "weight": 1}], "pass": 60, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}, {"id": "tr1v1", "title": "Explaining the plan", "langs": ["English", "Hindi"], "questions": [{"question": "A merchant asks what the ₹125 a month actually covers. What is the accurate answer?", "options": ["A one-time purchase of the device", "The monthly rental for the SB-V2 Music 4G, GST included", "A refundable deposit returned after a year", "Unlimited free QR stickers"], "correct_index": 1, "weight": 1}], "pass": 60, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}, {"id": "tr1v2", "title": "Handling the price objection", "langs": ["English"], "questions": [{"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2, "weight": 1}], "pass": 60, "maxq": "", "kind": "audio", "timer": "", "passMsg": "", "failMsg": ""}], "allowSeek": true, "blocker": false, "dueAt": ""}, {"id": "tr2", "name": "SoundBox device setup", "widget": "carousel", "inHub": true, "where": ["Payments"], "perVideo": true, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "mandatory": false, "timer": "", "passMsg": "", "failMsg": ""}, "videos": [{"id": "tr2v0", "title": "Adding a new device", "langs": ["English", "Hindi", "Marathi"], "questions": [{"question": "On the Add Device Details screen, which device type do you select for a monthly rental plan?", "options": ["Purchase", "Rental", "Demo", "Replacement"], "correct_index": 1, "weight": 1}], "pass": 70, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}, {"id": "tr2v1", "title": "Selecting the right plan", "langs": ["English", "Hindi"], "questions": [{"question": "For the Monthly Subscription plan at ₹125/month, what does the screen say about UPI Autopay?", "options": ["It is optional for the merchant", "It is not supported on rental plans", "It is required — the screen shows Yes", "It replaces the monthly rental"], "correct_index": 2, "weight": 1}], "pass": 70, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}, {"id": "tr2v2", "title": "Verifying the first payment", "langs": ["English"], "questions": [{"question": "The screen shows ₹125 as the total amount to be collected. What does that figure include?", "options": ["Only the one-time charge", "A refundable security deposit", "The monthly rental, inclusive of 18% GST", "The full purchase price of the device"], "correct_index": 2, "weight": 1}], "pass": 70, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}], "allowSeek": true, "blocker": false, "dueAt": ""}, {"id": "tr3", "name": "QR mapping — revised SOP", "widget": "interstitial", "inHub": true, "where": ["Home"], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "What does QR mapping actually link?", "options": ["The FSE's phone to the TL's phone", "The merchant's QR to the correct MID, so payments settle to the right account", "The SoundBox to the shop's WiFi router", "The merchant's Aadhaar to their PAN"], "correct_index": 1, "weight": 2}, {"question": "What do you verify immediately after mapping a new QR?", "options": ["Nothing — mapping is instant and never fails", "That the merchant has restarted the shop", "Do a small test payment and confirm the SoundBox announces it", "Peel off the old sticker before checking anything"], "correct_index": 2}, {"question": "The QR you are about to map is already mapped to a different MID. What is the correct action?", "options": ["Stop and raise a remapping request instead of forcing a new mapping", "Map it anyway and inform the TL later", "Peel the sticker off and reuse it at another shop", "Ask the merchant to create a new business account"], "correct_index": 0}, {"question": "Which two must be true before you map a QR? (select both)", "options": ["The merchant's MID is confirmed", "The shop has WiFi", "The sticker is not already mapped elsewhere", "The merchant has a SoundBox"], "correct": [0, 2], "multi": true, "weight": 3}], "pass": 70, "maxq": 3, "mandatory": true, "timer": 180, "passMsg": "Cleared. You may now map QRs under the revised SOP. Keep the test-payment step in every install.", "failMsg": "Not cleared. Mapping to the wrong MID sends a merchant's money to another account — rewatch the SOP and retake this."}, "videos": [{"id": "tr3v0", "title": "What changed in the SOP", "langs": ["English"], "questions": [], "pass": 70, "maxq": "", "kind": "pdf", "timer": "", "passMsg": "", "failMsg": ""}], "allowSeek": false, "blocker": true, "dueAt": "2026-09-07T18:00"}, {"id": "tr4", "name": "New joiner essentials", "widget": "module", "inHub": true, "where": ["Trainings & Assessment"], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}, {"question": "Where does a merchant manage their business profile in the v2 app?", "options": ["Under the \"Manage your Business\" section", "Under Offers", "Under Refer & Earn", "Under chat support"], "correct_index": 0}, {"question": "A merchant cannot find a feature after the v2 update. What do you do?", "options": ["Ask them to downgrade the app", "Show them where it has moved to in the updated navigation", "Tell them the feature was removed", "Raise a device replacement request"], "correct_index": 1}], "pass": 80, "maxq": 2, "mandatory": true, "timer": 120, "passMsg": "Welcome aboard. You have covered the essentials — your TL will see this as complete.", "failMsg": "Not quite there. Have another look at the four videos and retake when you are ready."}, "videos": [{"id": "tr4v0", "title": "Your first login", "langs": ["English", "Hindi", "Tamil"], "questions": [{"question": "Where does a merchant change app language or notification preferences?", "options": ["In the Offers carousel", "On the QR sticker", "In the Settings section of the app", "On the SoundBox device itself"], "correct_index": 2, "weight": 1}], "pass": 70, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}, {"id": "tr4v1", "title": "Finding your way around", "langs": ["English", "Hindi"], "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2, "weight": 1}], "pass": 70, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}, {"id": "tr4v2", "title": "Daily check-in", "langs": ["English"], "questions": [{"question": "On the Merchant Detail screen, which tab holds the merchant's open tasks?", "options": ["Details", "Tasks", "Interactions", "Offers"], "correct_index": 1, "weight": 1}], "pass": 70, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}, {"id": "tr4v3", "title": "Reading your dashboard", "langs": ["English"], "questions": [{"question": "Which three tabs make up the Team Performance view?", "options": ["Participation, Productivity, Leaderboard", "Sales, Refunds, Payouts", "Attendance, Salary, Incentive", "Tasks, Merchants, Devices"], "correct_index": 0, "weight": 1}], "pass": 70, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}], "allowSeek": true, "blocker": false, "dueAt": ""}, {"id": "tr5", "name": "Re-KYC walkthrough", "widget": "bottom-sheet", "inHub": true, "where": ["KYC"], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "On the Re-KYC check screen, which items sit under \"Action Required\"?", "options": ["Bank Details only", "KYC Details and Business Proof", "Device model and plan", "Nothing — Re-KYC completes automatically"], "correct_index": 1}, {"question": "The profile upgrade is pending on the P4B app. What do you ask the merchant to do?", "options": ["Visit the nearest bank branch", "Reinstall the consumer Paytm app", "Open Paytm for Business, scroll to \"Manage your Business\" and select \"Upgrade Profile\"", "Buy a new SoundBox"], "correct_index": 2}, {"question": "Bank Details already appears under \"Completed\". What does that mean?", "options": ["That part of the Re-KYC is done — only the pending items still need action", "The whole Re-KYC is finished", "The merchant's account has been blocked", "The bank account has to be entered again"], "correct_index": 0}, {"question": "Which of these count as Business Proof? (select all that apply)", "options": ["GST certificate", "A photo of the shopfront", "Shop & Establishment licence", "The merchant's Aadhaar"], "correct": [0, 2], "multi": true, "weight": 2}], "pass": 70, "maxq": "", "mandatory": true, "timer": 150, "passMsg": "Cleared. You can now take a merchant through Re-KYC end to end.", "failMsg": "Not cleared this time. Re-KYC errors block a merchant's settlements, so please rewatch and try again."}, "videos": [{"id": "tr5v0", "title": "Clearing Action Required items", "langs": ["English", "Hindi"], "questions": [], "pass": 70, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}], "allowSeek": false, "blocker": true, "dueAt": "2026-09-09T18:00"}, {"id": "tr6", "name": "Reading your performance dashboard", "widget": "inline-card", "inHub": true, "where": ["Dashboard", "Profile", "Reports"], "perVideo": false, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "mandatory": false, "timer": "", "passMsg": "", "failMsg": ""}, "videos": [{"id": "tr6v0", "title": "Participation, productivity, leaderboard", "langs": ["English"], "questions": [], "pass": 70, "maxq": "", "kind": "image", "timer": "", "passMsg": "", "failMsg": ""}], "allowSeek": true, "blocker": false, "dueAt": ""}];
+const TRAININGS = [{"id": "tr1", "name": "SoundBox pitch masterclass", "widget": "stories", "inHub": true, "perVideo": true, "final": {"enabled": false, "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}, {"question": "What real-time benefit does SoundBox give a merchant?", "options": ["Free advertising on the box", "Instant voice and display confirmation for every payment", "Unlimited free phone calls", "A physical cash register"], "correct_index": 1}, {"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "pass": 70, "maxq": "", "passMsg": "Nicely done. Use the objection lines from video 3 on your next visit.", "failMsg": "Not cleared. The objection-handling video is the one to rewatch.", "timer": ""}, "videos": [{"id": "tr1v0", "title": "Opening the conversation", "langs": ["English", "Hindi", "Tamil"], "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0, "weight": 1}], "pass": 60, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}, {"id": "tr1v1", "title": "Explaining the plan", "langs": ["English", "Hindi"], "questions": [{"question": "A merchant asks what the ₹125 a month actually covers. What is the accurate answer?", "options": ["A one-time purchase of the device", "The monthly rental for the SB-V2 Music 4G, GST included", "A refundable deposit returned after a year", "Unlimited free QR stickers"], "correct_index": 1, "weight": 1}], "pass": 60, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}, {"id": "tr1v2", "title": "Handling the price objection", "langs": ["English"], "questions": [{"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2, "weight": 1}], "pass": 60, "maxq": "", "kind": "audio", "timer": "", "passMsg": "", "failMsg": ""}], "allowSeek": true, "blocker": false, "mandatory": true}, {"id": "tr2", "name": "SoundBox device setup", "widget": "carousel", "inHub": true, "perVideo": true, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "timer": "", "passMsg": "", "failMsg": ""}, "videos": [{"id": "tr2v0", "title": "Adding a new device", "langs": ["English", "Hindi", "Marathi"], "questions": [{"question": "On the Add Device Details screen, which device type do you select for a monthly rental plan?", "options": ["Purchase", "Rental", "Demo", "Replacement"], "correct_index": 1, "weight": 1}], "pass": 70, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}, {"id": "tr2v1", "title": "Selecting the right plan", "langs": ["English", "Hindi"], "questions": [{"question": "For the Monthly Subscription plan at ₹125/month, what does the screen say about UPI Autopay?", "options": ["It is optional for the merchant", "It is not supported on rental plans", "It is required — the screen shows Yes", "It replaces the monthly rental"], "correct_index": 2, "weight": 1}], "pass": 70, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}, {"id": "tr2v2", "title": "Verifying the first payment", "langs": ["English"], "questions": [{"question": "The screen shows ₹125 as the total amount to be collected. What does that figure include?", "options": ["Only the one-time charge", "A refundable security deposit", "The monthly rental, inclusive of 18% GST", "The full purchase price of the device"], "correct_index": 2, "weight": 1}], "pass": 70, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}], "allowSeek": true, "blocker": false, "mandatory": false}, {"id": "tr3", "name": "QR mapping — revised SOP", "widget": "interstitial", "inHub": true, "perVideo": false, "final": {"enabled": false, "questions": [{"question": "What does QR mapping actually link?", "options": ["The FSE's phone to the TL's phone", "The merchant's QR to the correct MID, so payments settle to the right account", "The SoundBox to the shop's WiFi router", "The merchant's Aadhaar to their PAN"], "correct_index": 1, "weight": 2}, {"question": "What do you verify immediately after mapping a new QR?", "options": ["Nothing — mapping is instant and never fails", "That the merchant has restarted the shop", "Do a small test payment and confirm the SoundBox announces it", "Peel off the old sticker before checking anything"], "correct_index": 2}, {"question": "The QR you are about to map is already mapped to a different MID. What is the correct action?", "options": ["Stop and raise a remapping request instead of forcing a new mapping", "Map it anyway and inform the TL later", "Peel the sticker off and reuse it at another shop", "Ask the merchant to create a new business account"], "correct_index": 0}, {"question": "Which two must be true before you map a QR? (select both)", "options": ["The merchant's MID is confirmed", "The shop has WiFi", "The sticker is not already mapped elsewhere", "The merchant has a SoundBox"], "correct": [0, 2], "multi": true, "weight": 3}], "pass": 70, "maxq": 3, "timer": 180, "passMsg": "Cleared. You may now map QRs under the revised SOP. Keep the test-payment step in every install.", "failMsg": "Not cleared. Mapping to the wrong MID sends a merchant's money to another account — rewatch the SOP and retake this."}, "videos": [{"id": "tr3v0", "title": "What changed in the SOP", "langs": ["English"], "questions": [], "pass": 70, "maxq": "", "kind": "pdf", "timer": "", "passMsg": "", "failMsg": ""}], "allowSeek": false, "blocker": true, "mandatory": true}, {"id": "tr4", "name": "New joiner essentials", "widget": "module", "inHub": true, "perVideo": false, "final": {"enabled": true, "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}, {"question": "Where does a merchant manage their business profile in the v2 app?", "options": ["Under the \"Manage your Business\" section", "Under Offers", "Under Refer & Earn", "Under chat support"], "correct_index": 0}, {"question": "A merchant cannot find a feature after the v2 update. What do you do?", "options": ["Ask them to downgrade the app", "Show them where it has moved to in the updated navigation", "Tell them the feature was removed", "Raise a device replacement request"], "correct_index": 1}], "pass": 80, "maxq": 2, "timer": 120, "passMsg": "Welcome aboard. You have covered the essentials — your TL will see this as complete.", "failMsg": "Not quite there. Have another look at the four videos and retake when you are ready."}, "videos": [{"id": "tr4v0", "title": "Your first login", "langs": ["English", "Hindi", "Tamil"], "questions": [{"question": "Where does a merchant change app language or notification preferences?", "options": ["In the Offers carousel", "On the QR sticker", "In the Settings section of the app", "On the SoundBox device itself"], "correct_index": 2, "weight": 1}], "pass": 70, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}, {"id": "tr4v1", "title": "Finding your way around", "langs": ["English", "Hindi"], "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2, "weight": 1}], "pass": 70, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}, {"id": "tr4v2", "title": "Daily check-in", "langs": ["English"], "questions": [{"question": "On the Merchant Detail screen, which tab holds the merchant's open tasks?", "options": ["Details", "Tasks", "Interactions", "Offers"], "correct_index": 1, "weight": 1}], "pass": 70, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}, {"id": "tr4v3", "title": "Reading your dashboard", "langs": ["English"], "questions": [{"question": "Which three tabs make up the Team Performance view?", "options": ["Participation, Productivity, Leaderboard", "Sales, Refunds, Payouts", "Attendance, Salary, Incentive", "Tasks, Merchants, Devices"], "correct_index": 0, "weight": 1}], "pass": 70, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}], "allowSeek": true, "blocker": false, "mandatory": true}, {"id": "tr5", "name": "Re-KYC walkthrough", "widget": "bottom-sheet", "inHub": true, "perVideo": false, "final": {"enabled": false, "questions": [{"question": "On the Re-KYC check screen, which items sit under \"Action Required\"?", "options": ["Bank Details only", "KYC Details and Business Proof", "Device model and plan", "Nothing — Re-KYC completes automatically"], "correct_index": 1}, {"question": "The profile upgrade is pending on the P4B app. What do you ask the merchant to do?", "options": ["Visit the nearest bank branch", "Reinstall the consumer Paytm app", "Open Paytm for Business, scroll to \"Manage your Business\" and select \"Upgrade Profile\"", "Buy a new SoundBox"], "correct_index": 2}, {"question": "Bank Details already appears under \"Completed\". What does that mean?", "options": ["That part of the Re-KYC is done — only the pending items still need action", "The whole Re-KYC is finished", "The merchant's account has been blocked", "The bank account has to be entered again"], "correct_index": 0}, {"question": "Which of these count as Business Proof? (select all that apply)", "options": ["GST certificate", "A photo of the shopfront", "Shop & Establishment licence", "The merchant's Aadhaar"], "correct": [0, 2], "multi": true, "weight": 2}], "pass": 70, "maxq": "", "timer": 150, "passMsg": "Cleared. You can now take a merchant through Re-KYC end to end.", "failMsg": "Not cleared this time. Re-KYC errors block a merchant's settlements, so please rewatch and try again."}, "videos": [{"id": "tr5v0", "title": "Clearing Action Required items", "langs": ["English", "Hindi"], "questions": [], "pass": 70, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}], "allowSeek": false, "blocker": true, "mandatory": true}, {"id": "tr6", "name": "Reading your performance dashboard", "widget": "inline-card", "inHub": true, "perVideo": false, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "timer": "", "passMsg": "", "failMsg": ""}, "videos": [{"id": "tr6v0", "title": "Participation, productivity, leaderboard", "langs": ["English"], "questions": [], "pass": 70, "maxq": "", "kind": "image", "timer": "", "passMsg": "", "failMsg": ""}], "allowSeek": true, "blocker": false, "mandatory": false}];
 const vDoneG = v => { const p = prog(v.id); return v.questions.length ? p.passed : p.watched; };
 // The panel now emits correct[] with multi and weight. Older records carried a
 // single correct_index, so normalise once here and let the rest of the file
@@ -261,26 +261,6 @@ TRAININGS.forEach(t => {
   if(typeof t.allowSeek !== 'boolean') t.allowSeek = true;
 });
 
-// A blocker with a deadline is a countdown the FSE can plan around; once it
-// passes the gate becomes unpassable. A blocker with no deadline gates at once.
-const dueDate = t => t.dueAt ? new Date(t.dueAt) : null;
-function dueState(t){
-  if(!t.blocker) return {kind:'none'};
-  const d = dueDate(t);
-  if(!d) return {kind:'now', label:'Blocks the app until done'};
-  const ms = d - new Date();
-  if(ms <= 0) return {kind:'over', at:d, label:'Overdue — the app is blocked'};
-  const mins = Math.round(ms/6e4);
-  const label = mins < 60 ? `${mins} min left`
-              : mins < 60*24 ? `${Math.round(mins/60)}h left`
-              : `${Math.round(mins/(60*24))}d left`;
-  return {kind:'due', at:d, ms, mins, label,
-          soon: mins <= 240,
-          when: d.toLocaleString([], {weekday:'short', hour:'numeric', minute:'2-digit'})};
-}
-// Every training that is past its deadline and still unfinished.
-const overdueTrainings = () => TRAININGS.filter(t => t.inHub && t.blocker && !tDone(t)
-                                                  && dueState(t).kind === 'over');
 const blockingTrainings = () => TRAININGS.filter(t => t.inHub && t.blocker && !tDone(t));
 
 const tDone = t => {
@@ -921,59 +901,45 @@ const VIEWS = [
   },
   {
     id:'gate', n:'Homepage gate', on:'FSE Home', extra:true,
-    desc:'Not a widget. Trainings under a blocker carry a complete-by time. Before it the FSE sees a countdown and can carry on; once it passes the home screen is sealed until the training is finished.',
-    look:['Two tiers, decided by the clock: <b>countdown</b> before the deadline, <b>hard block</b> after it.','The countdown is dismissible — the hard block is not, and has no “later”.','Every overdue training is listed with how long it has been outstanding, not just the first three.','A blocker with no deadline set gates immediately, which is why the panel warns about it.'],
+    desc:'Not a widget. A training placed with the homepage blocker seals the home screen until it is finished. There is no dismiss and no timer — it is done or the app is not usable.',
+    look:['The only action is <b>Complete now</b>, which hands off to My trainings.','Every outstanding training is listed with how many steps remain.','Blocking is a property of the <b>placement</b>, so the same training can gate one segment and not another.'],
     render(app){
       app.innerHTML = HOST.home + HOST.homeBody;
       const blocking = blockingTrainings();
-      const overdue  = overdueTrainings();
       if(!blocking.length){
         app.insertAdjacentHTML('afterbegin', `<div style="background:#e6faf0;color:#0a7a42;font-size:11.5px;font-weight:700;padding:9px 14px;text-align:center">✓ Nothing under a blocker outstanding — no gate.</div>`);
         return;
       }
-      // Past the deadline the gate is sealed. Before it, it is a warning.
-      const hard = overdue.length > 0;
-      const list = hard ? overdue : blocking;
       const el = document.createElement('div');
       el.style.cssText='position:absolute;inset:0;z-index:70;background:rgba(8,10,18,.62);display:flex;align-items:center;justify-content:center;padding:20px';
       el.innerHTML = `
         <div style="background:#fff;border-radius:16px;width:100%;max-height:100%;overflow-y:auto;box-shadow:0 14px 36px rgba(0,0,0,.34);animation:up .22s ease">
           <div style="padding:20px 18px 14px;text-align:center">
-            <div style="width:50px;height:50px;border-radius:50%;background:${hard?'#fff0f0':'#fff4dc'};display:flex;align-items:center;justify-content:center;font-size:23px;margin:0 auto 11px">${hard?'🔒':'⏰'}</div>
-            <div style="font-size:15px;font-weight:800;line-height:1.35">${hard
-              ? `${list.length} training${list.length>1?'s are':' is'} past due`
-              : `${list.length} training${list.length>1?'s':''} to complete`}</div>
-            <div style="font-size:12px;color:#718096;margin-top:6px;line-height:1.5">${hard
-              ? 'The app stays locked until these are finished. Nothing else can be done from here.'
-              : 'You can carry on for now — these must be done before the times shown.'}</div>
+            <div style="width:50px;height:50px;border-radius:50%;background:#fff0f0;display:flex;align-items:center;justify-content:center;font-size:23px;margin:0 auto 11px">🔒</div>
+            <div style="font-size:15px;font-weight:800;line-height:1.35">${blocking.length} training${blocking.length>1?'s':''} to complete</div>
+            <div style="font-size:12px;color:#718096;margin-top:6px;line-height:1.5">The app stays locked until ${blocking.length>1?'these are':'this is'} done. Nothing else can be done from here.</div>
           </div>
           <div style="padding:0 18px;display:flex;flex-direction:column;gap:6px">
-            ${list.map(t=>{const d=dueState(t);
-              return `<div style="display:flex;align-items:center;gap:9px;background:#f7f9fc;border-radius:9px;padding:8px 9px">
+            ${blocking.map(t=>`<div style="display:flex;align-items:center;gap:9px;background:#f7f9fc;border-radius:9px;padding:8px 9px">
               <div style="width:34px;height:27px;border-radius:6px;background:linear-gradient(135deg,#012b72,#00baf2);flex-shrink:0;
                 display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px">▶</div>
               <div style="flex:1;min-width:0">
                 <div style="font-size:11px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(t.name)}</div>
-                <div style="font-size:8.5px;font-weight:800;margin-top:2px;color:${d.kind==='due'?'#9c5a00':'#c53030'}">${
-                  d.kind==='due' ? `DUE ${esc(d.when.toUpperCase())} · ${esc(d.label.toUpperCase())}`
-                                 : d.kind==='over' ? `OVERDUE SINCE ${esc(d.at.toLocaleString([], {weekday:'short',hour:'numeric',minute:'2-digit'}).toUpperCase())}`
-                                 : 'BLOCKING UNTIL COMPLETE'}</div>
+                ${t.mandatory?'<div style="font-size:8.5px;font-weight:800;margin-top:2px;color:#c53030">MANDATORY</div>':''}
               </div>
               <div style="font-size:9px;font-weight:800;color:#8a94a6;white-space:nowrap">${
                 (()=>{const total=t.videos.length+(t.final.enabled?1:0);
                       const vd=t.videos.filter(v=>{const pr=prog(v.id);
                         return (t.perVideo&&v.questions.length)?pr.passed:pr.watched;}).length
                         +(t.final.enabled&&prog(t.id+'-final').passed?1:0);
-                      return `${total-vd} left`;})()}</div></div>`;}).join('')}
+                      return `${total-vd} left`;})()}</div></div>`).join('')}
           </div>
           <div style="padding:14px 18px 18px">
-            <button data-go style="width:100%;background:#004299;color:#fff;border:none;border-radius:9px;padding:13px;font:inherit;font-size:13.5px;font-weight:800;cursor:pointer">${hard?'Complete now':'Go to Trainings'}</button>
-            ${hard?'<div style="text-align:center;font-size:10.5px;color:#a0aec0;font-weight:600;padding:9px 0 0">There is no way past this until the training is done.</div>'
-                  :'<button data-l style="width:100%;background:none;border:none;color:#a0aec0;font:inherit;font-size:12px;font-weight:700;cursor:pointer;padding:10px 0 0">Remind me later</button>'}
+            <button data-go style="width:100%;background:#004299;color:#fff;border:none;border-radius:9px;padding:13px;font:inherit;font-size:13.5px;font-weight:800;cursor:pointer">Complete now</button>
+            <div style="text-align:center;font-size:10.5px;color:#a0aec0;font-weight:600;padding:9px 0 0">There is no way past this until the training is done.</div>
           </div></div>`;
       app.appendChild(el);
       el.querySelector('[data-go]').onclick = () => select('hub');
-      const l = el.querySelector('[data-l]'); if(l) l.onclick = () => el.remove();
     }
   },
   {
@@ -1000,7 +966,7 @@ const VIEWS = [
           <div style="position:absolute;left:0;right:0;bottom:0;padding:0 18px 22px">
             <div style="color:#fff;font-size:20px;font-weight:800;line-height:1.22">${esc(v.title)}</div>
             <div style="display:flex;gap:8px;margin-top:10px;align-items:center">
-              ${t.final.mandatory?'<span style="background:#fd5154;color:#fff;font-size:9px;font-weight:800;padding:3px 9px;border-radius:99px">MANDATORY</span>':''}
+              ${t.mandatory?'<span style="background:#fd5154;color:#fff;font-size:9px;font-weight:800;padding:3px 9px;border-radius:99px">MANDATORY</span>':''}
               <span style="color:#c9d6ea;font-size:11px;font-weight:700">Segment ${i+1} of ${t.videos.length}</span>
             </div>
             <div data-cta style="margin-top:14px"></div>
@@ -1011,11 +977,11 @@ const VIEWS = [
         if(t.perVideo && v.questions.length && !pr.passed){
           cta.innerHTML = `<button data-a style="width:100%;background:#fff;color:#04263f;border:none;border-radius:99px;padding:12px;font:inherit;font-size:13px;font-weight:800;cursor:pointer">Check after this segment</button>`;
           cta.querySelector('[data-a]').onclick = () => assessment(
-            {id:v.id,title:v.title,questions:v.questions,pass_percent:v.pass,mandatory:t.final.mandatory}, draw);
+            {id:v.id,title:v.title,questions:v.questions,pass_percent:v.pass,mandatory:t.mandatory}, draw);
         } else if(i===t.videos.length-1 && t.final.enabled){
           cta.innerHTML = `<button data-f style="width:100%;background:#fff;color:#04263f;border:none;border-radius:99px;padding:12px;font:inherit;font-size:13px;font-weight:800;cursor:pointer">Take the combined assessment</button>`;
           cta.querySelector('[data-f]').onclick = () => assessment(
-            {id:t.id+'-final',title:t.name,questions:t.final.questions,pass_percent:t.final.pass,mandatory:t.final.mandatory}, draw);
+            {id:t.id+'-final',title:t.name,questions:t.final.questions,pass_percent:t.final.pass,mandatory:t.mandatory}, draw);
         } else {
           cta.innerHTML = `<div style="color:#c9d6ea;font-size:11.5px">Tap the sides to move between segments.</div>`;
         }
@@ -1053,9 +1019,9 @@ const VIEWS = [
     }
   },
   {
-    id:'hub', n:'Trainings & Assessment', on:'Hub', extra:true,
-    desc:'The hub answers one question first — what should I do right now. A "Next up" card resumes the training the FSE is mid-way through; everything else is sorted so mandatory and in-progress work sits at the top.',
-    look:['<b>Next up</b> is the whole point — one tap resumes the exact video or assessment the FSE stopped at.','Cards are <b>trainings</b>. The pips under each title are steps (videos + assessment), so progress moves with every action.','Order is <b>priority</b>, not upload date: mandatory first, then in progress, then not started, then done.','Inside a training the next step is ringed and labelled <b>NEXT</b> — nothing is locked, because the admin has no setting to lock it.'],
+    id:'hub', n:'My trainings', on:'Hub', extra:true,
+    desc:'Everything assigned to this FSE, in one list. Trainings built as a My trainings page run as an ordered set with one assessment at the end; everything else carries its check immediately after each video.',
+    look:['Four tabs: <b>All</b>, <b>Pending</b>, <b>Pending mandatory</b> and <b>Completed</b>, each with a live count.','Order is <b>priority</b>, not upload date: mandatory first, then in progress, then not started, then done.','The pips under each title are steps, so progress moves with every action.','Inside a training the next step is ringed and labelled <b>NEXT</b> — nothing is locked, because the admin has no setting to lock it.'],
     render(app){
       let filter='all', openId=null;
 
@@ -1094,14 +1060,14 @@ const VIEWS = [
           const v=t.videos[step.idx];
           player({id:v.id,title:v.title,kind:v.kind||'video',
                   questions:t.perVideo?v.questions:[],
-                  pass_percent:v.pass,mandatory:t.final.mandatory,
+                  pass_percent:v.pass,mandatory:t.mandatory,
                   max_questions:v.maxq,timer_seconds:v.timer,
                   pass_message:v.passMsg,fail_message:v.failMsg,
                   allow_seek:t.allowSeek!==false,
                   media_by_language:Object.fromEntries(v.langs.map(l=>[l,1]))}, ()=>detail(t));
         } else {
           assessment({id:t.id+'-final',title:t.name,questions:t.final.questions,
-                      pass_percent:t.final.pass,mandatory:t.final.mandatory,
+                      pass_percent:t.final.pass,mandatory:t.mandatory,
                       max_questions:t.final.maxq,timer_seconds:t.final.timer,
                       pass_message:t.final.passMsg,fail_message:t.final.failMsg}, ()=>detail(t));
         }
@@ -1111,7 +1077,7 @@ const VIEWS = [
       // finished work sinks.
       function rank(t){
         if(tDone(t)) return 4;
-        const m=t.final.mandatory, s=started(t);
+        const m=t.mandatory, s=started(t);
         return m&&s ? 0 : m ? 1 : s ? 2 : 3;
       }
 
@@ -1134,24 +1100,6 @@ const VIEWS = [
           `<div style="flex:1;height:4px;border-radius:99px;background:${i<d?'#004299':'#e7ecf3'}"></div>`).join('')}</div>`;
       }
 
-      // Where a training comes from, said plainly: either it lives only in the
-      // hub, or it is also running on a screen somewhere.
-      function sourceTag(t){
-        if(t.widget==='module') return `<span style="font-size:8.5px;font-weight:800;padding:2px 6px;border-radius:4px;background:#ede9fe;color:#5b21b6;white-space:nowrap">HUB ONLY</span>`;
-        const where=(t.where||[]).filter(w=>w!=='Trainings & Assessment');
-        if(!where.length) return '';
-        return `<span style="font-size:8.5px;font-weight:700;padding:2px 6px;border-radius:4px;background:#eef2f7;color:#5a7290;white-space:nowrap">Also on ${esc(where[0])}${where.length>1?` +${where.length-1}`:''}</span>`;
-      }
-      function dueTag(t){
-        const d=dueState(t);
-        if(d.kind==='none') return '';
-        if(tDone(t)) return '';
-        const style=(bg,c)=>`font-size:8.5px;font-weight:800;padding:2px 6px;border-radius:4px;background:${bg};color:${c};white-space:nowrap`;
-        if(d.kind==='over') return `<span style="${style('#fff0f0','#c53030')}">⛔ OVERDUE</span>`;
-        if(d.kind==='now')  return `<span style="${style('#fff0f0','#c53030')}">⛔ BLOCKING</span>`;
-        return `<span style="${style(d.soon?'#fff4dc':'#eef2f7', d.soon?'#9c5a00':'#5a7290')}">⏰ by ${esc(d.when)} · ${esc(d.label)}</span>`;
-      }
-
       const thumb = (n,size) => `<div style="position:relative;width:${size}px;height:${size}px;border-radius:9px;
         background:linear-gradient(135deg,#012b72,#00baf2);flex-shrink:0;display:flex;align-items:center;
         justify-content:center;color:#fff;font-size:${size>50?16:13}px">▶${n>1?`
@@ -1171,16 +1119,8 @@ const VIEWS = [
               <div style="font-size:11px;color:#8a94a6;margin-top:3px">${stepsDone(t)} of ${steps(t)} steps done${t.final.enabled?' · ends with a combined assessment':''}</div>
               <div style="margin-top:7px">${pips(t)}</div>
             </div>
-            ${t.final.mandatory&&!tDone(t)?'<span style="background:#fff0f0;color:#c53030;font-size:9px;font-weight:800;padding:3px 8px;border-radius:4px;flex-shrink:0">MANDATORY</span>':''}
+            ${t.mandatory&&!tDone(t)?'<span style="background:#fff0f0;color:#c53030;font-size:9px;font-weight:800;padding:3px 8px;border-radius:4px;flex-shrink:0">MANDATORY</span>':''}
           </div>
-          ${(()=>{const d=dueState(t); if(d.kind==='none'||tDone(t)) return '';
-            const over=d.kind!=='due';
-            return `<div style="background:${over?'#fff0f0':d.soon?'#fff4dc':'#eef4fb'};
-              color:${over?'#c53030':d.soon?'#9c5a00':'#31507d'};padding:9px 14px;font-size:11.5px;font-weight:700;
-              display:flex;gap:7px;align-items:center;border-bottom:1px solid rgba(0,0,0,.05)">
-              <span>${over?'⛔':'⏰'}</span><span>${over
-                ? 'Past its complete-by time — the app stays blocked until this is finished.'
-                : `Complete by ${esc(d.when)} — ${esc(d.label)}. The app is blocked after that.`}</span></div>`;})()}
 
           <div style="padding:13px 14px ${step?'86px':'22px'};display:flex;flex-direction:column;gap:9px">
             ${t.videos.map((v,i)=>{
@@ -1242,7 +1182,7 @@ const VIEWS = [
         const inHub=TRAININGS.filter(t=>t.inHub);
         const sorted=[...inHub].sort((a,b)=>rank(a)-rank(b));
         const doneN=inHub.filter(tDone).length, total=inHub.length;
-        const mand=inHub.filter(t=>t.final.mandatory&&!tDone(t));
+        const mand=inHub.filter(t=>t.mandatory&&!tDone(t));
 
         // Progress counts steps, not trainings — four videos into a five-video
         // training reads as real movement instead of a flat zero.
@@ -1250,11 +1190,14 @@ const VIEWS = [
         const doneSteps=inHub.reduce((n,t)=>n+stepsDone(t),0);
         const pct=allSteps?Math.round(doneSteps/allSteps*100):0;
 
-        const hero=sorted.find(t=>!tDone(t));
-        const heroStep=hero&&nextStep(hero);
-
-        const counts={all:inHub.length,pending:inHub.filter(t=>!tDone(t)).length,completed:doneN};
-        const rows=sorted.filter(t=> filter==='completed'?tDone(t) : filter==='pending'?!tDone(t) : true);
+        const isPending=t=>!tDone(t);
+        const counts={all:inHub.length, pending:inHub.filter(isPending).length,
+                      mandatory:inHub.filter(t=>isPending(t)&&t.mandatory).length, completed:doneN};
+        const rows=sorted.filter(t=>
+          filter==='completed' ? tDone(t)
+        : filter==='pending'   ? isPending(t)
+        : filter==='mandatory' ? (isPending(t)&&t.mandatory)
+        : true);
 
         app.innerHTML=`
           <div style="background:#fff;padding:14px 15px 13px;border-bottom:1px solid #eef1f4">
@@ -1267,9 +1210,6 @@ const VIEWS = [
                 <div style="width:34px;height:34px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#004299">${pct}%</div>
               </div>
             </div>
-            ${(()=>{const od=overdueTrainings(); if(!od.length) return '';
-              return `<div style="margin-top:10px;background:#fff0f0;color:#c53030;font-size:11.5px;font-weight:700;padding:9px 11px;border-radius:9px;display:flex;gap:7px;align-items:flex-start">
-                <span>⛔</span><span style="flex:1">${od.length} training${od.length>1?'s are':' is'} past its complete-by time — the app is blocked until ${od.length>1?'they are':'it is'} done.</span></div>`;})()}
             ${mand.length?`<button data-mand style="margin-top:10px;width:100%;text-align:left;border:none;cursor:pointer;
               background:#fff4dc;color:#9c5a00;font:inherit;font-size:11.5px;font-weight:700;padding:9px 11px;border-radius:9px;
               display:flex;align-items:center;gap:7px">
@@ -1277,27 +1217,10 @@ const VIEWS = [
               <span style="opacity:.7">View →</span></button>`:''}
           </div>
 
-          ${hero?`<div style="padding:13px 15px 0">
-            <div style="font-size:9.5px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:#8a94a6;margin-bottom:7px">Next up</div>
-            <div data-hero style="background:linear-gradient(135deg,#012b72,#0b47a8);border-radius:14px;padding:14px;cursor:pointer;
-              box-shadow:0 6px 18px rgba(1,43,114,.24)">
-              <div style="display:flex;gap:11px;align-items:center">
-                ${thumb(hero.videos.length,52)}
-                <div style="flex:1;min-width:0">
-                  <div style="font-size:13.5px;font-weight:800;color:#fff;line-height:1.3">${esc(hero.name)}</div>
-                  <div style="display:flex;align-items:center;gap:7px;margin-top:5px">
-                    ${hero.final.mandatory?'<span style="background:rgba(255,255,255,.18);color:#fff;font-size:8.5px;font-weight:800;padding:3px 7px;border-radius:4px;flex-shrink:0">MANDATORY</span>':''}
-                    <span style="font-size:10.5px;color:#a9c6ef;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(heroStep.short)}</span>
-                  </div>
-                </div>
-              </div>
-              <div style="margin-top:12px;background:#fff;color:#012b72;border-radius:9px;padding:11px;text-align:center;font-size:13px;font-weight:800">${heroStep.cta} →</div>
-            </div>
-          </div>`:''}
 
-          <div style="padding:${hero?'15px':'13px'} 15px 8px;display:flex;gap:7px">
-            ${[['all','All'],['pending','Pending'],['completed','Completed']].map(([k,l])=>
-              `<button data-f="${k}" style="padding:9px 14px;border-radius:99px;border:none;font:inherit;font-size:11.5px;font-weight:700;cursor:pointer;
+          <div style="padding:13px 15px 8px;display:flex;gap:7px;overflow-x:auto">
+            ${[['all','All'],['pending','Pending'],['mandatory','Pending mandatory'],['completed','Completed']].map(([k,l])=>
+              `<button data-f="${k}" style="padding:9px 13px;border-radius:99px;border:none;font:inherit;font-size:11.5px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;
                 background:${filter===k?'#004299':'#fff'};color:${filter===k?'#fff':'#718096'};box-shadow:${filter===k?'none':'0 1px 3px rgba(16,32,64,.09)'}">
                 ${l} ${counts[k]}</button>`).join('')}
           </div>
@@ -1311,9 +1234,8 @@ const VIEWS = [
                 <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:5px">
                   <div style="display:flex;align-items:center;gap:6px">
                     <div style="font-size:12.5px;font-weight:700;line-height:1.3;flex:1;min-width:0">${esc(t.name)}</div>
-                    ${!d&&t.final.mandatory?'<span style="font-size:8.5px;font-weight:800;padding:2px 6px;border-radius:4px;background:#fff0f0;color:#c53030;flex-shrink:0">MANDATORY</span>':''}
+                    ${!d&&t.mandatory?'<span style="font-size:8.5px;font-weight:800;padding:2px 6px;border-radius:4px;background:#fff0f0;color:#c53030;flex-shrink:0">MANDATORY</span>':''}
                   </div>
-                  <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">${sourceTag(t)}${dueTag(t)}</div>
                   ${pips(t)}
                   <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
                     <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;white-space:nowrap;background:${s.bg};color:${s.c}">${s.t}</span>
@@ -1322,15 +1244,19 @@ const VIEWS = [
                 </div></div>`;}).join('')
               :`<div style="text-align:center;padding:34px 16px">
                  <div style="font-size:26px">${filter==='completed'?'📭':'✓'}</div>
-                 <div style="font-size:13px;font-weight:800;margin-top:6px">${filter==='completed'?'Nothing completed yet':'All clear'}</div>
-                 <div style="font-size:11.5px;color:#8a94a6;margin-top:3px">${filter==='completed'?'Finish a training and it will show up here.':'Every training assigned to you is done.'}</div>
+                 <div style="font-size:13px;font-weight:800;margin-top:6px">${
+                   filter==='completed'?'Nothing completed yet'
+                 : filter==='mandatory'?'No mandatory work outstanding'
+                 : 'All clear'}</div>
+                 <div style="font-size:11.5px;color:#8a94a6;margin-top:3px">${
+                   filter==='completed'?'Finish a training and it will show up here.'
+                 : filter==='mandatory'?'Every mandatory training is done.'
+                 : 'Every training assigned to you is done.'}</div>
                </div>`}
           </div>`;
 
         app.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{filter=b.dataset.f;draw();});
         app.querySelectorAll('[data-t]').forEach(c=>c.onclick=()=>{openId=c.dataset.t;draw();});
-        const h=app.querySelector('[data-hero]');
-        if(h) h.onclick=()=>{openId=hero.id;draw();};
         const m=app.querySelector('[data-mand]');
         if(m) m.onclick=()=>{filter='pending';draw();};
       }
