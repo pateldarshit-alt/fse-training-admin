@@ -190,7 +190,7 @@
         <tr><td>Feature</td><td>Contextual Video Coaching — eight in-app widget views, My trainings hub, admin console</td></tr>
         <tr><td>Document owner</td><td>Product</td></tr>
         <tr><td>Status</td><td>Draft for review</td></tr>
-        <tr><td>Version</td><td>2.6</td></tr>
+        <tr><td>Version</td><td>2.7</td></tr>
         <tr><td>Date</td><td>7 September 2026</td></tr>
         <tr><td>Reviewers</td><td>Design, Frontend, Backend, Field Ops, L&amp;D</td></tr>
       </tbody>
@@ -473,6 +473,9 @@
   </div>
 
   <h2>6. Completion and assessment</h2>
+  <div class="note">
+    <p><strong>Certificates.</strong> A training may issue one on completion, set per training in the panel. Completed cards in My trainings then carry a certificate action, and the detail view offers it too. The certificate names the FSE and their code, the training, the score where there was an assessment, the date and a reference, and downloads as a file the FSE can keep, share or print. Nothing appears in the app unless the panel turns it on.</p>
+  </div>
 
   <h3>6.1 Two levels</h3>
   <div class="tw">
@@ -536,10 +539,12 @@
 
   <h3>6.4 Question types and weighting</h3>
   <ul>
+    <li><strong>Written answer</strong> — a free-text response. It carries no weight, sits outside the total score and the pass calculation, and is always asked after the scored questions. Recorded for the trainer, never marked.</li>
     <li><strong>Single answer</strong> — one option is correct; selecting it settles the question.</li>
     <li><strong>Multiple answers</strong> — the FSE must select every correct option and none of the others, then submit. The prompt states how many are correct.</li>
     <li><strong>Weight</strong> — each question carries a weight, defaulting to 1. The score is the weight earned over the weight shown, so a three-point question about mapping to the wrong MID counts for more than a one-point recall question.</li>
   </ul>
+  <p>A written answer is authored in the panel or imported: in CSV, the word <span class="mono">text</span> in the correct-answers column marks the row as free text, and option 1 becomes the hint shown in the box. Because it is unscored, it never appears in the reachable-total maths — a pool of three scored questions and one written answer still reaches the same totals it did without it.</p>
   <p>Multi-answer questions are marked whole: a partly correct selection scores nothing. Part credit would make a pass mark impossible to reason about, and every one of these questions is a case where half-knowing is the failure mode.</p>
 
   <h3>6.5 Scoring and paper selection</h3>
@@ -679,7 +684,8 @@
       <tbody>
         <tr><td>Stop after N views / N days</td><td>Frequency cap and expiry.</td></tr>
         <tr><td>Also list in My trainings</td><td>Adds it to the hub as well as the screen.</td></tr>
-        <tr><td>Let the FSE skip ahead</td><td>On by default. Forced off and locked when the placement is mandatory.</td></tr>
+        <tr><td>Make skippable after N views</td><td>Seeking stays clamped until the FSE has opened the content N times, then opens up. Setting it disables the skip-ahead tickbox, which asks the same question less precisely.</td></tr>
+        <tr><td>Let the FSE skip ahead</td><td>On by default. Disabled when a view threshold is set, and forced off when the placement is mandatory.</td></tr>
         <tr><td>Do not show the assessment again once cleared</td><td>A repeat visit shows the score they passed with instead of re-testing. Offered only when the training has an assessment.</td></tr>
         <tr><td>Mandatory training — Homepage blocker</td><td>Carries the MANDATORY tag and gates the home screen until finished.</td></tr>
       </tbody>
@@ -696,6 +702,7 @@
     <li><strong>Switching app clears an out-of-app screen</strong> rather than leaving an invalid pairing.</li>
   </ul>
 
+  <p>The console warns when a view threshold sits at or above the frequency cap — skipping would open on a view the FSE never reaches — and when a threshold is set on mandatory content, where it can never apply.</p>
   <p>Added with this revision: a question with nothing marked correct cannot be saved; weights must be positive; changing a content type clears files that no longer match; and warnings fire for a tight time limit, for widely varying weights inside a rotating set, and for a mandatory training that still allows skipping ahead.</p>
 
   <h3>7.4 Managing what exists</h3>

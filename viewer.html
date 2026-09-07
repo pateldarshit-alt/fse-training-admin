@@ -235,7 +235,7 @@ const ASSETS = {"video": "data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28y
 const CATALOG = ASSETS.catalog;
 // A training is an ordered set of videos plus its assessment rules — the unit the
 // FSE completes. Mirrors exactly what the admin panel publishes.
-const TRAININGS = [{"id": "tr1", "name": "SoundBox pitch masterclass", "widget": "stories", "inHub": true, "perVideo": true, "final": {"enabled": false, "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}, {"question": "What real-time benefit does SoundBox give a merchant?", "options": ["Free advertising on the box", "Instant voice and display confirmation for every payment", "Unlimited free phone calls", "A physical cash register"], "correct_index": 1}, {"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "pass": 2, "passMsg": "Nicely done. Use the objection lines from video 3 on your next visit.", "failMsg": "Not cleared. The objection-handling video is the one to rewatch.", "total": ""}, "videos": [{"id": "tr1v0", "title": "Opening the conversation", "langs": ["English", "Hindi", "Tamil"], "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0, "weight": 1}], "pass": 1, "kind": "video", "passMsg": "", "failMsg": "", "total": ""}, {"id": "tr1v1", "title": "Explaining the plan", "langs": ["English", "Hindi"], "questions": [{"question": "A merchant asks what the ₹125 a month actually covers. What is the accurate answer?", "options": ["A one-time purchase of the device", "The monthly rental for the SB-V2 Music 4G, GST included", "A refundable deposit returned after a year", "Unlimited free QR stickers"], "correct_index": 1, "weight": 1}], "pass": 1, "kind": "video", "passMsg": "", "failMsg": "", "total": ""}, {"id": "tr1v2", "title": "Handling the price objection", "langs": ["English"], "questions": [{"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2, "weight": 1}], "pass": 1, "kind": "audio", "passMsg": "", "failMsg": "", "total": ""}], "allowSeek": true, "blocker": false, "mandatory": false, "timer": "", "onceOnly": false}, {"id": "tr2", "name": "SoundBox device setup", "widget": "carousel", "inHub": true, "perVideo": true, "final": {"enabled": false, "questions": [], "pass": 1, "passMsg": "", "failMsg": "", "total": ""}, "videos": [{"id": "tr2v0", "title": "Adding a new device", "langs": ["English", "Hindi", "Marathi"], "questions": [{"question": "On the Add Device Details screen, which device type do you select for a monthly rental plan?", "options": ["Purchase", "Rental", "Demo", "Replacement"], "correct_index": 1, "weight": 1}], "pass": 1, "kind": "video", "passMsg": "", "failMsg": "", "total": ""}, {"id": "tr2v1", "title": "Selecting the right plan", "langs": ["English", "Hindi"], "questions": [{"question": "For the Monthly Subscription plan at ₹125/month, what does the screen say about UPI Autopay?", "options": ["It is optional for the merchant", "It is not supported on rental plans", "It is required — the screen shows Yes", "It replaces the monthly rental"], "correct_index": 2, "weight": 1}], "pass": 1, "kind": "video", "passMsg": "", "failMsg": "", "total": ""}, {"id": "tr2v2", "title": "Verifying the first payment", "langs": ["English"], "questions": [{"question": "The screen shows ₹125 as the total amount to be collected. What does that figure include?", "options": ["Only the one-time charge", "A refundable security deposit", "The monthly rental, inclusive of 18% GST", "The full purchase price of the device"], "correct_index": 2, "weight": 1}], "pass": 1, "kind": "video", "passMsg": "", "failMsg": "", "total": ""}], "allowSeek": true, "blocker": false, "mandatory": false, "timer": "", "onceOnly": false}, {"id": "tr3", "name": "QR mapping — revised SOP", "widget": "interstitial", "inHub": true, "perVideo": false, "final": {"enabled": false, "questions": [{"question": "What does QR mapping actually link?", "options": ["The FSE's phone to the TL's phone", "The merchant's QR to the correct MID, so payments settle to the right account", "The SoundBox to the shop's WiFi router", "The merchant's Aadhaar to their PAN"], "correct_index": 1, "weight": 2}, {"question": "What do you verify immediately after mapping a new QR?", "options": ["Nothing — mapping is instant and never fails", "That the merchant has restarted the shop", "Do a small test payment and confirm the SoundBox announces it", "Peel off the old sticker before checking anything"], "correct_index": 2}, {"question": "The QR you are about to map is already mapped to a different MID. What is the correct action?", "options": ["Stop and raise a remapping request instead of forcing a new mapping", "Map it anyway and inform the TL later", "Peel the sticker off and reuse it at another shop", "Ask the merchant to create a new business account"], "correct_index": 0}, {"question": "Which two must be true before you map a QR? (select both)", "options": ["The merchant's MID is confirmed", "The shop has WiFi", "The sticker is not already mapped elsewhere", "The merchant has a SoundBox"], "correct": [0, 2], "multi": true, "weight": 3}], "pass": 2, "passMsg": "Cleared. You may now map QRs under the revised SOP. Keep the test-payment step in every install.", "failMsg": "Not cleared. Mapping to the wrong MID sends a merchant's money to another account — rewatch the SOP and retake this.", "total": ""}, "videos": [{"id": "tr3v0", "title": "What changed in the SOP", "langs": ["English"], "questions": [], "pass": 1, "kind": "pdf", "passMsg": "", "failMsg": "", "total": ""}], "allowSeek": false, "blocker": true, "mandatory": true, "timer": 90, "onceOnly": true}, {"id": "tr4", "name": "New joiner essentials", "widget": "module", "inHub": true, "perVideo": false, "final": {"enabled": true, "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2, "weight": 3}, {"question": "Where does a merchant manage their business profile in the v2 app?", "options": ["Under the \"Manage your Business\" section", "Under Offers", "Under Refer & Earn", "Under chat support"], "correct_index": 0, "weight": 2}, {"question": "A merchant cannot find a feature after the v2 update. What do you do?", "options": ["Ask them to downgrade the app", "Show them where it has moved to in the updated navigation", "Tell them the feature was removed", "Raise a device replacement request"], "correct_index": 1, "weight": 1}], "pass": 4, "passMsg": "Welcome aboard. You have covered the essentials — your TL will see this as complete.", "failMsg": "Not quite there. Have another look at the four videos and retake when you are ready.", "total": 5}, "videos": [{"id": "tr4v0", "title": "Your first login", "langs": ["English", "Hindi", "Tamil"], "questions": [{"question": "Where does a merchant change app language or notification preferences?", "options": ["In the Offers carousel", "On the QR sticker", "In the Settings section of the app", "On the SoundBox device itself"], "correct_index": 2, "weight": 1}], "pass": 1, "kind": "video", "passMsg": "", "failMsg": "", "total": ""}, {"id": "tr4v1", "title": "Finding your way around", "langs": ["English", "Hindi"], "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2, "weight": 1}], "pass": 1, "kind": "video", "passMsg": "", "failMsg": "", "total": ""}, {"id": "tr4v2", "title": "Daily check-in", "langs": ["English"], "questions": [{"question": "On the Merchant Detail screen, which tab holds the merchant's open tasks?", "options": ["Details", "Tasks", "Interactions", "Offers"], "correct_index": 1, "weight": 1}], "pass": 1, "kind": "video", "passMsg": "", "failMsg": "", "total": ""}, {"id": "tr4v3", "title": "Reading your dashboard", "langs": ["English"], "questions": [{"question": "Which three tabs make up the Team Performance view?", "options": ["Participation, Productivity, Leaderboard", "Sales, Refunds, Payouts", "Attendance, Salary, Incentive", "Tasks, Merchants, Devices"], "correct_index": 0, "weight": 1}], "pass": 1, "kind": "video", "passMsg": "", "failMsg": "", "total": ""}], "allowSeek": true, "blocker": false, "mandatory": false, "timer": 180, "onceOnly": false}, {"id": "tr5", "name": "Re-KYC walkthrough", "widget": "bottom-sheet", "inHub": true, "perVideo": false, "final": {"enabled": false, "questions": [{"question": "On the Re-KYC check screen, which items sit under \"Action Required\"?", "options": ["Bank Details only", "KYC Details and Business Proof", "Device model and plan", "Nothing — Re-KYC completes automatically"], "correct_index": 1}, {"question": "The profile upgrade is pending on the P4B app. What do you ask the merchant to do?", "options": ["Visit the nearest bank branch", "Reinstall the consumer Paytm app", "Open Paytm for Business, scroll to \"Manage your Business\" and select \"Upgrade Profile\"", "Buy a new SoundBox"], "correct_index": 2}, {"question": "Bank Details already appears under \"Completed\". What does that mean?", "options": ["That part of the Re-KYC is done — only the pending items still need action", "The whole Re-KYC is finished", "The merchant's account has been blocked", "The bank account has to be entered again"], "correct_index": 0}, {"question": "Which of these count as Business Proof? (select all that apply)", "options": ["GST certificate", "A photo of the shopfront", "Shop & Establishment licence", "The merchant's Aadhaar"], "correct": [0, 2], "multi": true, "weight": 2}], "pass": 2, "passMsg": "Cleared. You can now take a merchant through Re-KYC end to end.", "failMsg": "Not cleared this time. Re-KYC errors block a merchant's settlements, so please rewatch and try again.", "total": ""}, "videos": [{"id": "tr5v0", "title": "Clearing Action Required items", "langs": ["English", "Hindi"], "questions": [], "pass": 1, "kind": "video", "passMsg": "", "failMsg": "", "total": ""}], "allowSeek": false, "blocker": true, "mandatory": true, "timer": "", "onceOnly": true}, {"id": "tr6", "name": "Reading your performance dashboard", "widget": "inline-card", "inHub": true, "perVideo": false, "final": {"enabled": false, "questions": [], "pass": 1, "passMsg": "", "failMsg": "", "total": ""}, "videos": [{"id": "tr6v0", "title": "Participation, productivity, leaderboard", "langs": ["English"], "questions": [], "pass": 1, "kind": "image", "passMsg": "", "failMsg": "", "total": ""}], "allowSeek": true, "blocker": false, "mandatory": false, "timer": "", "onceOnly": false}];
+const TRAININGS = [{"id": "tr1", "name": "SoundBox pitch masterclass", "widget": "stories", "inHub": true, "perVideo": true, "final": {"enabled": false, "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}, {"question": "What real-time benefit does SoundBox give a merchant?", "options": ["Free advertising on the box", "Instant voice and display confirmation for every payment", "Unlimited free phone calls", "A physical cash register"], "correct_index": 1}, {"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "pass": 2, "passMsg": "Nicely done. Use the objection lines from video 3 on your next visit.", "failMsg": "Not cleared. The objection-handling video is the one to rewatch.", "total": ""}, "videos": [{"id": "tr1v0", "title": "Opening the conversation", "langs": ["English", "Hindi", "Tamil"], "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0, "weight": 1}], "pass": 1, "kind": "video", "passMsg": "", "failMsg": "", "total": ""}, {"id": "tr1v1", "title": "Explaining the plan", "langs": ["English", "Hindi"], "questions": [{"question": "A merchant asks what the ₹125 a month actually covers. What is the accurate answer?", "options": ["A one-time purchase of the device", "The monthly rental for the SB-V2 Music 4G, GST included", "A refundable deposit returned after a year", "Unlimited free QR stickers"], "correct_index": 1, "weight": 1}], "pass": 1, "kind": "video", "passMsg": "", "failMsg": "", "total": ""}, {"id": "tr1v2", "title": "Handling the price objection", "langs": ["English"], "questions": [{"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2, "weight": 1}], "pass": 1, "kind": "audio", "passMsg": "", "failMsg": "", "total": ""}], "allowSeek": true, "blocker": false, "mandatory": false, "timer": "", "onceOnly": false, "certificate": true, "skipAfter": ""}, {"id": "tr2", "name": "SoundBox device setup", "widget": "carousel", "inHub": true, "perVideo": true, "final": {"enabled": false, "questions": [], "pass": 1, "passMsg": "", "failMsg": "", "total": ""}, "videos": [{"id": "tr2v0", "title": "Adding a new device", "langs": ["English", "Hindi", "Marathi"], "questions": [{"question": "On the Add Device Details screen, which device type do you select for a monthly rental plan?", "options": ["Purchase", "Rental", "Demo", "Replacement"], "correct_index": 1, "weight": 1}], "pass": 1, "kind": "video", "passMsg": "", "failMsg": "", "total": ""}, {"id": "tr2v1", "title": "Selecting the right plan", "langs": ["English", "Hindi"], "questions": [{"question": "For the Monthly Subscription plan at ₹125/month, what does the screen say about UPI Autopay?", "options": ["It is optional for the merchant", "It is not supported on rental plans", "It is required — the screen shows Yes", "It replaces the monthly rental"], "correct_index": 2, "weight": 1}], "pass": 1, "kind": "video", "passMsg": "", "failMsg": "", "total": ""}, {"id": "tr2v2", "title": "Verifying the first payment", "langs": ["English"], "questions": [{"question": "The screen shows ₹125 as the total amount to be collected. What does that figure include?", "options": ["Only the one-time charge", "A refundable security deposit", "The monthly rental, inclusive of 18% GST", "The full purchase price of the device"], "correct_index": 2, "weight": 1}], "pass": 1, "kind": "video", "passMsg": "", "failMsg": "", "total": ""}], "allowSeek": true, "blocker": false, "mandatory": false, "timer": "", "onceOnly": false, "certificate": false, "skipAfter": 2}, {"id": "tr3", "name": "QR mapping — revised SOP", "widget": "interstitial", "inHub": true, "perVideo": false, "final": {"enabled": false, "questions": [{"question": "What does QR mapping actually link?", "options": ["The FSE's phone to the TL's phone", "The merchant's QR to the correct MID, so payments settle to the right account", "The SoundBox to the shop's WiFi router", "The merchant's Aadhaar to their PAN"], "correct_index": 1, "weight": 2}, {"question": "What do you verify immediately after mapping a new QR?", "options": ["Nothing — mapping is instant and never fails", "That the merchant has restarted the shop", "Do a small test payment and confirm the SoundBox announces it", "Peel off the old sticker before checking anything"], "correct_index": 2}, {"question": "The QR you are about to map is already mapped to a different MID. What is the correct action?", "options": ["Stop and raise a remapping request instead of forcing a new mapping", "Map it anyway and inform the TL later", "Peel the sticker off and reuse it at another shop", "Ask the merchant to create a new business account"], "correct_index": 0}, {"question": "Which two must be true before you map a QR? (select both)", "options": ["The merchant's MID is confirmed", "The shop has WiFi", "The sticker is not already mapped elsewhere", "The merchant has a SoundBox"], "correct": [0, 2], "multi": true, "weight": 3}], "pass": 2, "passMsg": "Cleared. You may now map QRs under the revised SOP. Keep the test-payment step in every install.", "failMsg": "Not cleared. Mapping to the wrong MID sends a merchant's money to another account — rewatch the SOP and retake this.", "total": ""}, "videos": [{"id": "tr3v0", "title": "What changed in the SOP", "langs": ["English"], "questions": [], "pass": 1, "kind": "pdf", "passMsg": "", "failMsg": "", "total": ""}], "allowSeek": false, "blocker": true, "mandatory": true, "timer": 90, "onceOnly": true, "certificate": true, "skipAfter": ""}, {"id": "tr4", "name": "New joiner essentials", "widget": "module", "inHub": true, "perVideo": false, "final": {"enabled": true, "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2, "weight": 3}, {"question": "Where does a merchant manage their business profile in the v2 app?", "options": ["Under the \"Manage your Business\" section", "Under Offers", "Under Refer & Earn", "Under chat support"], "correct_index": 0, "weight": 2}, {"question": "A merchant cannot find a feature after the v2 update. What do you do?", "options": ["Ask them to downgrade the app", "Show them where it has moved to in the updated navigation", "Tell them the feature was removed", "Raise a device replacement request"], "correct_index": 1, "weight": 1}, {"kind": "text", "question": "What is the one thing you would still like more help with?", "prompt": "A sentence or two is plenty", "options": [], "correct": [], "multi": false, "weight": 0}], "pass": 4, "passMsg": "Welcome aboard. You have covered the essentials — your TL will see this as complete.", "failMsg": "Not quite there. Have another look at the four videos and retake when you are ready.", "total": 5}, "videos": [{"id": "tr4v0", "title": "Your first login", "langs": ["English", "Hindi", "Tamil"], "questions": [{"question": "Where does a merchant change app language or notification preferences?", "options": ["In the Offers carousel", "On the QR sticker", "In the Settings section of the app", "On the SoundBox device itself"], "correct_index": 2, "weight": 1}], "pass": 1, "kind": "video", "passMsg": "", "failMsg": "", "total": ""}, {"id": "tr4v1", "title": "Finding your way around", "langs": ["English", "Hindi"], "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2, "weight": 1}], "pass": 1, "kind": "video", "passMsg": "", "failMsg": "", "total": ""}, {"id": "tr4v2", "title": "Daily check-in", "langs": ["English"], "questions": [{"question": "On the Merchant Detail screen, which tab holds the merchant's open tasks?", "options": ["Details", "Tasks", "Interactions", "Offers"], "correct_index": 1, "weight": 1}], "pass": 1, "kind": "video", "passMsg": "", "failMsg": "", "total": ""}, {"id": "tr4v3", "title": "Reading your dashboard", "langs": ["English"], "questions": [{"question": "Which three tabs make up the Team Performance view?", "options": ["Participation, Productivity, Leaderboard", "Sales, Refunds, Payouts", "Attendance, Salary, Incentive", "Tasks, Merchants, Devices"], "correct_index": 0, "weight": 1}], "pass": 1, "kind": "video", "passMsg": "", "failMsg": "", "total": ""}], "allowSeek": true, "blocker": false, "mandatory": false, "timer": 180, "onceOnly": false, "certificate": true, "skipAfter": ""}, {"id": "tr5", "name": "Re-KYC walkthrough", "widget": "bottom-sheet", "inHub": true, "perVideo": false, "final": {"enabled": false, "questions": [{"question": "On the Re-KYC check screen, which items sit under \"Action Required\"?", "options": ["Bank Details only", "KYC Details and Business Proof", "Device model and plan", "Nothing — Re-KYC completes automatically"], "correct_index": 1}, {"question": "The profile upgrade is pending on the P4B app. What do you ask the merchant to do?", "options": ["Visit the nearest bank branch", "Reinstall the consumer Paytm app", "Open Paytm for Business, scroll to \"Manage your Business\" and select \"Upgrade Profile\"", "Buy a new SoundBox"], "correct_index": 2}, {"question": "Bank Details already appears under \"Completed\". What does that mean?", "options": ["That part of the Re-KYC is done — only the pending items still need action", "The whole Re-KYC is finished", "The merchant's account has been blocked", "The bank account has to be entered again"], "correct_index": 0}, {"question": "Which of these count as Business Proof? (select all that apply)", "options": ["GST certificate", "A photo of the shopfront", "Shop & Establishment licence", "The merchant's Aadhaar"], "correct": [0, 2], "multi": true, "weight": 2}], "pass": 2, "passMsg": "Cleared. You can now take a merchant through Re-KYC end to end.", "failMsg": "Not cleared this time. Re-KYC errors block a merchant's settlements, so please rewatch and try again.", "total": ""}, "videos": [{"id": "tr5v0", "title": "Clearing Action Required items", "langs": ["English", "Hindi"], "questions": [], "pass": 1, "kind": "video", "passMsg": "", "failMsg": "", "total": ""}], "allowSeek": false, "blocker": true, "mandatory": true, "timer": "", "onceOnly": true, "certificate": true, "skipAfter": ""}, {"id": "tr6", "name": "Reading your performance dashboard", "widget": "inline-card", "inHub": true, "perVideo": false, "final": {"enabled": false, "questions": [], "pass": 1, "passMsg": "", "failMsg": "", "total": ""}, "videos": [{"id": "tr6v0", "title": "Participation, productivity, leaderboard", "langs": ["English"], "questions": [], "pass": 1, "kind": "image", "passMsg": "", "failMsg": "", "total": ""}], "allowSeek": true, "blocker": false, "mandatory": false, "timer": "", "onceOnly": false, "certificate": false, "skipAfter": ""}];
 const vDoneG = v => { const p = prog(v.id); return v.questions.length ? p.passed : p.watched; };
 // The panel now emits correct[] with multi and weight. Older records carried a
 // single correct_index, so normalise once here and let the rest of the file
@@ -324,13 +324,18 @@ function player(v, onClose){
   if (!langs.includes(LANG)) LANG = langs[0];
   const kindId = v.kind || 'video';
   const kind = kindOf(v), timed = kind.timed;
-  const allowSeek = v.allow_seek !== false;
+  // A view threshold answers the same question as the toggle: locked until the
+  // FSE has been through it enough times, then open.
+  const views = prog(v.id).views || 0;
+  const threshold = +v.skip_after_views || 0;
+  const allowSeek = threshold ? views >= threshold : v.allow_seek !== false;
   const el = document.createElement('div');
   el.className = 'ov';
   el.style.cssText = 'position:absolute;inset:0;z-index:60;background:#0b0f18;display:flex;flex-direction:column;animation:fade .18s ease';
   document.getElementById('app').appendChild(el);
 
   let media = null, maxSeen = prog(v.id).pos || 0, page = 0;
+  save(v.id, {views: views + 1});      // opening it counts as a view
   const PAGES = 3;                   // stand-in page count for documents
 
   function persistPos(){
@@ -376,7 +381,9 @@ function player(v, onClose){
           : `<span style="color:#5f6b82;font-size:10.5px;font-weight:700">🌐 ${esc(LANG)} · only language uploaded</span>`}
         ${kindId==='video'?`<button data-cc style="background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.19);color:#fff;border-radius:99px;padding:5px 11px;font:inherit;font-size:11px;font-weight:700;cursor:pointer">CC</button>`:''}
         ${timed?`<button data-sp style="background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.19);color:#fff;border-radius:99px;padding:5px 11px;font:inherit;font-size:11px;font-weight:800;cursor:pointer">${SPEED}×</button>`:''}
-        ${timed&&!allowSeek?`<span style="color:#ffc46b;font-size:10.5px;font-weight:700">🔒 no skipping ahead</span>`:''}
+        ${timed&&!allowSeek?`<span style="color:#ffc46b;font-size:10.5px;font-weight:700">🔒 ${
+          threshold?`unlocks on view ${threshold} — this is view ${views+1}`:'no skipping ahead'}</span>`:''}
+        ${timed&&allowSeek&&threshold?`<span style="color:#7fd8ff;font-size:10.5px;font-weight:700">🔓 skipping unlocked</span>`:''}
       </div>
       ${resumable?`<div data-resume style="background:#132038;padding:9px 14px;display:flex;gap:9px;align-items:center;border-top:1px solid rgba(255,255,255,.07)">
         <span style="flex:1;color:#a9c6ef;font-size:11.5px;font-weight:700">Picking up at ${fmtT(maxSeen)}</span>
@@ -521,25 +528,33 @@ function langSheet(v, pick){
 /* ─ assessment ─────────────────────────────────────────────────────────────
    Per-selection feedback, weighted scoring, an optional countdown, and a
    round-robin subset so a retry is not the same paper twice.               */
+const isTextQ = q => q.kind === 'text';
+const scored  = qs => (qs||[]).filter(q=>!isTextQ(q));
 const sameSet = (a,b) => a.length===b.length && [...a].sort().every((x,i)=>x===[...b].sort()[i]);
-const qWeight = q => +q.weight || 1;
+const qWeight = q => isTextQ(q) ? 0 : (+q.weight || 1);
 
 // The admin sets a target total score. Questions are drawn at random until
 // their weights add up to exactly that, so two FSEs sit different papers
 // worth the same. Falls back to the whole pool if no target is set.
 function pickQuestions(v){
   const all = v.questions || [];
+  const texts = all.filter(isTextQ);          // always asked, never scored
+  const pool0 = scored(all);
   const goal = +v.total_score || 0;
-  if(!goal) return all;
-  for(let attempt = 0; attempt < 40; attempt++){
-    const pool = [...all].sort(()=>Math.random()-.5), out = []; let sum = 0;
-    for(const q of pool){
-      const w = qWeight(q);
-      if(sum + w <= goal){ out.push(q); sum += w; }
-      if(sum === goal) return out;
+  const paper = (() => {
+    if(!goal) return pool0;
+    for(let attempt = 0; attempt < 40; attempt++){
+      const pool = [...pool0].sort(()=>Math.random()-.5), out = []; let sum = 0;
+      for(const q of pool){
+        const w = qWeight(q);
+        if(sum + w <= goal){ out.push(q); sum += w; }
+        if(sum === goal) return out;
+      }
     }
-  }
-  return all;                       // unreachable target — show everything
+    return pool0;                             // unreachable target — show everything
+  })();
+  // Written answers come last, after the paper has been decided.
+  return [...paper, ...texts];
 }
 
 function assessment(v, onClose){
@@ -548,6 +563,7 @@ function assessment(v, onClose){
 
   let i = 0;
   const ans = new Array(qs.length).fill(null);   // null | number[]
+  const txt = new Array(qs.length).fill('');     // written answers, unscored
   const limit = +v.timer_seconds || 0;
   let left = limit, tick = null, expired = false;
 
@@ -576,7 +592,8 @@ function assessment(v, onClose){
     // shown. Per-question feedback let an FSE learn the paper by elimination
     // across retakes, which is exactly what gating on a score is meant to stop.
     const chosen = ans[i] || [];
-    const ready = chosen.length > 0;
+    const isText = isTextQ(Q);
+    const ready = isText ? String(txt[i]||'').trim().length > 0 : chosen.length > 0;
     el.innerHTML = `
       <div style="display:flex;align-items:center;gap:9px;padding:12px 14px;border-bottom:1px solid #eef1f4">
         ${v.mandatory?'<span style="width:18px"></span>':'<button data-x style="background:none;border:none;font-size:18px;color:#555;cursor:pointer;line-height:1">✕</button>'}
@@ -589,9 +606,13 @@ function assessment(v, onClose){
       <div style="flex:1;overflow-y:auto;padding:17px 15px">
         <div style="font-size:14.5px;font-weight:700;line-height:1.4;margin-bottom:6px">${esc(Q.question)}</div>
         <div style="font-size:11px;color:#8a94a6;font-weight:700;margin-bottom:14px">
-          ${Q.multi?`Select all that apply — ${Q.correct.length} are correct`:'Select one'}${
-            qWeight(Q)!==1?` · worth ${qWeight(Q)} points`:''}</div>
-        <div style="display:flex;flex-direction:column;gap:9px">
+          ${isText ? 'In your own words · not scored'
+            : `${Q.multi?`Select all that apply — ${Q.correct.length} are correct`:'Select one'}${
+               qWeight(Q)!==1?` · worth ${qWeight(Q)} points`:''}`}</div>
+        ${isText?`<textarea data-txt rows="6" placeholder="${esc(Q.prompt||'Type your answer')}"
+          style="width:100%;border:1.5px solid #e2e8f0;border-radius:10px;padding:12px;font:inherit;font-size:12.5px;
+          line-height:1.5;resize:vertical;color:#1a1a2e;background:#fff">${esc(txt[i]||'')}</textarea>`:''}
+        <div style="display:flex;flex-direction:column;gap:9px;${isText?'display:none':''}">
           ${Q.options.map((o,k)=>{
             const on = chosen.includes(k);
             return `<button data-o="${k}" style="display:flex;gap:9px;align-items:center;text-align:left;padding:11px 13px;border-radius:9px;
@@ -604,16 +625,28 @@ function assessment(v, onClose){
             </button>`;}).join('')}
         </div>
         <div style="margin-top:14px;font-size:11px;color:#a0aec0;line-height:1.5">
-          You can change your answer until you move on. Your score is shown at the end.
+          ${isText ? 'This is recorded for your trainer, not marked. It does not affect your score.'
+                   : 'You can change your answer until you move on. Your score is shown at the end.'}
         </div>
       </div>
       <div style="padding:12px 15px 18px;border-top:1px solid #eef1f4">
         <button data-n ${ready?'':'disabled'} style="width:100%;padding:12px;border-radius:8px;border:none;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;
           background:${ready?'#004299':'#e2e8f0'};color:${ready?'#fff':'#a0aec0'}">${
-          i===qs.length-1?'Submit':'Next'}${Q.multi&&ready?` · ${chosen.length} selected`:''}</button>
+          i===qs.length-1?'Submit':'Next'}${!isText&&Q.multi&&ready?` · ${chosen.length} selected`:''}</button>
       </div>`;
 
     const x = el.querySelector('[data-x]'); if(x) x.onclick = shut;
+    const ta = el.querySelector('[data-txt]');
+    if(ta){
+      ta.oninput = () => {
+        txt[i] = ta.value;
+        const btn = el.querySelector('[data-n]'), on = ta.value.trim().length > 0;
+        btn.disabled = !on;
+        btn.style.background = on ? '#004299' : '#e2e8f0';
+        btn.style.color = on ? '#fff' : '#a0aec0';
+      };
+      setTimeout(()=>ta.focus(), 40);
+    }
     el.querySelectorAll('[data-o]').forEach(b => b.onclick = () => {
       const k = +b.dataset.o;
       const cur = ans[i] || [];
@@ -628,7 +661,8 @@ function assessment(v, onClose){
     });
     const nx = el.querySelector('[data-n]');
     if(nx) nx.onclick = () => {
-      if(!(ans[i]||[]).length) return;
+      if(isText){ if(!String(txt[i]||'').trim()) return; }
+      else if(!(ans[i]||[]).length) return;
       if(i < qs.length-1){ i++; q(); } else fin();
     };
     startTimer();
@@ -654,6 +688,8 @@ function assessment(v, onClose){
     if(!passed){
       (v.rewatch_ids || []).forEach(id => save(id, {watched:false, pos:0}));
     }
+    const written = qs.map((Q,k)=>isTextQ(Q)?{q:Q.question, a:txt[k]||''}:null).filter(Boolean);
+    if(written.length) save(v.id, {written});
 
     el.innerHTML = `
       <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;overflow-y:auto">
@@ -664,6 +700,8 @@ function assessment(v, onClose){
           ${v.pass_score} needed to pass
           ${expired?'<br><span style="color:#9c5a00;font-weight:700">Graded on what was answered before time ran out.</span>':''}
         </div>
+        ${written.length?`<div style="margin-top:14px;font-size:11px;color:#8a94a6;line-height:1.5;max-width:280px">
+          ${written.length} written answer${written.length>1?'s':''} recorded for your trainer.</div>`:''}
         <div style="margin-top:18px;padding:13px 15px;border-radius:11px;max-width:280px;
           background:${passed?'#e6faf0':'#f4f6f9'};color:${passed?'#0a7a42':'#3b4557'};
           font-size:12.5px;font-weight:600;line-height:1.55">${esc(msg)}</div>
@@ -678,6 +716,73 @@ function assessment(v, onClose){
     el.querySelector('[data-p]').onclick = shut;
   }
   q();
+}
+
+/* ─ certificate ───────────────────────────────────────────────────────────
+   Built as an SVG so it downloads as a real file rather than a screenshot,
+   and reads the same on the phone as it does once saved.                  */
+const FSE_NAME = 'Ajay Kumar';
+const FSE_CODE = 'E‑48213';
+
+function certificateSVG(t){
+  const fin = prog(t.id+'-final');
+  const when = new Date().toLocaleDateString([], {day:'numeric', month:'long', year:'numeric'});
+  const score = t.final.enabled && fin.total ? `${fin.score} of ${fin.total}` : 'Completed';
+  const wrap = (s,max) => String(s).length>max ? String(s).slice(0,max-1)+'…' : String(s);
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 700" width="1000" height="700">
+  <defs><linearGradient id="b" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#012b72"/><stop offset="1" stop-color="#00baf2"/></linearGradient></defs>
+  <rect width="1000" height="700" fill="#ffffff"/>
+  <rect x="24" y="24" width="952" height="652" fill="none" stroke="#e2e8f0" stroke-width="2" rx="10"/>
+  <rect x="24" y="24" width="952" height="10" fill="url(#b)" rx="5"/>
+  <text x="500" y="120" text-anchor="middle" font-family="Georgia, serif" font-size="19" fill="#8a94a6" letter-spacing="4">CERTIFICATE OF COMPLETION</text>
+  <text x="500" y="200" text-anchor="middle" font-family="Georgia, serif" font-size="44" fill="#012b72">${esc(wrap(t.name,42))}</text>
+  <text x="500" y="262" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="17" fill="#4a5568">This is to certify that</text>
+  <text x="500" y="326" text-anchor="middle" font-family="Georgia, serif" font-size="40" fill="#1a1a2e">${esc(FSE_NAME)}</text>
+  <text x="500" y="360" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="15" fill="#8a94a6">${esc(FSE_CODE)}</text>
+  <text x="500" y="418" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="17" fill="#4a5568">has completed every video in this training${t.final.enabled?' and cleared its assessment':''}.</text>
+  <line x1="180" y1="486" x2="820" y2="486" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="270" y="530" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#8a94a6" letter-spacing="2">SCORE</text>
+  <text x="270" y="562" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="21" font-weight="bold" fill="#1a1a2e">${esc(score)}</text>
+  <text x="500" y="530" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#8a94a6" letter-spacing="2">COMPLETED</text>
+  <text x="500" y="562" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="21" font-weight="bold" fill="#1a1a2e">${esc(when)}</text>
+  <text x="730" y="530" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#8a94a6" letter-spacing="2">REFERENCE</text>
+  <text x="730" y="562" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="21" font-weight="bold" fill="#1a1a2e">${esc(t.id.toUpperCase())}-${esc(FSE_CODE.replace(/\D/g,''))}</text>
+  <text x="500" y="640" text-anchor="middle" font-family="Helvetica, Arial, sans-serif" font-size="13" fill="#a0aec0">GG App · Field Training</text>
+</svg>`;
+}
+
+function certificateSheet(t){
+  const wrap = document.createElement('div');
+  wrap.style.cssText='position:absolute;inset:0;z-index:95;background:#0d1017;display:flex;flex-direction:column;animation:fade .18s ease';
+  wrap.innerHTML = `
+    <div style="display:flex;align-items:center;gap:9px;padding:12px 14px">
+      <button data-x style="background:none;border:none;color:#fff;font-size:19px;cursor:pointer;line-height:1;padding:2px 4px">←</button>
+      <div style="flex:1;color:#fff;font-size:13.5px;font-weight:800">Certificate</div>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:0 14px;display:flex;align-items:center;justify-content:center">
+      <div style="width:100%;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,.4)">
+        ${certificateSVG(t).replace('width="1000" height="700"','style="width:100%;height:auto;display:block"')}
+      </div>
+    </div>
+    <div style="padding:14px;display:flex;flex-direction:column;gap:8px">
+      <button data-dl style="width:100%;background:#00baf2;color:#04263f;border:none;border-radius:10px;padding:13px;font:inherit;font-size:13.5px;font-weight:800;cursor:pointer">⬇ Download certificate</button>
+      <div style="text-align:center;color:#7f8ca8;font-size:10.5px">Saves as an image you can share or print.</div>
+    </div>`;
+  document.getElementById('app').appendChild(wrap);
+  wrap.querySelector('[data-x]').onclick = () => wrap.remove();
+  wrap.querySelector('[data-dl]').onclick = () => {
+    const blob = new Blob([certificateSVG(t)], {type:'image/svg+xml'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `certificate-${t.name.toLowerCase().replace(/[^a-z0-9]+/g,'-')}.svg`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url), 4000);
+    const b = wrap.querySelector('[data-dl]');
+    b.textContent = '✓ Downloaded';
+    setTimeout(()=>{ b.textContent = '⬇ Download certificate'; }, 2200);
+  };
 }
 
 /* ─ reusable pieces ─ */
@@ -1014,6 +1119,21 @@ const VIEWS = [
     render(app){
       let filter='all', openId=null;
 
+      // Two trainings arrive already complete so the Completed tab and its
+      // certificates have something real to show.
+      if(!sessionStorage.getItem('proto_seeded_v1')){
+        sessionStorage.setItem('proto_seeded_v1','1');
+        ['tr3','tr5'].forEach(id=>{
+          const t=TRAININGS.find(x=>x.id===id); if(!t) return;
+          t.videos.forEach(v=>save(v.id,{watched:true,views:1}));
+          if(t.final.enabled){
+            const worth=t.final.questions.filter(q=>q.kind!=='text')
+              .reduce((a,q)=>a+(+q.weight||1),0);
+            save(t.id+'-final',{attempted:true,passed:true,score:worth,total:worth});
+          }
+        });
+      }
+
       /* ── state helpers ─────────────────────────────────────────────── */
       // A video only needs an assessment when the training turns per-video
       // checks on. Reading v.questions alone would strand a video the FSE
@@ -1150,7 +1270,10 @@ const VIEWS = [
             ${tDone(t)?`<div style="margin-top:6px;background:#e6faf0;border-radius:11px;padding:14px;text-align:center">
               <div style="font-size:22px">✓</div>
               <div style="font-size:13px;font-weight:800;color:#0a7a42;margin-top:3px">Training complete</div>
-              <div style="font-size:11.5px;color:#0a7a42;opacity:.85;margin-top:2px">Rewatch any video any time.</div></div>`:''}
+              <div style="font-size:11.5px;color:#0a7a42;opacity:.85;margin-top:2px">Rewatch any video any time.</div>
+              ${t.certificate?`<button data-certd style="margin-top:11px;width:100%;background:#fff;color:#0a7a42;border:1px solid #b7e6cd;
+                border-radius:9px;padding:11px;font:inherit;font-size:12.5px;font-weight:800;cursor:pointer">🎓 View certificate</button>`:''}
+            </div>`:''}
           </div>
 
           ${step?`<div style="position:sticky;bottom:0;background:linear-gradient(180deg,rgba(255,255,255,0),#fff 32%);padding:14px;margin-top:-72px">
@@ -1165,6 +1288,8 @@ const VIEWS = [
         if(f&&!locked) f.onclick=()=>go(t,{kind:'final'});
         const b=app.querySelector('[data-go]');
         if(b) b.onclick=()=>go(t,step);
+        const cd=app.querySelector('[data-certd]');
+        if(cd) cd.onclick=()=>certificateSheet(t);
       }
 
       /* ── list ───────────────────────────────────────────────────────── */
@@ -1231,6 +1356,8 @@ const VIEWS = [
                   ${pips(t)}
                   <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
                     <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;white-space:nowrap;background:${s.bg};color:${s.c}">${s.t}</span>
+                    ${d&&t.certificate?`<button data-cert="${t.id}" style="font-size:10px;font-weight:800;padding:3px 9px;border-radius:99px;white-space:nowrap;
+                      border:1px solid #cfe0f5;background:#f2f7ff;color:#004299;font-family:inherit;cursor:pointer">🎓 Certificate</button>`:''}
                     ${t.final.enabled?`<span style="font-size:9.5px;color:#a0aec0;font-weight:700;white-space:nowrap">${t.final.questions.length}-question assessment</span>`:''}
                   </div>
                 </div></div>`;}).join('')
@@ -1249,6 +1376,11 @@ const VIEWS = [
 
         app.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{filter=b.dataset.f;draw();});
         app.querySelectorAll('[data-t]').forEach(c=>c.onclick=()=>{openId=c.dataset.t;draw();});
+        // The certificate button sits inside the card, so stop it opening the card too.
+        app.querySelectorAll('[data-cert]').forEach(b=>b.onclick=ev=>{
+          ev.stopPropagation();
+          certificateSheet(TRAININGS.find(t=>t.id===b.dataset.cert));
+        });
         const m=app.querySelector('[data-mand]');
         if(m) m.onclick=()=>{filter='pending';draw();};
       }

@@ -274,6 +274,8 @@
     <div class="slotnote" id="assessNote" style="text-align:left;margin-bottom:14px"></div>
     <label class="toggle-row" id="perRow"><input type="checkbox" id="f_pervideo">
       <span id="perLabel">A check after <b>each</b> video<small id="perHint">Questions are edited inside each video row above.</small></span></label>
+    <label class="toggle-row"><input type="checkbox" id="f_cert">
+      <span>Issue a certificate on completion<small>The FSE can open and download it from the Completed tab in My trainings. Nothing appears there unless this is on.</small></span></label>
     <label class="toggle-row" id="finalRow"><input type="checkbox" id="f_final">
       <span>One assessment after <b>all</b> the videos<small>The FSE works through the set in order, then takes a single question set covering the whole training.</small></span></label>
     <div id="finalBox" hidden style="border-top:1px solid var(--line);padding-top:16px;margin-top:6px">
@@ -281,6 +283,7 @@
       <div id="finalQs"></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
         <button class="btn btn-ghost btn-sm" type="button" id="addFinalQ">＋ Add question</button>
+        <button class="btn btn-ghost btn-sm" type="button" id="addFinalText">＋ Add written answer</button>
         <label class="fpick">📤 Upload questions<input type="file" accept=".csv,.tsv,.txt" id="finalQFile"></label>
         <a href="#" id="tplLink" download="questions-template.csv" style="font-size:13px;color:var(--indigo)">Download template</a>
       </div>
@@ -347,12 +350,14 @@
         <input type="number" min="1" id="p_maxviews" placeholder="e.g. 3"></div>
       <div class="form-group"><label>Stop after this many days <small>— from first view</small></label>
         <input type="number" min="1" id="p_expiry" placeholder="e.g. 14"></div>
+      <div class="form-group"><label>Make skippable after this many views <small>— blank to never open up</small></label>
+        <input type="number" min="1" id="p_skipAfter" placeholder="e.g. 2"></div>
     </div>
     <div style="margin-top:16px;border-top:1px solid var(--line);padding-top:16px">
       <label class="toggle-row" id="p_hubRow"><input type="checkbox" id="p_hub">
         <span>Also list this in <b>My trainings</b><small id="p_hubHint">The FSE can find and complete it from the hub as well as on the screen.</small></span></label>
       <label class="toggle-row" id="p_seekRow"><input type="checkbox" id="p_seek">
-        <span>Let the FSE skip ahead<small>Scrubbing forward past content they have not reached. Resume and 2× playback are always available. With this off, the furthest point actually watched is the ceiling — which is the only thing making a completion record mean anything.</small></span></label>
+        <span>Let the FSE skip ahead<small id="p_seekHint">Scrubbing forward past content they have not reached. Resume and 2× playback are always available. With this off, the furthest point actually watched is the ceiling — which is the only thing making a completion record mean anything.</small></span></label>
       <label class="toggle-row" id="p_onceRow"><input type="checkbox" id="p_once">
         <span>Do not show the assessment again once cleared<small>A repeat visit shows the score they passed with instead of re-testing them.</small></span></label>
       <label class="toggle-row" id="p_blockRow"><input type="checkbox" id="p_blocker">
@@ -459,7 +464,11 @@ const allowsPerVideo = t => !isModule(t);                   // everywhere else
 const isSingle    = t => capOf(t)===1;
 const isModule    = t => t.widget==='module';   // hub-only
 
-const blankQ=()=>({question:'',options:['','','',''],correct:[0],multi:false,weight:1});
+const blankQ=()=>({kind:'choice',question:'',options:['','','',''],correct:[0],multi:false,weight:1});
+// A written answer carries no score. It is recorded, not marked, so it stays
+// out of the total and out of the pass calculation entirely.
+const blankTextQ=()=>({kind:'text',question:'',prompt:'',options:[],correct:[],multi:false,weight:0});
+const isTextQ = q => q.kind==='text';
 const blankVideo=n=>({title:`Video ${n}`,kind:'video',files:[{lang:'English',name:''}],
   questions:[],pass:1,total:'',passMsg:'',failMsg:''});
 
@@ -480,6 +489,8 @@ const kindOf = v => KINDS.find(k=>k.id===(v.kind||'video')) || KINDS[0];
 // Older records stored a single correct_index. Normalise on load so the rest
 // of the panel only ever deals with correct[] plus multi and weight.
 function normQ(q){
+  if(!q.kind) q.kind='choice';
+  if(isTextQ(q)){ q.options=[]; q.correct=[]; q.multi=false; q.weight=0; q.prompt=q.prompt||''; return q; }
   if(!Array.isArray(q.correct)) q.correct=[q.correct_index??0];
   if(typeof q.multi!=='boolean') q.multi=q.correct.length>1;
   if(q.weight==null||q.weight==='') q.weight=1;
@@ -512,7 +523,7 @@ function normSet(set){
    the pool, so the console works that out and says so.                    */
 function reachableTotals(questions){
   const sums = new Set([0]);
-  questions.forEach(q => {
+  scored(questions).forEach(q => {
     const w = +q.weight || 1;
     [...sums].forEach(v => sums.add(v + w));
   });
@@ -525,7 +536,7 @@ function pickToTotal(questions, target){
   // Shuffle, then take greedily; retry a few times so an unlucky order does
   // not fail a target that is reachable.
   for(let attempt=0; attempt<40; attempt++){
-    const pool=[...questions].sort(()=>Math.random()-.5), out=[]; let sum=0;
+    const pool=scored(questions).sort(()=>Math.random()-.5), out=[]; let sum=0;
     for(const q of pool){
       const w=+q.weight||1;
       if(sum+w<=goal){ out.push(q); sum+=w; }
@@ -536,6 +547,7 @@ function pickToTotal(questions, target){
 }
 function normT(t){
   if(t.timer==null) t.timer='';
+  if(typeof t.certificate!=='boolean') t.certificate=false;
   // A combined assessment is only meaningful on My trainings page.
   if(t.widget!=='module' && t.final) t.final.enabled = false;
   if(t.widget==='module') t.perVideo = false;
@@ -545,7 +557,8 @@ function normT(t){
 }
 const DEFAULT_PASS_MSG='Well done — you have cleared this assessment.';
 const DEFAULT_FAIL_MSG='You have not cleared it this time. Rewatch the content and try again.';
-const totalWeight = qs => qs.reduce((a,q)=>a+(+q.weight||1),0);
+const scored = qs => (qs||[]).filter(q=>!isTextQ(q));
+const totalWeight = qs => scored(qs).reduce((a,q)=>a+(+q.weight||1),0);
 const uid=()=>'t'+Math.random().toString(36).slice(2,9);
 
 function titleFromFile(name){
@@ -570,6 +583,13 @@ function questionsFromRows(rows){
   rows.forEach((r,i)=>{
     if(i===0&&/question/i.test(r[0]||'')) return;
     const [qt,a,b,c,d,correct,weight]=r.map(x=>(x||'').trim());
+    // "text" in the correct column marks a written answer; its option columns
+    // are ignored, and the hint may be carried in option1.
+    if(/^text$/i.test(correct||'')){
+      if(!qt){errs.push(`Row ${i+1}: a written answer still needs a question.`);return;}
+      const q=blankTextQ(); q.question=qt; q.prompt=a||'';
+      out.push(q); return;
+    }
     if(!qt||!a||!b||!c||!d){errs.push(`Row ${i+1}: needs a question and all four options.`);return;}
     // "2" for one answer, "2;4" or "2,4" for several.
     const idx=(correct||'').split(/[;|]/).map(x=>parseInt(x,10)).filter(x=>!isNaN(x));
@@ -584,7 +604,8 @@ function questionsFromRows(rows){
 }
 const CSV_TEMPLATE='question,option1,option2,option3,option4,correct_options,weight\n'
   +'"What does the SoundBox confirm?","Nothing","Every payment, by voice","Only refunds","Stock levels",2,1\n'
-  +'"Which two are required on a rental plan? (select both)","UPI Autopay mandate","A cash deposit","Correct MID mapping","A new SIM","1;3",2\n';
+  +'"Which two are required on a rental plan? (select both)","UPI Autopay mandate","A cash deposit","Correct MID mapping","A new SIM","1;3",2\n'
+  +'"What objection did you hear most this week?","Type what the merchant actually said","","","",text,\n';
 const CSV_HREF='data:text/csv;charset=utf-8,'+encodeURIComponent(CSV_TEMPLATE);
 
 /* ── state ─────────────────────────────────────────────────────────────── */
@@ -594,10 +615,10 @@ let T = freshT(), P = freshP();
 let editT = null, editP = null;
 
 function freshT(){ return {id:uid(),name:'',widget:'mini-banner',videos:[blankVideo(1)],timer:'',
-  perVideo:false,
+  certificate:false,perVideo:false,
   final:{enabled:false,questions:[],pass:1,total:'',passMsg:'',failMsg:''}}; }
 function freshP(){ return {id:uid(),trainingId:'',app:'gg',screen:'',audience:blankAudience(),
-  maxViews:'',expiry:'',blocker:false,hub:true,allowSeek:true,onceOnly:false}; }
+  maxViews:'',expiry:'',skipAfter:'',blocker:false,hub:true,allowSeek:true,onceOnly:false}; }
 
 // Placements saved before the audience model had five sibling fields whose
 // relationship lived only in a form label. Fold them into one source.
@@ -606,6 +627,7 @@ function normP(p){
   const a = blankAudience();
   if(typeof p.allowSeek!=='boolean') p.allowSeek = p.self !== false;
   if(typeof p.onceOnly!=='boolean') p.onceOnly = false;
+  if(p.skipAfter==null) p.skipAfter='';
   delete p.self;
   if(p.ecodes) { a.source='ecodes'; a.ecodes={name:'imported list', count:p.ecodes}; }
   else if(p.team) { a.source='org'; a.team=p.team; a.subteam=p.subteam||''; }
@@ -625,6 +647,8 @@ const placementsFor = id => placements.filter(p=>p.trainingId===id);
 
 /* ── shared editors ────────────────────────────────────────────────────── */
 function rulesRow(scope,set,count){
+  const texts = (set.questions||[]).filter(isTextQ).length;
+  count = count - texts;
   const pool = totalWeight(set.questions||[]);
   const reach = reachableTotals(set.questions||[]);
   const target = +set.total || 0;
@@ -641,7 +665,7 @@ function rulesRow(scope,set,count){
       !count ? 'no questions uploaded yet'
       : badPass ? `passing score cannot exceed ${target||pool}`
       : badTarget ? `${target} is not reachable from these weights${nearest?` — nearest is ${nearest}`:''}`
-      : `${count} question${count===1?'':'s'} worth <b>${pool}</b> in total${
+      : `${count} scored question${count===1?'':'s'} worth <b>${pool}</b> in total${texts?` · ${texts} written answer${texts===1?'':'s'}`:''}${
           target ? ` · a paper of <b>${target}</b> is drawn at random` : ' · the whole pool is shown'}`}</div>
   </div>
   ${count?`<div class="slotnote" style="text-align:left;margin:-6px 0 12px">
@@ -659,6 +683,15 @@ function fmtSecs(t){
   return m?`${m}m${r?` ${r}s`:''}`:`${s}s`;
 }
 function qEditor(q,scope,j){
+  if(isTextQ(q)) return `<div class="q-editor" style="border-left:3px solid var(--indigo)">
+    <div class="hd2"><b>Written answer</b>
+      <span class="badge grey">not scored</span>
+      <span class="sp"></span>
+      <button class="btn btn-danger btn-sm" data-qrm="${scope}-${j}">Remove</button></div>
+    <input type="text" data-qt="${scope}-${j}" value="${esc(q.question)}" placeholder="What do you want to ask?">
+    <input type="text" data-qp="${scope}-${j}" value="${esc(q.prompt||'')}" placeholder="Hint shown in the box (optional)" style="margin-top:8px">
+    <div class="qhint">Recorded, not marked. It carries no weight, sits outside the total score, and is always asked after the scored questions.</div>
+  </div>`;
   const multi=!!q.multi, none=!q.correct.length;
   return `<div class="q-editor">
     <div class="hd2"><b>Q${j+1}</b>
@@ -700,6 +733,8 @@ function wireQ(root){
   });
   root.querySelectorAll('[data-qw]').forEach(i=>i.oninput=()=>{
     const[s,j]=i.dataset.qw.split('-'); bucket(s)[+j].weight=i.value===''?1:Number(i.value); flowT();});
+  root.querySelectorAll('[data-qp]').forEach(i=>i.oninput=()=>{
+    const[s,j]=i.dataset.qp.split('-'); bucket(s)[+j].prompt=i.value;});
 }
 function wireRules(root){
   root.querySelectorAll('[data-rpass]').forEach(i=>i.oninput=()=>{
@@ -739,14 +774,19 @@ function flowT(){
   const kinds=[...new Set(T.videos.map(v=>kindOf(v).label))];
   if(kinds.length>1) bits.push(`mixed content — ${kinds.join(', ').toLowerCase()}`);
   if(T.timer) bits.push(`timed at ${fmtSecs(T.timer)} for the whole attempt`);
+  if(T.certificate) bits.push('and earns a downloadable certificate');
 
   const warns=[];
   if(T.final.enabled&&!T.final.questions.length) warns.push('The combined assessment has no questions yet.');
   if(T.perVideo&&T.videos.some(v=>!v.questions.length)) warns.push('Some videos have no check questions yet.');
   // A question with nothing marked correct can never be passed.
   const noAns=[];
-  T.videos.forEach((v,i)=>v.questions.forEach((q,j)=>{ if(!q.correct.length) noAns.push(`video ${i+1} Q${j+1}`); }));
-  T.final.questions.forEach((q,j)=>{ if(!q.correct.length) noAns.push(`assessment Q${j+1}`); });
+  T.videos.forEach((v,i)=>v.questions.forEach((q,j)=>{ if(!isTextQ(q)&&!q.correct.length) noAns.push(`video ${i+1} Q${j+1}`); }));
+  T.final.questions.forEach((q,j)=>{ if(!isTextQ(q)&&!q.correct.length) noAns.push(`assessment Q${j+1}`); });
+  const blankText=[];
+  [['assessment',T.final],...T.videos.map((v,i)=>[`video ${i+1}`,v])].forEach(([label,set])=>
+    (set.questions||[]).forEach((q,j)=>{ if(isTextQ(q)&&!q.question.trim()) blankText.push(`${label} written answer ${j+1}`); }));
+  if(blankText.length) warns.push(`${blankText.join(', ')} has no question text yet.`);
   if(noAns.length) warns.push(`Nothing is marked correct on ${noAns.join(', ')} — ${noAns.length>1?'those questions':'that question'} can never be answered right.`);
   // A target the weights cannot add up to would leave the paper unbuildable.
   const sets=[['The assessment',T.final],...T.videos.map((v,i)=>[`Video ${i+1}`,v])];
@@ -820,6 +860,7 @@ function drawVideos(){
         ${v.questions.map((q,j)=>qEditor(q,`v${i}`,j)).join('')}
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
           <button class="btn btn-ghost btn-sm" data-vaq="${i}">＋ Add question</button>
+          <button class="btn btn-ghost btn-sm" data-vat="${i}">＋ Add written answer</button>
           <label class="fpick">📤 Upload questions<input type="file" accept=".csv,.tsv,.txt" data-vqf="${i}"></label>
           <a href="${CSV_HREF}" download="questions-template.csv" style="font-size:13px;color:var(--indigo)">Download template</a>
         </div></div>`:''}
@@ -840,6 +881,7 @@ function drawVideos(){
     v.kind=sel.value; renderT();
   });
   L.querySelectorAll('[data-vaq]').forEach(b=>b.onclick=()=>{T.videos[+b.dataset.vaq].questions.push(blankQ());renderT();});
+  L.querySelectorAll('[data-vat]').forEach(b=>b.onclick=()=>{T.videos[+b.dataset.vat].questions.push(blankTextQ());renderT();});
   L.querySelectorAll('[data-vf]').forEach(inp=>inp.onchange=e=>{
     const f=e.target.files[0]; if(!f) return;
     const v=T.videos[+inp.dataset.vf]; v.files[0].name=f.name;
@@ -866,7 +908,7 @@ function drawVideos(){
 function renderT(){
   $('f_name').value=T.name; $('f_widget').value=T.widget;
   $('f_pervideo').checked=T.perVideo; $('f_final').checked=T.final.enabled;
-  $('f_timer').value=T.timer||'';
+  $('f_timer').value=T.timer||''; $('f_cert').checked=!!T.certificate;
   const qCount = T.final.enabled ? T.final.questions.length
                : T.videos.reduce((a,v)=>a+v.questions.length,0);
   $('timerNote').textContent = !T.timer
@@ -919,6 +961,7 @@ function structOf(t){
   }
   if(t.final.enabled) parts.push(line('assessment at the end',t.final));
   if(t.timer) parts.push(`<span class="badge grey">⏱ ${fmtSecs(t.timer)}</span>`);
+  if(t.certificate) parts.push('<span class="badge">🎓 certificate</span>');
   return parts.length?parts.join('<br>'):'<span style="color:var(--faint)">None</span>';
 }
 
@@ -1060,6 +1103,10 @@ function validateP(P){
   errors.push(...resolveAudience(P).problems);
 
   // The gate's only action is "Go to Trainings", so the training has to be there.
+  if(+P.skipAfter > 0 && P.maxViews && +P.skipAfter >= +P.maxViews)
+    warnings.push(`Skipping opens up on view ${P.skipAfter}, but the placement stops showing after ${P.maxViews} — the FSE would never reach it.`);
+  if(P.blocker && +P.skipAfter > 0)
+    warnings.push('Mandatory content is never skippable, so the view threshold will not apply here.');
   if(P.blocker && !P.hub)
     warnings.push('A homepage blocker sends the FSE to My trainings, so hub listing will be turned on when you save.');
   if(P.blocker && !trainingIsMandatory(t))
@@ -1108,7 +1155,8 @@ function flowP(){
   const aud = resolveAudience(P);
   const rules=[P.maxViews&&`stops after ${P.maxViews} views`,P.expiry&&`stops after ${P.expiry} days`,
                P.blocker&&'is mandatory and gates the home screen until it is done',
-               P.allowSeek===false&&'no skipping ahead',
+               (+P.skipAfter>0)&&`unlocks skipping after ${P.skipAfter} view${+P.skipAfter===1?'':'s'}`,
+               (!(+P.skipAfter>0)&&P.allowSeek===false)&&'no skipping ahead',
                P.onceOnly&&'assessment is not repeated once cleared'].filter(Boolean);
   const where = P.screen===HUB
     ? `in <b>My trainings</b> in <b>${esc(appLabel(P.app))}</b>`
@@ -1183,12 +1231,21 @@ function renderP(){
   $('p_maxviews').value=P.maxViews; $('p_expiry').value=P.expiry;
   $('p_blocker').checked=P.blocker; $('p_hub').checked=P.hub;
   $('p_seek').checked=P.allowSeek!==false; $('p_once').checked=!!P.onceOnly;
+  $('p_skipAfter').value=P.skipAfter||'';
   const t=trainingById(P.trainingId);
-  // Mandatory content nobody may skim: forcing skip-ahead off is the only
-  // thing that makes its completion record mean anything.
-  $('p_seekRow').classList.toggle('off',P.blocker);
-  $('p_seek').disabled=P.blocker;
+  // Two things can take the toggle away. A view threshold answers the same
+  // question with a number, and mandatory content may not be skimmed at all.
+  const byViews = !!(+P.skipAfter > 0);
+  const seekLocked = P.blocker || byViews;
+  $('p_seekRow').classList.toggle('off',seekLocked);
+  $('p_seek').disabled=seekLocked;
   if(P.blocker){ P.allowSeek=false; $('p_seek').checked=false; }
+  else if(byViews){ $('p_seek').checked=false; }
+  $('p_seekHint').textContent = byViews
+    ? `Set by the view threshold instead — skipping is off until the ${P.skipAfter}${+P.skipAfter===1?'st':+P.skipAfter===2?'nd':+P.skipAfter===3?'rd':'th'} view, then allowed. Clear that field to control it here.`
+    : P.blocker
+      ? 'Not available — mandatory content may not be skimmed.'
+      : 'Scrubbing forward past content they have not reached. Resume and 2× playback are always available.';
   const hasAssessment = !!(t && (t.final.enabled || (t.perVideo && t.videos.some(v=>v.questions.length))));
   $('p_onceRow').hidden=!hasAssessment;
 
@@ -1296,25 +1353,27 @@ $('f_pervideo').onchange=e=>{T.perVideo=e.target.checked;
 $('f_final').onchange=e=>{T.final.enabled=e.target.checked;
   if(T.final.enabled&&!T.final.questions.length) T.final.questions.push(blankQ()); renderT();};
 $('f_timer').oninput=e=>{T.timer=e.target.value;renderT();};
+$('f_cert').onchange=e=>{T.certificate=e.target.checked;renderT();};
 $('addVideo').onclick=()=>{T.videos.push(blankVideo(T.videos.length+1));
   if(T.perVideo) T.videos[T.videos.length-1].questions.push(blankQ()); renderT();};
+$('addFinalText').onclick=()=>{T.final.questions.push(blankTextQ());renderT();};
 $('addFinalQ').onclick=()=>{T.final.questions.push(blankQ());renderT();};
 $('finalQFile').onchange=e=>loadQuestions(e.target.files[0],T.final.questions);
 
 $('tSave').onclick=()=>{
   if(!T.name.trim()) return toast('Give the training a name.');
   if(T.videos.some(v=>!v.title.trim())) return toast('Every video needs a title.');
-  const bad=q=>!q.question.trim()||q.options.some(o=>!o.trim());
+  const bad=q=>!q.question.trim()||(!isTextQ(q)&&q.options.some(o=>!o.trim()));
   if(T.final.enabled&&!T.final.questions.length) return toast('The combined assessment has no questions.');
   if(T.final.enabled&&T.final.questions.some(bad)) return toast('Every final question needs text and all four options.');
   if(T.perVideo&&T.videos.some(v=>v.questions.some(bad))) return toast('Every per-video question needs text and all four options.');
   // A question with nothing ticked is unanswerable, so it must not be saved.
-  const noAns=q=>!q.correct||!q.correct.length;
+  const noAns=q=>!isTextQ(q)&&(!q.correct||!q.correct.length);
   if(T.final.enabled&&T.final.questions.some(noAns))
     return toast('Every combined-assessment question needs at least one correct answer ticked.');
   if(T.perVideo&&T.videos.some(v=>v.questions.some(noAns)))
     return toast('Every per-video question needs at least one correct answer ticked.');
-  const badW=q=>!(+q.weight>0);
+  const badW=q=>!isTextQ(q)&&!(+q.weight>0);
   if(T.final.questions.some(badW)||T.videos.some(v=>v.questions.some(badW)))
     return toast('Question weights must be greater than zero.');
   const setsToCheck=[['The assessment',T.final,T.final.enabled],
@@ -1350,6 +1409,7 @@ $('p_screen').onchange=e=>{P.screen=e.target.value;syncScreens();flowP();};
 $('p_hub').onchange=e=>{P.hub=e.target.checked;flowP();};
 $('p_maxviews').oninput=e=>{P.maxViews=e.target.value;flowP();};
 $('p_expiry').oninput=e=>{P.expiry=e.target.value;flowP();};
+$('p_skipAfter').oninput=e=>{P.skipAfter=e.target.value;renderP();};
 $('p_src').onchange=e=>{
   // Sources are alternatives, so switching drops the previous one's settings
   // rather than leaving stale values to be silently saved.
