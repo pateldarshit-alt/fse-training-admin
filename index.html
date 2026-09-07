@@ -322,9 +322,13 @@
         <label>App <span style="color:#e53e3e">*</span></label>
         <select id="p_app"></select>
       </div>
-      <div class="form-group full">
+      <div class="form-group">
         <label>Screen <span style="color:#e53e3e">*</span></label>
         <select id="p_screen"></select>
+      </div>
+      <div class="form-group" id="p_slotGroup">
+        <label>Position on the screen <span style="color:#e53e3e">*</span></label>
+        <select id="p_slot"></select>
       </div>
     </div>
     <div class="slotnote" id="pScreenNote" style="margin-top:14px;text-align:left"></div>
@@ -391,23 +395,56 @@ const APPS=[{id:'gg',label:'GG App'},{id:'force',label:'Force App'}];
 // PLACEHOLDER for Force App — confirm the real screen list before build.
 const APP_SCREENS={
   gg:{
-    'Home':['mini-banner','interstitial','stories'],
-    'Onboarding':['mini-banner','stories'],
-    'KYC':['bottom-sheet','accordion'],
-    'Dashboard':['accordion','inline-card'],
-    'Payments':['pip','carousel','inline-card'],
-    'Profile':['accordion','inline-card'],
-    'Settings':['accordion'],
+    'Home':['direct-cta','mini-banner','interstitial','stories'],
+    'Onboarding':['direct-cta','mini-banner','stories'],
+    'KYC':['direct-cta','bottom-sheet','accordion'],
+    'Dashboard':['direct-cta','accordion','inline-card'],
+    'Payments':['direct-cta','pip','carousel','inline-card'],
+    'Profile':['direct-cta','accordion','inline-card'],
+    'Settings':['direct-cta','accordion'],
   },
   force:{
-    'Home':['mini-banner','interstitial','stories'],
-    'Leads':['carousel','inline-card'],
-    'Visits':['accordion','bottom-sheet'],
-    'Orders':['inline-card','pip'],
-    'Reports':['inline-card'],
-    'Settings':['accordion'],
+    'Home':['direct-cta','mini-banner','interstitial','stories'],
+    'Leads':['direct-cta','carousel','inline-card'],
+    'Visits':['direct-cta','accordion','bottom-sheet'],
+    'Orders':['direct-cta','inline-card','pip'],
+    'Reports':['direct-cta','inline-card'],
+    'Settings':['direct-cta','accordion'],
   },
 };
+// Named positions the front end has built for each widget on each screen.
+// Two Mini Banners on Home are different placements, and the slot is what
+// tells them apart — without it a second one silently competes with the first.
+// PLACEHOLDER — confirm the real slot inventory with the app team.
+const DEFAULT_SLOTS={
+  'direct-cta':  ['Header icon','Beside the section title','Bottom link'],
+  'mini-banner': ['Top of page','After the first card','Bottom of page'],
+  'inline-card': ['After the summary','Between sections','Bottom of page'],
+  'accordion':   ['Below the header','After the details block'],
+  'carousel':    ['Below the fold','After the task list'],
+  'pip':         ['Floating, bottom right'],
+  'bottom-sheet':['On open','On action tap'],
+  'interstitial':['On screen open','On first visit of the day'],
+  'stories':     ['Top rail'],
+};
+// Screen-specific positions, where the screen has somewhere the generic list
+// does not describe.
+const SCREEN_SLOTS={
+  gg:{
+    'Home':{'mini-banner':['Top of page','After performance','After check-in'],
+            'direct-cta':['Header icon','Beside “Quick start”','Beside the gate meeting card']},
+    'Dashboard':{'inline-card':['After the summary','Between Participation and Productivity','Below the leaderboard'],
+                 'direct-cta':['Beside “Team performance”','Beside the leaderboard']},
+    'Payments':{'carousel':['Below the plan picker','After the device list']},
+  },
+  force:{
+    'Home':{'mini-banner':['Top of page','After performance']},
+  },
+};
+function slotsFor(app,screen,widget){
+  const byScreen=((SCREEN_SLOTS[app]||{})[screen]||{})[widget];
+  return byScreen || DEFAULT_SLOTS[widget] || ['Default position'];
+}
 const LANGS_UNUSED=null;
 const LANGS=['English','Hindi','Tamil','Telugu','Kannada','Bengali','Marathi'];
 const TEAMS={'Sales':['Merchant Acquisition','Cross-sell & Upsell'],'Service':['Service & Support','Retention'],
@@ -418,6 +455,8 @@ const TEAMS={'Sales':['Merchant Acquisition','Cross-sell & Upsell'],'Service':['
 const WIDGETS=[
   {id:'module',      label:'My trainings page',        max:20, plays:false, combined:true, hubOnly:true,
    note:'Never placed on an app screen. The FSE works through the videos in order from My trainings, then takes one assessment at the end.'},
+  {id:'direct-cta',  label:'Direct CTA',               max:1,  plays:true,  combined:false, placeable:true,
+   note:'A link or “View tutorial” icon sitting in the screen’s own controls. Takes almost no space and opens the player when tapped, so it fits on any screen.'},
   {id:'mini-banner', label:'Mini Banner',              max:1,  plays:true,  combined:false, placeable:true,
    note:'Shows one collapsed strip. One video.'},
   {id:'interstitial',label:'Interstitial (Full-Screen)',max:1, plays:true,  combined:false, placeable:true,
@@ -617,7 +656,7 @@ let editT = null, editP = null;
 function freshT(){ return {id:uid(),name:'',widget:'mini-banner',videos:[blankVideo(1)],timer:'',
   certificate:false,perVideo:false,
   final:{enabled:false,questions:[],pass:1,total:'',passMsg:'',failMsg:''}}; }
-function freshP(){ return {id:uid(),trainingId:'',app:'gg',screen:'',audience:blankAudience(),
+function freshP(){ return {id:uid(),trainingId:'',app:'gg',screen:'',slot:'',audience:blankAudience(),
   maxViews:'',expiry:'',skipAfter:'',blocker:false,hub:true,allowSeek:true,onceOnly:false}; }
 
 // Placements saved before the audience model had five sibling fields whose
@@ -628,6 +667,7 @@ function normP(p){
   if(typeof p.allowSeek!=='boolean') p.allowSeek = p.self !== false;
   if(typeof p.onceOnly!=='boolean') p.onceOnly = false;
   if(p.skipAfter==null) p.skipAfter='';
+  if(p.slot==null) p.slot='';
   delete p.self;
   if(p.ecodes) { a.source='ecodes'; a.ecodes={name:'imported list', count:p.ecodes}; }
   else if(p.team) { a.source='org'; a.team=p.team; a.subteam=p.subteam||''; }
@@ -1113,9 +1153,19 @@ function validateP(P){
     warnings.push('A homepage blocker on non-mandatory content will let the FSE past after watching.');
   if(trainingIsMandatory(t) && !P.hub && P.screen !== HUB)
     warnings.push('Mandatory but not listed in the hub — if the FSE never visits this screen they have no way to complete it.');
-  const dupe = placements.find(p => p.id!==P.id && p.trainingId===P.trainingId
-                                 && p.screen===P.screen && p.app===P.app && P.screen);
-  if(dupe) warnings.push(`Already placed on ${appLabel(P.app)} · ${screenLabel(P.screen)} — the two will compete.`);
+  if(P.screen && P.screen!==HUB && !isModule(t) && !P.slot)
+    errors.push('Choose a position on the screen.');
+  // Two placements only truly collide when they want the same physical slot.
+  const clash = placements.find(p => p.id!==P.id && p.app===P.app && p.screen===P.screen
+                                  && p.slot===P.slot && P.slot);
+  if(clash){
+    const other = trainingById(clash.trainingId);
+    warnings.push(`${other?other.name:'Another training'} already sits in ${W[t.widget].label} — ${P.slot} on this screen. Only one of them will show.`);
+  }
+  const sameScreen = placements.find(p => p.id!==P.id && p.trainingId===P.trainingId
+                                  && p.screen===P.screen && p.app===P.app && P.screen);
+  if(sameScreen && !clash)
+    warnings.push(`This training is already on ${appLabel(P.app)} · ${screenLabel(P.screen)} in a different position.`);
   return {errors, warnings, t};
 }
 
@@ -1140,6 +1190,16 @@ function syncScreens(){
             : `<span style="color:var(--red-fg)">No ${esc(appLabel(P.app))} screen carries that slot.</span> ${screensAnyApp(t.widget).length?`It is available on ${screensAnyApp(t.widget).map(esc).join(', ')}.`:''}`))
     + (trainingIsMandatory(t)?' <span class="badge red">This training is mandatory</span>':'');
 
+  // A hub placement has no screen, so it has no position on one either.
+  const onScreen = P.screen && P.screen!==HUB && !isModule(t);
+  $('p_slotGroup').hidden = !onScreen;
+  if(onScreen){
+    const list=slotsFor(P.app,P.screen,t.widget);
+    if(!list.includes(P.slot)) P.slot=list[0];
+    fill($('p_slot'), list.map(x=>({id:x,label:`${W[t.widget].label} — ${x}`})));
+    $('p_slot').value=P.slot;
+  } else P.slot='';
+
   // The hub listing is forced on when the hub *is* the placement.
   const hubForced = P.screen===HUB;
   if(hubForced) P.hub=true;
@@ -1160,7 +1220,7 @@ function flowP(){
                P.onceOnly&&'assessment is not repeated once cleared'].filter(Boolean);
   const where = P.screen===HUB
     ? `in <b>My trainings</b> in <b>${esc(appLabel(P.app))}</b>`
-    : `as a <b>${esc(W[t.widget].label)}</b> on <b>${esc(appLabel(P.app))} · ${esc(P.screen||'— pick a screen —')}</b>`;
+    : `as a <b>${esc(W[t.widget].label)}</b> on <b>${esc(appLabel(P.app))} · ${esc(P.screen||'— pick a screen —')}</b>${P.slot?`, <b>${esc(P.slot.toLowerCase())}</b>`:''}`;
   const also = (P.hub && P.screen!==HUB) ? ', and is listed in My trainings' : '';
   $('pFlow').innerHTML=`<div class="k">What this placement does</div>
     <div class="v"><b>${esc(t.name)}</b> appears ${where}
@@ -1300,7 +1360,8 @@ function drawPLib(){
       <td><span class="badge grey">${esc(appLabel(p.app))}</span></td>
       <td>${p.screen===HUB
         ? '<span class="badge grey">My trainings only</span>'
-        : `<span class="badge">${esc(p.screen)}</span><br><span class="badge">${t?esc(W[t.widget].label):'—'}</span>`}
+        : `<span class="badge">${esc(p.screen)}</span><br><span class="badge">${t?esc(W[t.widget].label):'—'}</span>${
+            p.slot?`<br><span class="badge grey">${esc(p.slot)}</span>`:''}`}
         ${p.hub&&p.screen!==HUB?'<br><span class="badge grey">＋ in hub</span>':''}</td>
       <td class="struct">${srcBadge}<br>${esc(aud.label)}
         ${aud.problems.length?`<br><span class="badge red">⚠ ${esc(aud.problems[0])}</span>`:''}</td>
@@ -1405,7 +1466,8 @@ $('p_app').onchange=e=>{
   }
   syncScreens(); flowP();
 };
-$('p_screen').onchange=e=>{P.screen=e.target.value;syncScreens();flowP();};
+$('p_screen').onchange=e=>{P.screen=e.target.value;P.slot='';syncScreens();flowP();};
+$('p_slot').onchange=e=>{P.slot=e.target.value;flowP();};
 $('p_hub').onchange=e=>{P.hub=e.target.checked;flowP();};
 $('p_maxviews').oninput=e=>{P.maxViews=e.target.value;flowP();};
 $('p_expiry').oninput=e=>{P.expiry=e.target.value;flowP();};

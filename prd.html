@@ -187,10 +187,10 @@
     <table class="meta">
       <tbody>
         <tr><td>Product</td><td>GG App — Field Sales Executive (FSE) mobile application</td></tr>
-        <tr><td>Feature</td><td>Contextual Video Coaching — eight in-app widget views, My trainings hub, admin console</td></tr>
+        <tr><td>Feature</td><td>Contextual Video Coaching — nine in-app widget views, My trainings hub, admin console</td></tr>
         <tr><td>Document owner</td><td>Product</td></tr>
         <tr><td>Status</td><td>Draft for review</td></tr>
-        <tr><td>Version</td><td>2.7</td></tr>
+        <tr><td>Version</td><td>2.8</td></tr>
         <tr><td>Date</td><td>7 September 2026</td></tr>
         <tr><td>Reviewers</td><td>Design, Frontend, Backend, Field Ops, L&amp;D</td></tr>
       </tbody>
@@ -334,7 +334,7 @@
   <h4>S4 — Process change goes live</h4>
   <p>A revised SOP takes effect on a fixed date. The training is published as mandatory with the homepage blocker set. Every FSE is gated on their next home screen visit and routed to the hub.</p>
 
-  <h2>3. App — the eight widget views</h2>
+  <h2>3. App — the nine widget views</h2>
   <p>Training reaches the FSE only through these nine views. Each is a reusable placeholder slot dropped into an existing screen. A slot owns no app content, changes no layout, and renders nothing at all when no training is targeted at it.</p>
 
   <h3>3.1 View catalogue</h3>
@@ -342,7 +342,8 @@
     <table>
       <thead><tr><th>#</th><th>View</th><th>Behaviour</th><th>Use when</th><th>Reference placement</th></tr></thead>
       <tbody>
-        <tr><td class="num">1</td><td><strong>Mini Banner</strong></td><td>A collapsed strip pinned into the screen that expands inline to play. Never takes the screen over.</td><td>Persistent, low-pressure presence for optional content.</td><td>FSE Home</td></tr>
+        <tr><td class="num">1</td><td><strong>Direct CTA</strong></td><td>A link or “View tutorial” icon in the screen’s own controls. Costs a line of a screen rather than a block, opens the player instead of embedding one, and is therefore the one view available on <strong>every</strong> screen.</td></tr>
+        <tr><td class="num">2</td><td><strong>Mini Banner</strong></td><td>A collapsed strip pinned into the screen that expands inline to play. Never takes the screen over.</td><td>Persistent, low-pressure presence for optional content.</td><td>FSE Home</td></tr>
         <tr><td class="num">2</td><td><strong>Bottom Sheet</strong></td><td>Slides up over the screen and dims the content behind. Dismissed by tap-away or close.</td><td>A question asked mid-flow, at a prompt or decision point.</td><td>Re-KYC Check</td></tr>
         <tr><td class="num">3</td><td><strong>Interstitial</strong><br>Full-screen</td><td>Takes over the screen and interrupts. Must be dealt with before the FSE proceeds.</td><td>Mandatory content and hard gates only. The most expensive view — use sparingly.</td><td>Check-in gate</td></tr>
         <tr><td class="num">4</td><td><strong>Inline Accordion</strong></td><td>A collapsible row inline in the page flow that expands in place. Covers nothing.</td><td>Dense list screens where no existing content may be obscured.</td><td>Merchant Task Details; Consumer App Verification</td></tr>
@@ -606,7 +607,7 @@
       <thead><tr><th>Field</th><th>Type</th><th>Purpose</th></tr></thead>
       <tbody>
         <tr><td>Training name</td><td>Text, required</td><td>Displayed everywhere the training appears.</td></tr>
-        <tr><td>Widget view</td><td>Select — one of eight, or My trainings page</td><td>Sets video capacity and assessment capability. Also determines which screens can host it.</td></tr>
+        <tr><td>Widget view</td><td>Select — one of nine, or My trainings page</td><td>Sets video capacity and assessment capability. Also determines which screens can host it.</td></tr>
         <tr><td>Videos</td><td>Ordered list, reorderable</td><td>Capacity enforced by the widget view. Reducing capacity trims the list and says what it removed.</td></tr>
         <tr><td>— Content type</td><td>Select — video, audio, PDF/slides, image</td><td>Drives the accepted file types, the player, and what counts as finishing the item. Changing it clears the uploaded files, since they no longer match.</td></tr>
         <tr><td>— Video file</td><td>Upload</td><td>The <strong>title is derived from the filename</strong> unless one has been typed.</td></tr>
@@ -643,6 +644,13 @@
   </div>
 
   <p><strong>Homepage blocker</strong> is a single switch. The home screen is sealed until the training is finished, with no timer and no dismiss. Turning it on forces the training to be listed in My trainings, since that is where the gate hands off to.</p>
+
+  <h4>Position on the screen</h4>
+  <p>Choosing a screen then asks for a <strong>position</strong> — <em>Mini Banner — Top of page</em>, <em>Mini Banner — After performance</em>. A screen can carry more than one widget of the same type, and the position is what tells two placements apart.</p>
+  <div class="note">
+    <p>Without it, a second Mini Banner on Home is indistinguishable from the first in the data, and the two silently compete for whichever slot the front end renders. With it, the console can say plainly which training already occupies a position and warn that only one of them will show. Two placements on the same screen in <em>different</em> positions are legitimate and pass without complaint.</p>
+  </div>
+  <p>The slot inventory comes from the front-end build: a generic set per widget type, with screen-specific positions where a screen has somewhere the generic list does not describe. It is a placeholder in this prototype and needs confirming against the real app.</p>
 
   <h3>7.2a Audience</h3>
   <p>Targeting is expressed as <strong>one source, optionally narrowed</strong>. The earlier form had five sibling fields — team, subteam, stage, trigger and an ecode upload — whose relationship existed only in a label reading <em>“overrides the fields above”</em>. Nothing enforced that, and the summary line rendered them as an intersection, so the console could describe an audience it would not actually deliver.</p>
@@ -847,6 +855,7 @@
       <tr><td>training_id</td><td>uuid</td><td>Restrict on delete — a training in use cannot be removed</td></tr>
       <tr><td>app</td><td>text</td><td>gg | force</td></tr>
       <tr><td>screen</td><td>text</td><td>App screen, or <span class="mono">my_trainings_page</span></td></tr>
+      <tr><td>slot</td><td>text</td><td>Named position on that screen. Required for any on-screen placement; unique per app + screen + slot</td></tr>
       <tr><td>blocker</td><td>boolean</td><td>Mandatory and homepage blocker — one flag, both meanings</td></tr>
       <tr><td>allow_seek</td><td>boolean</td><td>Default true. Forced false when blocker is true</td></tr>
       <tr><td>once_only</td><td>boolean</td><td>Do not re-test once the assessment is cleared</td></tr>
