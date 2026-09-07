@@ -187,10 +187,10 @@
     <table class="meta">
       <tbody>
         <tr><td>Product</td><td>GG App — Field Sales Executive (FSE) mobile application</td></tr>
-        <tr><td>Feature</td><td>Contextual Video Coaching — nine in-app widget views, My trainings hub, admin console</td></tr>
+        <tr><td>Feature</td><td>Contextual Video Coaching — eight in-app widget views, My trainings hub, admin console</td></tr>
         <tr><td>Document owner</td><td>Product</td></tr>
         <tr><td>Status</td><td>Draft for review</td></tr>
-        <tr><td>Version</td><td>2.4</td></tr>
+        <tr><td>Version</td><td>2.5</td></tr>
         <tr><td>Date</td><td>7 September 2026</td></tr>
         <tr><td>Reviewers</td><td>Design, Frontend, Backend, Field Ops, L&amp;D</td></tr>
       </tbody>
@@ -334,7 +334,7 @@
   <h4>S4 — Process change goes live</h4>
   <p>A revised SOP takes effect on a fixed date. The training is published as mandatory with the homepage blocker set. Every FSE is gated on their next home screen visit and routed to the hub.</p>
 
-  <h2>3. App — the nine widget views</h2>
+  <h2>3. App — the eight widget views</h2>
   <p>Training reaches the FSE only through these nine views. Each is a reusable placeholder slot dropped into an existing screen. A slot owns no app content, changes no layout, and renders nothing at all when no training is targeted at it.</p>
 
   <h3>3.1 View catalogue</h3>
@@ -349,7 +349,6 @@
         <tr><td class="num">5</td><td><strong>Picture-in-Picture</strong></td><td>Opens full-screen, shrinks to a floating card that stays on top while the FSE works underneath.</td><td>Step-by-step content the FSE must follow while operating a form.</td><td>SoundBox Plan Selection</td></tr>
         <tr><td class="num">6</td><td><strong>Carousel</strong></td><td>Horizontally scrolling cards; tapping one opens it in a sheet.</td><td>Browsing several short clips to pick the relevant one.</td><td>SoundBox Add Device</td></tr>
         <tr><td class="num">7</td><td><strong>Stories</strong></td><td>Full-bleed vertical playback with a segmented progress bar, one segment per training. Autoplays muted, auto-advances, taps move between segments.</td><td>Short, browsable content the FSE flicks through rather than commits to.</td><td>FSE Home</td></tr>
-        <tr><td class="num">8</td><td><strong>Popup Modal</strong></td><td>A centred card naming what is outstanding, with a hand-off to the hub. Plays nothing in place.</td><td>Trigger-driven nudges — allocation, target shortfalls — where the point is to route, not to teach on the spot.</td><td>Performance Tracking</td></tr>
         <tr><td class="num">9</td><td><strong>Inline Embedded Card</strong></td><td>A static thumbnail with a play badge and duration, embedded in the natural page flow.</td><td>Explainers that belong beside the numbers or fields they explain.</td><td>Performance Tracking; SoundBox Payment; Merchant Detail</td></tr>
       </tbody>
     </table>
@@ -433,7 +432,6 @@
         <tr><td>Carousel</td><td class="num">12</td><td class="p0">Not available</td><td>The FSE picks the one card matching the merchant in front of them. A combined test would ask about videos they never opened.</td></tr>
         <tr><td>Inline Embedded Card</td><td class="num">8</td><td class="p0">Not available</td><td>Each card is opened independently from the page.</td></tr>
         <tr><td><strong>Stories</strong></td><td class="num">10</td><td><strong>Available</strong></td><td>Sequential and auto-advancing. The last segment is a real ending.</td></tr>
-        <tr><td>Popup Modal</td><td class="num">6</td><td class="p0">No assessment at all</td><td>It routes rather than plays, so any assessment belongs to the training it sends the FSE to.</td></tr>
         <tr><td><strong>My trainings page</strong> — no screen widget</td><td class="num">20</td><td><strong>Available</strong></td><td>Completed in order from My trainings, which is a committed, sequential context.</td></tr>
       </tbody>
     </table>
@@ -509,15 +507,15 @@
     <table>
       <thead><tr><th>Control</th><th>Behaviour</th></tr></thead>
       <tbody>
-        <tr><td><strong>Resume</strong></td><td>Video and audio store the furthest point reached and open there, with the position shown and a <em>Start over</em> beside it. An FSE interrupted mid-visit does not pay for it twice.</td></tr>
+        <tr><td><strong>Resume</strong></td><td><strong>Always on, for every training.</strong> Video and audio store the furthest point reached and open there, with the position shown and a <em>Start over</em> beside it. An FSE interrupted mid-visit does not pay for it twice, and there is no setting that can take this away.</td></tr>
         <tr><td><strong>Speed</strong></td><td>1×, 1.5× and 2×, cycled from one control and carried across items for the session. A second viewing is usually a refresher, and 2× respects that.</td></tr>
-        <tr><td><strong>Skipping</strong></td><td>Allowed by default. Turning it off on a training clamps seeking to the furthest point genuinely reached — scrubbing back and forward within watched content still works.</td></tr>
+        <tr><td><strong>Skipping</strong></td><td>A <strong>placement rule</strong>, on by default and forced off wherever the training is mandatory. With it off, seeking is clamped to the furthest point genuinely reached; scrubbing back and forward within watched content still works.</td></tr>
         <tr><td><strong>Captions</strong></td><td>Video only, toggled from the player.</td></tr>
       </tbody>
     </table>
   </div>
   <div class="note">
-    <p><strong>Skipping and mandatory content pull in opposite directions.</strong> With skipping on, an FSE can drag to the end and be recorded as having watched. The console therefore exposes the toggle per training and warns when a mandatory training leaves it on. Until completion is measured as a percentage of the timeline rather than an ended event (§10.1), that toggle is the only real defence.</p>
+    <p><strong>There is no “I’ve watched this”.</strong> Marking a video watched without watching it and dragging to the end were the same escape hatch by two names, so only one control remains — skipping. It is off wherever the training is mandatory, which is the only thing making a mandatory completion record mean anything until completion is measured against the timeline rather than an ended event (§10.1).</p>
   </div>
 
   <h3>6.3a Where an assessment sits</h3>
@@ -533,7 +531,7 @@
   </div>
   <p>A screen widget has no dependable moment at which the set is finished — an FSE opens the one card that matches the merchant in front of them and closes the sheet. A single pass mark across several videos has nothing to fire on, and would test content that was never opened. Putting the check next to the video that taught it is also far easier to author and to reason about.</p>
   <div class="note">
-    <p><strong>Mandatory is a property of the training, not of its assessment.</strong> It used to hang off the combined assessment, which no longer exists on most views — so a mandatory interstitial would have had nowhere to record it. Switching a training between the two families discards the assessment the other shape used, and says so.</p>
+    <p><strong>Mandatory and the homepage blocker are the same thing</strong>, expressed once, on the placement: <em>Mandatory training — Homepage blocker</em>. Content nobody may skip has to be enforced somewhere, and the home screen is that place. It follows that the same training can be mandatory for one audience and merely available to another, which is what a placement is for.</p>
   </div>
 
   <h3>6.4 Question types and weighting</h3>
@@ -544,23 +542,22 @@
   </ul>
   <p>Multi-answer questions are marked whole: a partly correct selection scores nothing. Part credit would make a pass mark impossible to reason about, and every one of these questions is a case where half-knowing is the failure mode.</p>
 
-  <h3>6.5 Question sampling — round robin</h3>
-  <p>Every question set carries a pass mark and an optional cap on how many questions are shown. With a cap set, the questions are drawn as a <strong>rotating window</strong> over the pool rather than at random: the first attempt takes the first <em>n</em>, the next attempt continues from where that ended, wrapping around. A cap higher than the pool is rejected at save.</p>
+  <h3>6.5 Scoring and paper selection</h3>
+  <p>Scores are absolute, in the same unit as question weight. There are no percentages anywhere in the model.</p>
   <div class="tw">
     <table>
-      <thead><tr><th>Attempt</th><th>Pool of 4, cap of 3</th></tr></thead>
+      <thead><tr><th>Setting</th><th>Meaning</th></tr></thead>
       <tbody>
-        <tr><td>1st</td><td>Q1 Q2 Q3</td></tr>
-        <tr><td>2nd</td><td>Q4 Q1 Q2</td></tr>
-        <tr><td>3rd</td><td>Q3 Q4 Q1</td></tr>
-        <tr><td>4th</td><td>Q2 Q3 Q4</td></tr>
+        <tr><td><strong>Total score</strong></td><td>What one paper is worth. Questions are drawn at random until their weights add up to exactly this. Left blank, the whole pool is shown.</td></tr>
+        <tr><td><strong>Passing score</strong></td><td>The absolute score needed to clear it. Must be at or below the total.</td></tr>
+        <tr><td><strong>Weight</strong></td><td>What a single question contributes, and therefore how likely it is to appear in a paper of a given size.</td></tr>
       </tbody>
     </table>
   </div>
-  <p>Rotation guarantees two things random draw does not: a retake never repeats the previous paper, and every question in the pool is eventually asked. Because subsets can carry different total weight, the console warns when weights inside a capped set vary by more than a factor of three — attempts would not be equally hard.</p>
+  <p>Two FSEs sit different papers worth the same, and a retake draws a fresh one rather than repeating the last. Because the target must be met exactly, not every number is reachable — a pool weighted 3, 2 and 1 can build 1 through 6, but never 7. The console computes the reachable set from the uploaded weights, lists it, names the nearest achievable figure when the target misses, and refuses the save.</p>
 
   <h3>6.6 Time limit</h3>
-  <p>A question set may carry a countdown for the whole attempt, not per question. It appears in the header, turns amber at a quarter remaining and red at a tenth. On expiry the attempt is submitted as it stands and graded on what was answered — the result names the reason rather than showing a bare low score. The console warns when a limit allows under ten seconds a question.</p>
+  <p>One time limit is set <strong>on the training</strong> and covers every question in an attempt, whichever assessment is running. It appears in the header, turns amber at a quarter remaining and red at a tenth. On expiry the attempt is submitted as it stands and graded on what was answered — the result names the reason rather than showing a bare low score. The console warns when a limit allows under ten seconds a question.</p>
 
   <h3>6.7 Result copy</h3>
   <p>Pass and fail messages are configured per question set. Defaults are used when left blank. The message is the last thing an FSE reads, so it carries the consequence — a fail on QR mapping says money settles to the wrong account, not <em>better luck next time</em>.</p>
@@ -600,7 +597,7 @@
       <thead><tr><th>Field</th><th>Type</th><th>Purpose</th></tr></thead>
       <tbody>
         <tr><td>Training name</td><td>Text, required</td><td>Displayed everywhere the training appears.</td></tr>
-        <tr><td>Widget view</td><td>Select — one of nine, or My trainings page</td><td>Sets video capacity and assessment capability. Also determines which screens can host it.</td></tr>
+        <tr><td>Widget view</td><td>Select — one of eight, or My trainings page</td><td>Sets video capacity and assessment capability. Also determines which screens can host it.</td></tr>
         <tr><td>Videos</td><td>Ordered list, reorderable</td><td>Capacity enforced by the widget view. Reducing capacity trims the list and says what it removed.</td></tr>
         <tr><td>— Content type</td><td>Select — video, audio, PDF/slides, image</td><td>Drives the accepted file types, the player, and what counts as finishing the item. Changing it clears the uploaded files, since they no longer match.</td></tr>
         <tr><td>— Video file</td><td>Upload</td><td>The <strong>title is derived from the filename</strong> unless one has been typed.</td></tr>
@@ -669,6 +666,20 @@
   </div>
   <div class="note">
     <p>Segment membership is resolved by CleverTap at delivery time, not stored here. The panel persists only the segment id, so a segment that changes shape in CleverTap changes who this training reaches without any edit in this console. That is the point of the integration, and it is also the reason the withdrawn-segment case has to be loud.</p>
+  </div>
+
+  <h4>Placement rules</h4>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Rule</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td>Stop after N views / N days</td><td>Frequency cap and expiry.</td></tr>
+        <tr><td>Also list in My trainings</td><td>Adds it to the hub as well as the screen.</td></tr>
+        <tr><td>Let the FSE skip ahead</td><td>On by default. Forced off and locked when the placement is mandatory.</td></tr>
+        <tr><td>Do not show the assessment again once cleared</td><td>A repeat visit shows the score they passed with instead of re-testing. Offered only when the training has an assessment.</td></tr>
+        <tr><td>Mandatory training — Homepage blocker</td><td>Carries the MANDATORY tag and gates the home screen until finished.</td></tr>
+      </tbody>
+    </table>
   </div>
 
   <h3>7.3 Rules the console enforces</h3>
@@ -779,12 +790,11 @@
       <tr><td>widget_view</td><td>text</td><td>One of nine, or <span class="mono">my_trainings_page</span></td></tr>
       <tr><td>per_video_checks</td><td>boolean</td><td>Whether each video carries its own check</td></tr>
       <tr><td>final_enabled</td><td>boolean</td><td>Combined assessment on. Rejected where the widget view cannot support one</td></tr>
-      <tr><td>final_pass_percent</td><td>int</td><td>Default 70</td></tr>
-      <tr><td>final_max_questions</td><td>int, nullable</td><td>Size of the rotating window over the pool</td></tr>
-      <tr><td>final_timer_seconds</td><td>int, nullable</td><td>Countdown for the whole attempt. Null means untimed</td></tr>
+      <tr><td>final_pass_score</td><td>int</td><td>Absolute score needed. At or below final_total_score</td></tr>
+      <tr><td>final_total_score</td><td>int, nullable</td><td>What one paper is worth. Null shows the whole pool. Must be reachable from the question weights</td></tr>
+      <tr><td>timer_seconds</td><td>int, nullable</td><td>On the training. Covers every question in one attempt, whichever assessment is running</td></tr>
       <tr><td>final_pass_message</td><td>text, nullable</td><td>Shown on the result screen when cleared. Null falls back to the default</td></tr>
       <tr><td>final_fail_message</td><td>text, nullable</td><td>Shown when not cleared</td></tr>
-      <tr><td>allow_seek</td><td>boolean</td><td>Default true. False clamps seeking to the furthest point reached</td></tr>
       <tr><td>mandatory</td><td>boolean</td><td>On the training, not the assessment. Drives the MANDATORY tag everywhere it appears</td></tr>
       <tr><td>created_at</td><td>timestamptz</td><td></td></tr>
     </tbody></table></div>
@@ -798,9 +808,8 @@
       <tr><td>position</td><td>int</td><td>Playback order</td></tr>
       <tr><td>title</td><td>text</td><td>Derived from the filename unless overridden</td></tr>
       <tr><td>content_type</td><td>text</td><td>video | audio | pdf | image — drives the player and the completion rule</td></tr>
-      <tr><td>check_pass_percent</td><td>int</td><td>Pass mark for this video’s own check</td></tr>
-      <tr><td>check_max_questions</td><td>int, nullable</td><td>Size of the rotating window over this video’s pool</td></tr>
-      <tr><td>check_timer_seconds</td><td>int, nullable</td><td>Countdown for this check</td></tr>
+      <tr><td>check_pass_score</td><td>int</td><td>Absolute score needed for this video’s own check</td></tr>
+      <tr><td>check_total_score</td><td>int, nullable</td><td>What this check's paper is worth</td></tr>
       <tr><td>check_pass_message</td><td>text, nullable</td><td>Result copy for this check</td></tr>
       <tr><td>check_fail_message</td><td>text, nullable</td><td></td></tr>
     </tbody></table></div>
@@ -826,6 +835,9 @@
       <tr><td>training_id</td><td>uuid</td><td>Restrict on delete — a training in use cannot be removed</td></tr>
       <tr><td>app</td><td>text</td><td>gg | force</td></tr>
       <tr><td>screen</td><td>text</td><td>App screen, or <span class="mono">my_trainings_page</span></td></tr>
+      <tr><td>blocker</td><td>boolean</td><td>Mandatory and homepage blocker — one flag, both meanings</td></tr>
+      <tr><td>allow_seek</td><td>boolean</td><td>Default true. Forced false when blocker is true</td></tr>
+      <tr><td>once_only</td><td>boolean</td><td>Do not re-test once the assessment is cleared</td></tr>
       <tr><td>audience_source</td><td>text</td><td>everyone | clevertap | org | ecodes</td></tr>
       <tr><td>clevertap_segment_id</td><td>text, nullable</td><td>Set when the source is clevertap. Membership is resolved by CleverTap at delivery, never cached here</td></tr>
       <tr><td>team, subteam</td><td>text, nullable</td><td>Set when the source is org. Null subteam means all</td></tr>

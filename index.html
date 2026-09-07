@@ -252,8 +252,13 @@
       </div>
     </div>
     <div class="slotnote" id="capNote" style="margin-top:14px;text-align:left"></div>
-    <label class="toggle-row" id="seekRow" style="margin-top:14px"><input type="checkbox" id="f_seek">
-      <span>Let the FSE skip ahead<small id="seekHint">Scrubbing and 2× playback stay available either way; turning this off only stops them jumping past content they have not reached. Resume and speed controls are unaffected.</small></span></label>
+    <div class="form-grid" style="margin-top:16px">
+      <div class="form-group">
+        <label>Time limit <small>— seconds for a whole attempt, blank for none</small></label>
+        <input type="number" min="10" id="f_timer" placeholder="None">
+        <div id="timerNote" style="font-size:13px;color:var(--faint);line-height:1.5"></div>
+      </div>
+    </div>
   </div>
 
   <div class="card">
@@ -267,8 +272,6 @@
   <div class="card">
     <div class="hd"><span class="step">3</span><h2>Assessment</h2><span class="sub" id="assessSub"></span></div>
     <div class="slotnote" id="assessNote" style="text-align:left;margin-bottom:14px"></div>
-    <label class="toggle-row"><input type="checkbox" id="f_mand">
-      <span>This training is mandatory<small>Adds the MANDATORY tag wherever it appears, and removes the “I’ve watched this” shortcut.</small></span></label>
     <label class="toggle-row" id="perRow"><input type="checkbox" id="f_pervideo">
       <span id="perLabel">A check after <b>each</b> video<small id="perHint">Questions are edited inside each video row above.</small></span></label>
     <label class="toggle-row" id="finalRow"><input type="checkbox" id="f_final">
@@ -348,10 +351,12 @@
     <div style="margin-top:16px;border-top:1px solid var(--line);padding-top:16px">
       <label class="toggle-row" id="p_hubRow"><input type="checkbox" id="p_hub">
         <span>Also list this in <b>My trainings</b><small id="p_hubHint">The FSE can find and complete it from the hub as well as on the screen.</small></span></label>
+      <label class="toggle-row" id="p_seekRow"><input type="checkbox" id="p_seek">
+        <span>Let the FSE skip ahead<small>Scrubbing forward past content they have not reached. Resume and 2× playback are always available. With this off, the furthest point actually watched is the ceiling — which is the only thing making a completion record mean anything.</small></span></label>
+      <label class="toggle-row" id="p_onceRow"><input type="checkbox" id="p_once">
+        <span>Do not show the assessment again once cleared<small>A repeat visit shows the score they passed with instead of re-testing them.</small></span></label>
       <label class="toggle-row" id="p_blockRow"><input type="checkbox" id="p_blocker">
-        <span>Homepage blocker<small id="p_blockHint">A gate on the home screen sends the FSE to My trainings, with no way past it until this is done. Available whatever screen the training sits on.</small></span></label>
-      <label class="toggle-row" id="p_selfRow"><input type="checkbox" id="p_self">
-        <span>Let the FSE mark videos watched without finishing them<small id="p_selfHint">Adds an “I’ve watched this” button.</small></span></label>
+        <span>Mandatory training — Homepage blocker<small id="p_blockHint">Carries the MANDATORY tag and gates the home screen until it is finished. Mandatory and blocking are the same thing: content nobody may skip has to be enforced somewhere, and the home screen is that place.</small></span></label>
     </div>
   </div>
 
@@ -372,7 +377,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const SEED = {"trainings": [{"id": "tr1", "name": "SoundBox pitch masterclass", "widget": "stories", "videos": [{"title": "Opening the conversation", "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}], "files": [{"lang": "English", "name": "soundbox_pitch_merchant.mp4"}, {"lang": "Hindi", "name": "soundbox_pitch_merchant_hi.mp4"}, {"lang": "Tamil", "name": "soundbox_pitch_merchant_ta.mp4"}], "pass": 60, "maxq": ""}, {"title": "Explaining the plan", "questions": [{"question": "A merchant asks what the ₹125 a month actually covers. What is the accurate answer?", "options": ["A one-time purchase of the device", "The monthly rental for the SB-V2 Music 4G, GST included", "A refundable deposit returned after a year", "Unlimited free QR stickers"], "correct_index": 1}], "files": [{"lang": "English", "name": "soundbox_plans.mp4"}, {"lang": "Hindi", "name": "soundbox_plans_hi.mp4"}], "pass": 60, "maxq": ""}, {"title": "Handling the price objection", "questions": [{"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_objection_price.mp4"}], "pass": 60, "maxq": ""}], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}, {"question": "What real-time benefit does SoundBox give a merchant?", "options": ["Free advertising on the box", "Instant voice and display confirmation for every payment", "Unlimited free phone calls", "A physical cash register"], "correct_index": 1}, {"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "pass": 70, "maxq": "", "mandatory": true}}, {"id": "tr2", "name": "SoundBox device setup", "widget": "carousel", "videos": [{"title": "Adding a new device", "questions": [{"question": "On the Add Device Details screen, which device type do you select for a monthly rental plan?", "options": ["Purchase", "Rental", "Demo", "Replacement"], "correct_index": 1}], "files": [{"lang": "English", "name": "soundbox_add_device.mp4"}, {"lang": "Hindi", "name": "soundbox_add_device_hi.mp4"}, {"lang": "Marathi", "name": "soundbox_add_device_mr.mp4"}], "pass": 70, "maxq": ""}, {"title": "Selecting the right plan", "questions": [{"question": "For the Monthly Subscription plan at ₹125/month, what does the screen say about UPI Autopay?", "options": ["It is optional for the merchant", "It is not supported on rental plans", "It is required — the screen shows Yes", "It replaces the monthly rental"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_plan_selection.mp4"}, {"lang": "Hindi", "name": "soundbox_plan_selection_hi.mp4"}], "pass": 70, "maxq": ""}, {"title": "Verifying the first payment", "questions": [{"question": "The screen shows ₹125 as the total amount to be collected. What does that figure include?", "options": ["Only the one-time charge", "A refundable security deposit", "The monthly rental, inclusive of 18% GST", "The full purchase price of the device"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_payment_verify.mp4"}], "pass": 70, "maxq": ""}], "perVideo": true, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "mandatory": false}}, {"id": "tr3", "name": "QR mapping — revised SOP", "widget": "interstitial", "videos": [{"title": "What changed in the SOP", "questions": [], "files": [{"lang": "English", "name": "qr_mapping_sop_v4.mp4"}], "pass": 70, "maxq": ""}], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "What does QR mapping actually link?", "options": ["The FSE's phone to the TL's phone", "The merchant's QR to the correct MID, so payments settle to the right account", "The SoundBox to the shop's WiFi router", "The merchant's Aadhaar to their PAN"], "correct_index": 1}, {"question": "What do you verify immediately after mapping a new QR?", "options": ["Nothing — mapping is instant and never fails", "That the merchant has restarted the shop", "Do a small test payment and confirm the SoundBox announces it", "Peel off the old sticker before checking anything"], "correct_index": 2}, {"question": "The QR you are about to map is already mapped to a different MID. What is the correct action?", "options": ["Stop and raise a remapping request instead of forcing a new mapping", "Map it anyway and inform the TL later", "Peel the sticker off and reuse it at another shop", "Ask the merchant to create a new business account"], "correct_index": 0}], "pass": 70, "maxq": "", "mandatory": true}}, {"id": "tr4", "name": "New joiner essentials", "widget": "module", "videos": [{"title": "Your first login", "questions": [{"question": "Where does a merchant change app language or notification preferences?", "options": ["In the Offers carousel", "On the QR sticker", "In the Settings section of the app", "On the SoundBox device itself"], "correct_index": 2}], "files": [{"lang": "English", "name": "first_login_setup.mp4"}, {"lang": "Hindi", "name": "first_login_setup_hi.mp4"}, {"lang": "Tamil", "name": "first_login_setup_ta.mp4"}], "pass": 70, "maxq": ""}, {"title": "Finding your way around", "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}], "files": [{"lang": "English", "name": "app_navigation_tour.mp4"}, {"lang": "Hindi", "name": "app_navigation_tour_hi.mp4"}], "pass": 70, "maxq": ""}, {"title": "Daily check-in", "questions": [{"question": "On the Merchant Detail screen, which tab holds the merchant's open tasks?", "options": ["Details", "Tasks", "Interactions", "Offers"], "correct_index": 1}], "files": [{"lang": "English", "name": "daily_checkin.mp4"}], "pass": 70, "maxq": ""}, {"title": "Reading your dashboard", "questions": [{"question": "Which three tabs make up the Team Performance view?", "options": ["Participation, Productivity, Leaderboard", "Sales, Refunds, Payouts", "Attendance, Salary, Incentive", "Tasks, Merchants, Devices"], "correct_index": 0}], "files": [{"lang": "English", "name": "performance_dashboard.mp4"}], "pass": 70, "maxq": ""}], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}, {"question": "Where does a merchant manage their business profile in the v2 app?", "options": ["Under the \"Manage your Business\" section", "Under Offers", "Under Refer & Earn", "Under chat support"], "correct_index": 0}, {"question": "A merchant cannot find a feature after the v2 update. What do you do?", "options": ["Ask them to downgrade the app", "Show them where it has moved to in the updated navigation", "Tell them the feature was removed", "Raise a device replacement request"], "correct_index": 1}], "pass": 80, "maxq": 2, "mandatory": true}}, {"id": "tr5", "name": "Re-KYC walkthrough", "widget": "bottom-sheet", "videos": [{"title": "Clearing Action Required items", "questions": [], "files": [{"lang": "English", "name": "rekyc_completion.mp4"}, {"lang": "Hindi", "name": "rekyc_completion_hi.mp4"}], "pass": 70, "maxq": ""}], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "On the Re-KYC check screen, which items sit under \"Action Required\"?", "options": ["Bank Details only", "KYC Details and Business Proof", "Device model and plan", "Nothing — Re-KYC completes automatically"], "correct_index": 1}, {"question": "The profile upgrade is pending on the P4B app. What do you ask the merchant to do?", "options": ["Visit the nearest bank branch", "Reinstall the consumer Paytm app", "Open Paytm for Business, scroll to \"Manage your Business\" and select \"Upgrade Profile\"", "Buy a new SoundBox"], "correct_index": 2}, {"question": "Bank Details already appears under \"Completed\". What does that mean?", "options": ["That part of the Re-KYC is done — only the pending items still need action", "The whole Re-KYC is finished", "The merchant's account has been blocked", "The bank account has to be entered again"], "correct_index": 0}], "pass": 70, "maxq": "", "mandatory": true}}, {"id": "tr6", "name": "Reading your performance dashboard", "widget": "inline-card", "videos": [{"title": "Participation, productivity, leaderboard", "questions": [], "files": [{"lang": "English", "name": "performance_dashboard.mp4"}], "pass": 70, "maxq": ""}], "perVideo": false, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "mandatory": false}}], "placements": [{"id": "pl1", "trainingId": "tr1", "screen": "Home", "maxViews": 5, "expiry": "", "blocker": false, "self": false, "app": "gg", "hub": true, "audience": {"source": "clevertap", "segmentId": "ct_sb_below", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}}, {"id": "pl2", "trainingId": "tr2", "screen": "Payments", "maxViews": "", "expiry": "", "blocker": false, "self": false, "app": "gg", "hub": true, "audience": {"source": "clevertap", "segmentId": "ct_retired_2024", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}}, {"id": "pl3", "trainingId": "tr3", "screen": "Home", "maxViews": "", "expiry": "", "blocker": true, "self": false, "app": "gg", "hub": true, "audience": {"source": "everyone", "segmentId": "", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}}, {"id": "pl4", "trainingId": "tr5", "screen": "KYC", "maxViews": "", "expiry": "", "blocker": false, "self": false, "app": "gg", "hub": true, "audience": {"source": "everyone", "segmentId": "", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}}, {"id": "pl5", "trainingId": "tr6", "screen": "Dashboard", "maxViews": "", "expiry": 14, "blocker": false, "self": true, "app": "gg", "hub": true, "audience": {"source": "everyone", "segmentId": "", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}}, {"id": "pl6", "trainingId": "tr1", "screen": "Onboarding", "maxViews": "", "expiry": 30, "blocker": false, "self": false, "app": "gg", "hub": true, "audience": {"source": "org", "segmentId": "", "team": "Sales", "subteam": "Merchant Acquisition", "ecodes": {"name": "", "count": 0}, "stage": "new", "trigger": ""}}, {"id": "pl7", "trainingId": "tr6", "screen": "Profile", "maxViews": 2, "expiry": "", "blocker": false, "self": true, "app": "gg", "hub": true, "audience": {"source": "ecodes", "segmentId": "", "team": "", "subteam": "", "ecodes": {"name": "pilot_cohort.csv", "count": 312}, "stage": "", "trigger": ""}}, {"id": "plhtr4", "trainingId": "tr4", "app": "gg", "screen": "__hub__", "maxViews": "", "expiry": "", "blocker": false, "hub": true, "self": false, "audience": {"source": "everyone", "segmentId": "", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}}, {"id": "plf1", "trainingId": "tr6", "app": "force", "screen": "Reports", "maxViews": "", "expiry": "", "blocker": false, "hub": true, "self": false, "audience": {"source": "everyone", "segmentId": "", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}}]};
+const SEED = {"trainings": [{"id": "tr1", "name": "SoundBox pitch masterclass", "widget": "stories", "videos": [{"title": "Opening the conversation", "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}], "files": [{"lang": "English", "name": "soundbox_pitch_merchant.mp4"}, {"lang": "Hindi", "name": "soundbox_pitch_merchant_hi.mp4"}, {"lang": "Tamil", "name": "soundbox_pitch_merchant_ta.mp4"}], "pass": 1, "total": ""}, {"title": "Explaining the plan", "questions": [{"question": "A merchant asks what the ₹125 a month actually covers. What is the accurate answer?", "options": ["A one-time purchase of the device", "The monthly rental for the SB-V2 Music 4G, GST included", "A refundable deposit returned after a year", "Unlimited free QR stickers"], "correct_index": 1}], "files": [{"lang": "English", "name": "soundbox_plans.mp4"}, {"lang": "Hindi", "name": "soundbox_plans_hi.mp4"}], "pass": 1, "total": ""}, {"title": "Handling the price objection", "questions": [{"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_objection_price.mp4"}], "pass": 1, "total": ""}], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}, {"question": "What real-time benefit does SoundBox give a merchant?", "options": ["Free advertising on the box", "Instant voice and display confirmation for every payment", "Unlimited free phone calls", "A physical cash register"], "correct_index": 1}, {"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "pass": 2, "total": ""}, "timer": ""}, {"id": "tr2", "name": "SoundBox device setup", "widget": "carousel", "videos": [{"title": "Adding a new device", "questions": [{"question": "On the Add Device Details screen, which device type do you select for a monthly rental plan?", "options": ["Purchase", "Rental", "Demo", "Replacement"], "correct_index": 1}], "files": [{"lang": "English", "name": "soundbox_add_device.mp4"}, {"lang": "Hindi", "name": "soundbox_add_device_hi.mp4"}, {"lang": "Marathi", "name": "soundbox_add_device_mr.mp4"}], "pass": 1, "total": ""}, {"title": "Selecting the right plan", "questions": [{"question": "For the Monthly Subscription plan at ₹125/month, what does the screen say about UPI Autopay?", "options": ["It is optional for the merchant", "It is not supported on rental plans", "It is required — the screen shows Yes", "It replaces the monthly rental"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_plan_selection.mp4"}, {"lang": "Hindi", "name": "soundbox_plan_selection_hi.mp4"}], "pass": 1, "total": ""}, {"title": "Verifying the first payment", "questions": [{"question": "The screen shows ₹125 as the total amount to be collected. What does that figure include?", "options": ["Only the one-time charge", "A refundable security deposit", "The monthly rental, inclusive of 18% GST", "The full purchase price of the device"], "correct_index": 2}], "files": [{"lang": "English", "name": "soundbox_payment_verify.mp4"}], "pass": 1, "total": ""}], "perVideo": true, "final": {"enabled": false, "questions": [], "pass": 70, "total": ""}, "timer": ""}, {"id": "tr3", "name": "QR mapping — revised SOP", "widget": "interstitial", "videos": [{"title": "What changed in the SOP", "questions": [], "files": [{"lang": "English", "name": "qr_mapping_sop_v4.mp4"}], "pass": 1, "total": ""}], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "What does QR mapping actually link?", "options": ["The FSE's phone to the TL's phone", "The merchant's QR to the correct MID, so payments settle to the right account", "The SoundBox to the shop's WiFi router", "The merchant's Aadhaar to their PAN"], "correct_index": 1}, {"question": "What do you verify immediately after mapping a new QR?", "options": ["Nothing — mapping is instant and never fails", "That the merchant has restarted the shop", "Do a small test payment and confirm the SoundBox announces it", "Peel off the old sticker before checking anything"], "correct_index": 2}, {"question": "The QR you are about to map is already mapped to a different MID. What is the correct action?", "options": ["Stop and raise a remapping request instead of forcing a new mapping", "Map it anyway and inform the TL later", "Peel the sticker off and reuse it at another shop", "Ask the merchant to create a new business account"], "correct_index": 0}], "pass": 2, "total": ""}, "timer": 90}, {"id": "tr4", "name": "New joiner essentials", "widget": "module", "videos": [{"title": "Your first login", "questions": [{"question": "Where does a merchant change app language or notification preferences?", "options": ["In the Offers carousel", "On the QR sticker", "In the Settings section of the app", "On the SoundBox device itself"], "correct_index": 2}], "files": [{"lang": "English", "name": "first_login_setup.mp4"}, {"lang": "Hindi", "name": "first_login_setup_hi.mp4"}, {"lang": "Tamil", "name": "first_login_setup_ta.mp4"}], "pass": 1, "total": ""}, {"title": "Finding your way around", "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}], "files": [{"lang": "English", "name": "app_navigation_tour.mp4"}, {"lang": "Hindi", "name": "app_navigation_tour_hi.mp4"}], "pass": 1, "total": ""}, {"title": "Daily check-in", "questions": [{"question": "On the Merchant Detail screen, which tab holds the merchant's open tasks?", "options": ["Details", "Tasks", "Interactions", "Offers"], "correct_index": 1}], "files": [{"lang": "English", "name": "daily_checkin.mp4"}], "pass": 1, "total": ""}, {"title": "Reading your dashboard", "questions": [{"question": "Which three tabs make up the Team Performance view?", "options": ["Participation, Productivity, Leaderboard", "Sales, Refunds, Payouts", "Attendance, Salary, Incentive", "Tasks, Merchants, Devices"], "correct_index": 0}], "files": [{"lang": "English", "name": "performance_dashboard.mp4"}], "pass": 1, "total": ""}], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2, "weight": 3}, {"question": "Where does a merchant manage their business profile in the v2 app?", "options": ["Under the \"Manage your Business\" section", "Under Offers", "Under Refer & Earn", "Under chat support"], "correct_index": 0, "weight": 2}, {"question": "A merchant cannot find a feature after the v2 update. What do you do?", "options": ["Ask them to downgrade the app", "Show them where it has moved to in the updated navigation", "Tell them the feature was removed", "Raise a device replacement request"], "correct_index": 1, "weight": 1}], "pass": 4, "total": 5}, "timer": 180}, {"id": "tr5", "name": "Re-KYC walkthrough", "widget": "bottom-sheet", "videos": [{"title": "Clearing Action Required items", "questions": [], "files": [{"lang": "English", "name": "rekyc_completion.mp4"}, {"lang": "Hindi", "name": "rekyc_completion_hi.mp4"}], "pass": 1, "total": ""}], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "On the Re-KYC check screen, which items sit under \"Action Required\"?", "options": ["Bank Details only", "KYC Details and Business Proof", "Device model and plan", "Nothing — Re-KYC completes automatically"], "correct_index": 1}, {"question": "The profile upgrade is pending on the P4B app. What do you ask the merchant to do?", "options": ["Visit the nearest bank branch", "Reinstall the consumer Paytm app", "Open Paytm for Business, scroll to \"Manage your Business\" and select \"Upgrade Profile\"", "Buy a new SoundBox"], "correct_index": 2}, {"question": "Bank Details already appears under \"Completed\". What does that mean?", "options": ["That part of the Re-KYC is done — only the pending items still need action", "The whole Re-KYC is finished", "The merchant's account has been blocked", "The bank account has to be entered again"], "correct_index": 0}], "pass": 2, "total": ""}, "timer": ""}, {"id": "tr6", "name": "Reading your performance dashboard", "widget": "inline-card", "videos": [{"title": "Participation, productivity, leaderboard", "questions": [], "files": [{"lang": "English", "name": "performance_dashboard.mp4"}], "pass": 1, "total": ""}], "perVideo": false, "final": {"enabled": false, "questions": [], "pass": 70, "total": ""}, "timer": ""}], "placements": [{"id": "pl1", "trainingId": "tr1", "screen": "Home", "maxViews": 5, "expiry": "", "blocker": false, "app": "gg", "hub": true, "audience": {"source": "clevertap", "segmentId": "ct_sb_below", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}, "allowSeek": true, "onceOnly": false}, {"id": "pl2", "trainingId": "tr2", "screen": "Payments", "maxViews": "", "expiry": "", "blocker": false, "app": "gg", "hub": true, "audience": {"source": "clevertap", "segmentId": "ct_retired_2024", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}, "allowSeek": true, "onceOnly": false}, {"id": "pl3", "trainingId": "tr3", "screen": "Home", "maxViews": "", "expiry": "", "blocker": true, "app": "gg", "hub": true, "audience": {"source": "everyone", "segmentId": "", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}, "allowSeek": false, "onceOnly": true}, {"id": "pl4", "trainingId": "tr5", "screen": "KYC", "maxViews": "", "expiry": "", "blocker": true, "app": "gg", "hub": true, "audience": {"source": "everyone", "segmentId": "", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}, "allowSeek": false, "onceOnly": true}, {"id": "pl5", "trainingId": "tr6", "screen": "Dashboard", "maxViews": "", "expiry": 14, "blocker": false, "app": "gg", "hub": true, "audience": {"source": "everyone", "segmentId": "", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}, "allowSeek": true, "onceOnly": false}, {"id": "pl6", "trainingId": "tr1", "screen": "Onboarding", "maxViews": "", "expiry": 30, "blocker": false, "app": "gg", "hub": true, "audience": {"source": "org", "segmentId": "", "team": "Sales", "subteam": "Merchant Acquisition", "ecodes": {"name": "", "count": 0}, "stage": "new", "trigger": ""}, "allowSeek": true, "onceOnly": false}, {"id": "pl7", "trainingId": "tr6", "screen": "Profile", "maxViews": 2, "expiry": "", "blocker": false, "app": "gg", "hub": true, "audience": {"source": "ecodes", "segmentId": "", "team": "", "subteam": "", "ecodes": {"name": "pilot_cohort.csv", "count": 312}, "stage": "", "trigger": ""}, "allowSeek": true, "onceOnly": false}, {"id": "plhtr4", "trainingId": "tr4", "app": "gg", "screen": "__hub__", "maxViews": "", "expiry": "", "blocker": false, "hub": true, "audience": {"source": "everyone", "segmentId": "", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}, "allowSeek": true, "onceOnly": false}, {"id": "plf1", "trainingId": "tr6", "app": "force", "screen": "Reports", "maxViews": "", "expiry": "", "blocker": false, "hub": true, "audience": {"source": "everyone", "segmentId": "", "team": "", "subteam": "", "ecodes": {"name": "", "count": 0}, "stage": "", "trigger": ""}, "allowSeek": true, "onceOnly": false}]};
 
 const HUB='__hub__';   // not an app screen — the My trainings section
 const APPS=[{id:'gg',label:'GG App'},{id:'force',label:'Force App'}];
@@ -384,7 +389,7 @@ const APP_SCREENS={
     'Home':['mini-banner','interstitial','stories'],
     'Onboarding':['mini-banner','stories'],
     'KYC':['bottom-sheet','accordion'],
-    'Dashboard':['accordion','inline-card','popup'],
+    'Dashboard':['accordion','inline-card'],
     'Payments':['pip','carousel','inline-card'],
     'Profile':['accordion','inline-card'],
     'Settings':['accordion'],
@@ -394,7 +399,7 @@ const APP_SCREENS={
     'Leads':['carousel','inline-card'],
     'Visits':['accordion','bottom-sheet'],
     'Orders':['inline-card','pip'],
-    'Reports':['inline-card','popup'],
+    'Reports':['inline-card'],
     'Settings':['accordion'],
   },
 };
@@ -414,8 +419,8 @@ const WIDGETS=[
    note:'Takes over the screen. One video, or the interruption becomes a queue.'},
   {id:'pip',         label:'Picture-in-Picture',       max:1,  plays:true,  combined:false, placeable:true,
    note:'A single floating player.'},
-  {id:'bottom-sheet',label:'Bottom Sheet',             max:8,  plays:true,  combined:false, placeable:true,
-   note:'Lists videos in a sheet. Order is the list order.'},
+  {id:'bottom-sheet',label:'Bottom Sheet',             max:1,  plays:true,  combined:false, placeable:true,
+   note:'A sheet slides up over the screen. One video.'},
   {id:'accordion',   label:'Inline Accordion',         max:8,  plays:true,  combined:false, placeable:true,
    note:'Numbered pills switch between videos, in order.'},
   {id:'carousel',    label:'Carousel',                 max:12, plays:true,  combined:false, placeable:true,
@@ -424,8 +429,6 @@ const WIDGETS=[
    note:'Stacked cards in the page flow, in order.'},
   {id:'stories',     label:'Stories',                  max:10, plays:true,  combined:false, placeable:true,
    note:'One segment per video, auto-advancing.'},
-  {id:'popup',       label:'Popup Modal',              max:6,  plays:true,  combined:false, placeable:true,
-   note:'Stacked cards in a modal, opened one at a time.'},
 ];
 // An assessment sits directly after the video that taught it, on every widget
 // except My trainings page. On a screen widget there is no dependable moment at
@@ -458,7 +461,7 @@ const isModule    = t => t.widget==='module';   // hub-only
 
 const blankQ=()=>({question:'',options:['','','',''],correct:[0],multi:false,weight:1});
 const blankVideo=n=>({title:`Video ${n}`,kind:'video',files:[{lang:'English',name:''}],
-  questions:[],pass:70,maxq:'',timer:'',passMsg:'',failMsg:''});
+  questions:[],pass:1,total:'',passMsg:'',failMsg:''});
 
 // What a piece of content is decides how it is uploaded, how it plays, and
 // what counts as finishing it. Only timed media can resume or change speed.
@@ -484,18 +487,55 @@ function normQ(q){
   return q;
 }
 function normSet(set){
-  set.timer   = set.timer   ?? '';
+  // pass used to be a percentage and maxq a question count; both are now
+  // absolute scores measured in the same unit as question weight.
+  const pool = totalWeight(set.questions||[]);
+  // The presence of maxq is what marks a record as the old shape. Guessing
+  // from the value of pass cannot work — 4 is a valid absolute score and a
+  // valid percentage, and the last pass converted correct data into nonsense.
+  const legacy = 'maxq' in set;
+  delete set.maxq;
+  if(set.total==null) set.total = '';
+  if(legacy) set.pass = Math.max(1, Math.ceil(pool * ((+set.pass||70)/100)));
+  if(set.pass==null || set.pass==='') set.pass = Math.max(1, Math.ceil(pool*0.7));
   set.passMsg = set.passMsg ?? '';
   set.failMsg = set.failMsg ?? '';
+  delete set.timer;
   (set.questions||[]).forEach(normQ);
   return set;
 }
+
+/* ── score-based selection ────────────────────────────────────────────────
+   The admin sets a target total score. Questions are drawn at random until
+   their weights sum to exactly that, so two FSEs sit different papers worth
+   the same. Which totals are actually reachable depends on the weights in
+   the pool, so the console works that out and says so.                    */
+function reachableTotals(questions){
+  const sums = new Set([0]);
+  questions.forEach(q => {
+    const w = +q.weight || 1;
+    [...sums].forEach(v => sums.add(v + w));
+  });
+  sums.delete(0);
+  return [...sums].sort((a,b)=>a-b);
+}
+function pickToTotal(questions, target){
+  const goal = +target || 0;
+  if(!goal) return [...questions];
+  // Shuffle, then take greedily; retry a few times so an unlucky order does
+  // not fail a target that is reachable.
+  for(let attempt=0; attempt<40; attempt++){
+    const pool=[...questions].sort(()=>Math.random()-.5), out=[]; let sum=0;
+    for(const q of pool){
+      const w=+q.weight||1;
+      if(sum+w<=goal){ out.push(q); sum+=w; }
+      if(sum===goal) return out;
+    }
+  }
+  return null;
+}
 function normT(t){
-  if(typeof t.allowSeek!=='boolean') t.allowSeek=true;
-  // Mandatory used to hang off the combined assessment. Only My trainings page
-  // has one now, so it lives on the training instead.
-  if(typeof t.mandatory!=='boolean') t.mandatory = !!(t.final && t.final['mandatory']);
-  if(t.final) delete t.final['mandatory'];
+  if(t.timer==null) t.timer='';
   // A combined assessment is only meaningful on My trainings page.
   if(t.widget!=='module' && t.final) t.final.enabled = false;
   if(t.widget==='module') t.perVideo = false;
@@ -553,17 +593,20 @@ let placements = SEED.placements.map(p=>normP(JSON.parse(JSON.stringify(p))));
 let T = freshT(), P = freshP();
 let editT = null, editP = null;
 
-function freshT(){ return {id:uid(),name:'',widget:'mini-banner',videos:[blankVideo(1)],allowSeek:true,
-  mandatory:false,perVideo:false,
-  final:{enabled:false,questions:[],pass:70,maxq:'',timer:'',passMsg:'',failMsg:''}}; }
+function freshT(){ return {id:uid(),name:'',widget:'mini-banner',videos:[blankVideo(1)],timer:'',
+  perVideo:false,
+  final:{enabled:false,questions:[],pass:1,total:'',passMsg:'',failMsg:''}}; }
 function freshP(){ return {id:uid(),trainingId:'',app:'gg',screen:'',audience:blankAudience(),
-  maxViews:'',expiry:'',blocker:false,hub:true,self:false}; }
+  maxViews:'',expiry:'',blocker:false,hub:true,allowSeek:true,onceOnly:false}; }
 
 // Placements saved before the audience model had five sibling fields whose
 // relationship lived only in a form label. Fold them into one source.
 function normP(p){
   if(p.audience) return p;
   const a = blankAudience();
+  if(typeof p.allowSeek!=='boolean') p.allowSeek = p.self !== false;
+  if(typeof p.onceOnly!=='boolean') p.onceOnly = false;
+  delete p.self;
   if(p.ecodes) { a.source='ecodes'; a.ecodes={name:'imported list', count:p.ecodes}; }
   else if(p.team) { a.source='org'; a.team=p.team; a.subteam=p.subteam||''; }
   p.audience = a;
@@ -572,35 +615,43 @@ function normP(p){
 }
 
 const trainingById = id => trainings.find(t=>t.id===id);
+// Mandatory is expressed by the blocker on a placement, so a training is
+// mandatory exactly when something places it that way. Declared, not const —
+// normT runs during module init, above this point.
+function trainingIsMandatory(t){
+  return !!t && typeof placements!=='undefined' && placements.some(p=>p.trainingId===t.id && p.blocker);
+}
 const placementsFor = id => placements.filter(p=>p.trainingId===id);
 
 /* ── shared editors ────────────────────────────────────────────────────── */
-function rulesRow(scope,set,total){
-  const {pass,maxq,timer,passMsg,failMsg}=set;
-  const over=maxq&&+maxq>total;
-  const shown=maxq?Math.min(+maxq,total):total;
-  const tight=timer&&shown&&(+timer/shown)<10;
+function rulesRow(scope,set,count){
+  const pool = totalWeight(set.questions||[]);
+  const reach = reachableTotals(set.questions||[]);
+  const target = +set.total || 0;
+  const badTarget = target && !reach.includes(target);
+  const badPass = +set.pass > (target || pool);
+  const nearest = target && reach.length
+    ? reach.reduce((a,b)=>Math.abs(b-target)<Math.abs(a-target)?b:a) : null;
   return `<div class="rules">
+    <div class="fg"><label>Total score <small>of this paper</small></label>
+      <input type="number" min="1" data-rtotal="${scope}" value="${esc(set.total)}" placeholder="${pool||'—'}"></div>
     <div class="fg"><label>Passing score</label>
-      <input type="number" min="1" max="100" data-rpass="${scope}" value="${esc(pass)}"></div>
-    <div class="fg"><label>Questions to show</label>
-      <input type="number" min="1" data-rmax="${scope}" value="${esc(maxq)}" placeholder="All"></div>
-    <div class="fg"><label>Time limit <small>seconds</small></label>
-      <input type="number" min="10" data-rtime="${scope}" value="${esc(timer)}" placeholder="None"></div>
-    <div class="of ${over?'bad':''}">${total
-      ? (over?`only ${total} uploaded`
-             :`of <b>${total}</b> uploaded${maxq?' · rotated round-robin, so a retry asks a different set':' · blank shows all'}`)
-      : 'no questions uploaded yet'}</div>
+      <input type="number" min="1" data-rpass="${scope}" value="${esc(set.pass)}"></div>
+    <div class="of ${badTarget||badPass?'bad':''}">${
+      !count ? 'no questions uploaded yet'
+      : badPass ? `passing score cannot exceed ${target||pool}`
+      : badTarget ? `${target} is not reachable from these weights${nearest?` — nearest is ${nearest}`:''}`
+      : `${count} question${count===1?'':'s'} worth <b>${pool}</b> in total${
+          target ? ` · a paper of <b>${target}</b> is drawn at random` : ' · the whole pool is shown'}`}</div>
   </div>
-  ${timer?`<div class="slotnote" style="text-align:left;margin:-6px 0 12px${tight?';background:var(--amber-bg);color:var(--amber-fg)':''}">
-    ⏱ ${fmtSecs(timer)} for ${shown||'—'} question${shown===1?'':'s'}${
-      shown?` — about ${Math.round(+timer/shown)}s each`:''}. When it runs out the attempt is submitted as it stands.
-    ${tight?'<b>That is tight.</b> Allow at least 10 seconds per question.':''}</div>`:''}
+  ${count?`<div class="slotnote" style="text-align:left;margin:-6px 0 12px">
+    Reachable totals from this pool: ${reach.slice(0,14).map(v=>`<b>${v}</b>`).join(' · ')}${reach.length>14?' …':''}.
+    Pass at <b>${set.pass}</b> of <b>${target||pool}</b>.</div>`:''}
   <div class="msgs">
     <div class="fg"><label>Message when they pass</label>
-      <textarea rows="2" data-rpm="${scope}" placeholder="${esc(DEFAULT_PASS_MSG)}">${esc(passMsg)}</textarea></div>
+      <textarea rows="2" data-rpm="${scope}" placeholder="${esc(DEFAULT_PASS_MSG)}">${esc(set.passMsg)}</textarea></div>
     <div class="fg"><label>Message when they fail</label>
-      <textarea rows="2" data-rfm="${scope}" placeholder="${esc(DEFAULT_FAIL_MSG)}">${esc(failMsg)}</textarea></div>
+      <textarea rows="2" data-rfm="${scope}" placeholder="${esc(DEFAULT_FAIL_MSG)}">${esc(set.failMsg)}</textarea></div>
   </div>`;
 }
 function fmtSecs(t){
@@ -653,10 +704,8 @@ function wireQ(root){
 function wireRules(root){
   root.querySelectorAll('[data-rpass]').forEach(i=>i.oninput=()=>{
     const s=i.dataset.rpass; if(s==='final') T.final.pass=i.value; else T.videos[+s.slice(1)].pass=i.value; flowT();});
-  root.querySelectorAll('[data-rmax]').forEach(i=>i.oninput=()=>{
-    const s=i.dataset.rmax; setOf(s).maxq=i.value; renderT();});
-  root.querySelectorAll('[data-rtime]').forEach(i=>i.oninput=()=>{
-    const s=i.dataset.rtime; setOf(s).timer=i.value; renderT();});
+  root.querySelectorAll('[data-rtotal]').forEach(i=>i.oninput=()=>{
+    setOf(i.dataset.rtotal).total=i.value; renderT();});
   root.querySelectorAll('[data-rpm]').forEach(i=>i.oninput=()=>{ setOf(i.dataset.rpm).passMsg=i.value; });
   root.querySelectorAll('[data-rfm]').forEach(i=>i.oninput=()=>{ setOf(i.dataset.rfm).failMsg=i.value; });
 }
@@ -675,46 +724,49 @@ function loadQuestions(file,target){
 
 /* ── section 1 · training ──────────────────────────────────────────────── */
 function flowT(){
-  const n=T.videos.length, perQ=T.videos.reduce((s,v)=>s+v.questions.length,0);
-  const bits=[`Watches <b>${n} video${n>1?'s':''}</b> ${isModule(T)?'in <b>My Trainings</b>':`as a <b>${esc(W[T.widget].label)}</b>`}`];
+  const n=T.videos.length;
+  const bits=[`Watches <b>${n} video${n>1?'s':''}</b> ${isModule(T)?'in <b>My trainings</b>':`as a <b>${esc(W[T.widget].label)}</b>`}`];
+  const setLine = set => {
+    const pool=totalWeight(set.questions||[]), target=+set.total||pool;
+    return `<b>${set.pass} of ${target}</b> to pass${target<pool?` — drawn at random from a pool worth ${pool}`:''}`;
+  };
   if(T.perVideo){
-    const shown=T.videos.reduce((a,v)=>a+(v.maxq?Math.min(+v.maxq,v.questions.length):v.questions.length),0);
-    const marks=[...new Set(T.videos.map(v=>+(v.pass??70)))];
-    bits.push(`answers a check after each one <b>(${shown} of ${perQ} question${perQ===1?'':'s'}, ${marks.length===1?marks[0]:`${Math.min(...marks)}–${Math.max(...marks)}`}% to pass)</b>`);
+    const withQs=T.videos.filter(v=>v.questions.length).length;
+    bits.push(`answers a check after ${withQs===n?'each one':`${withQs} of them`} (${T.videos.filter(v=>v.questions.length).map(setLine)[0]||'no questions yet'})`);
   }
-  if(T.final.enabled){
-    const fq=T.final.questions.length, fs=T.final.maxq?Math.min(+T.final.maxq,fq):fq;
-    bits.push(`${isSingle(T)?'then an assessment':'then a combined assessment'} of <b>${fs===fq?fs:`${fs} of ${fq}`} question${fq===1?'':'s'}</b> at <b>${T.final.pass}%</b> to pass`);
-  }
+  if(T.final.enabled) bits.push(`then one assessment at the end — ${setLine(T.final)}`);
   if(!T.perVideo&&!T.final.enabled) bits.push('with no assessment — watching is enough');
+  const kinds=[...new Set(T.videos.map(v=>kindOf(v).label))];
+  if(kinds.length>1) bits.push(`mixed content — ${kinds.join(', ').toLowerCase()}`);
+  if(T.timer) bits.push(`timed at ${fmtSecs(T.timer)} for the whole attempt`);
 
   const warns=[];
   if(T.final.enabled&&!T.final.questions.length) warns.push('The combined assessment has no questions yet.');
   if(T.perVideo&&T.videos.some(v=>!v.questions.length)) warns.push('Some videos have no check questions yet.');
-  const kinds=[...new Set(T.videos.map(v=>kindOf(v).label))];
-  if(kinds.length>1) bits.push(`mixed content — ${kinds.join(', ').toLowerCase()}`);
-  if(T.final.enabled&&T.final.timer) bits.push(`timed at ${fmtSecs(T.final.timer)}`);
-  T.videos.forEach((v,i)=>{if(v.maxq&&+v.maxq>v.questions.length)
-    warns.push(`Video ${i+1} shows ${v.maxq} questions but only ${v.questions.length} are uploaded.`);});
-  if(T.final.maxq&&+T.final.maxq>T.final.questions.length)
-    warns.push(`The combined assessment shows ${T.final.maxq} questions but only ${T.final.questions.length} are uploaded.`);
   // A question with nothing marked correct can never be passed.
   const noAns=[];
   T.videos.forEach((v,i)=>v.questions.forEach((q,j)=>{ if(!q.correct.length) noAns.push(`video ${i+1} Q${j+1}`); }));
-  T.final.questions.forEach((q,j)=>{ if(!q.correct.length) noAns.push(`combined Q${j+1}`); });
+  T.final.questions.forEach((q,j)=>{ if(!q.correct.length) noAns.push(`assessment Q${j+1}`); });
   if(noAns.length) warns.push(`Nothing is marked correct on ${noAns.join(', ')} — ${noAns.length>1?'those questions':'that question'} can never be answered right.`);
-  // Round-robin over uneven weights means attempts are not equally hard.
-  [['The combined assessment',T.final],...T.videos.map((v,i)=>[`Video ${i+1}`,v])].forEach(([label,set])=>{
-    if(!set.maxq||!set.questions.length) return;
-    const ws=set.questions.map(q=>+q.weight||1);
-    if(Math.max(...ws)/Math.min(...ws)>=3)
-      warns.push(`${label} shows a rotating subset while question weights range from ${Math.min(...ws)} to ${Math.max(...ws)} — attempts will not be equally hard.`);
+  // A target the weights cannot add up to would leave the paper unbuildable.
+  const sets=[['The assessment',T.final],...T.videos.map((v,i)=>[`Video ${i+1}`,v])];
+  sets.forEach(([label,set])=>{
+    if(!set.questions||!set.questions.length) return;
+    const pool=totalWeight(set.questions), target=+set.total||0;
+    if(target && !reachableTotals(set.questions).includes(target))
+      warns.push(`${label}: no combination of these questions adds up to ${target}.`);
+    if(+set.pass > (target||pool))
+      warns.push(`${label}: the passing score (${set.pass}) is above the total (${target||pool}).`);
+    if(+set.pass < 1) warns.push(`${label}: the passing score must be at least 1.`);
   });
+  const shown=(+T.final.total||totalWeight(T.final.questions||[]));
+  if(T.timer && T.final.enabled && shown && (+T.timer/Math.max(1,T.final.questions.length))<10)
+    warns.push(`${fmtSecs(T.timer)} across ${T.final.questions.length} questions is under 10 seconds each.`);
   if(!isModule(T)&&!screensAnyApp(T.widget).length)
     warns.push(`No screen currently carries a ${W[T.widget].label} slot — this cannot be placed yet.`);
 
   $('tFlow').innerHTML=`<div class="k">What the FSE will experience</div>
-    <div class="v">${bits.join(' → ')}.${T.mandatory?' <span class="badge red">MANDATORY</span>':''}</div>
+    <div class="v">${bits.join(' → ')}.${false?' <span class="badge red">MANDATORY</span>':''}</div>
     ${warns.map(w=>`<div class="warnline">⚠ ${esc(w)}</div>`).join('')}`;
 }
 
@@ -813,13 +865,13 @@ function drawVideos(){
 
 function renderT(){
   $('f_name').value=T.name; $('f_widget').value=T.widget;
-  $('f_pervideo').checked=T.perVideo; $('f_final').checked=T.final.enabled; $('f_mand').checked=T.mandatory;
-  $('f_seek').checked=T.allowSeek!==false;
-  const timed=T.videos.some(v=>kindOf(v).timed);
-  $('seekRow').hidden=!timed;
-  $('seekHint').textContent = T.mandatory && T.allowSeek!==false
-    ? 'This training is mandatory. Leaving skip-ahead on means an FSE can jump to the end and be marked as having watched it.'
-    : 'Scrubbing and 2× playback stay available either way; turning this off only stops them jumping past content they have not reached.';
+  $('f_pervideo').checked=T.perVideo; $('f_final').checked=T.final.enabled;
+  $('f_timer').value=T.timer||'';
+  const qCount = T.final.enabled ? T.final.questions.length
+               : T.videos.reduce((a,v)=>a+v.questions.length,0);
+  $('timerNote').textContent = !T.timer
+    ? 'Untimed. The FSE can take as long as they need.'
+    : `${fmtSecs(T.timer)} covering every question in one attempt${qCount?` — about ${Math.round(T.timer/Math.max(1,qCount))}s each` : ''}.`;
 
   const w=W[T.widget], canCombine=allowsCombined(T), canPer=allowsPerVideo(T), single=isSingle(T);
   const scr=screensAnyApp(T.widget);
@@ -857,16 +909,16 @@ function renderT(){
 
 function structOf(t){
   const parts=[];
+  const line=(label,set)=>{
+    const pool=totalWeight(set.questions||[]), target=+set.total||pool;
+    return `${label} · ${set.questions.length} Q · pass ${set.pass}/${target}`;
+  };
   if(t.perVideo){
-    const total=t.videos.reduce((s,v)=>s+v.questions.length,0);
-    const shown=t.videos.reduce((n,v)=>n+(v.maxq?Math.min(+v.maxq,v.questions.length):v.questions.length),0);
-    const marks=[...new Set(t.videos.map(v=>+(v.pass??70)))];
-    parts.push(`check after each · ${shown===total?`${total} Q`:`${shown} of ${total} Q`} · ${marks.length===1?marks[0]:`${Math.min(...marks)}–${Math.max(...marks)}`}%`);
+    const withQs=t.videos.filter(v=>v.questions.length);
+    if(withQs.length) parts.push(line('check after each',withQs[0]));
   }
-  if(t.final.enabled){
-    const fq=t.final.questions.length, fs=t.final.maxq?Math.min(+t.final.maxq,fq):fq;
-    parts.push(`${isSingle(t)?'assessment':'final'} · ${fs===fq?`${fq} Q`:`${fs} of ${fq} Q`} · ${t.final.pass}%`);
-  }
+  if(t.final.enabled) parts.push(line('assessment at the end',t.final));
+  if(t.timer) parts.push(`<span class="badge grey">⏱ ${fmtSecs(t.timer)}</span>`);
   return parts.length?parts.join('<br>'):'<span style="color:var(--faint)">None</span>';
 }
 
@@ -875,7 +927,7 @@ function drawTLib(){
   $('tLib').innerHTML=trainings.map(t=>{
     const used=placementsFor(t.id);
     return `<tr>
-      <td class="t">${esc(t.name)}${t.mandatory?' <span class="badge red">MANDATORY</span>':''}</td>
+      <td class="t">${esc(t.name)}${trainingIsMandatory(t)?' <span class="badge red">MANDATORY</span>':''}</td>
       <td><span class="badge">${esc(W[t.widget]?.label||t.widget)}</span></td>
       <td class="struct"><b>${t.videos.length}</b> in order<br>${t.videos.slice(0,3).map((v,n)=>`${n+1}. ${esc(v.title)}`).join('<br>')}${t.videos.length>3?`<br>+${t.videos.length-3} more`:''}</td>
       <td class="struct">${structOf(t)}</td>
@@ -1010,9 +1062,9 @@ function validateP(P){
   // The gate's only action is "Go to Trainings", so the training has to be there.
   if(P.blocker && !P.hub)
     warnings.push('A homepage blocker sends the FSE to My trainings, so hub listing will be turned on when you save.');
-  if(P.blocker && !t.mandatory)
+  if(P.blocker && !trainingIsMandatory(t))
     warnings.push('A homepage blocker on non-mandatory content will let the FSE past after watching.');
-  if(t.mandatory && !P.hub && P.screen !== HUB)
+  if(trainingIsMandatory(t) && !P.hub && P.screen !== HUB)
     warnings.push('Mandatory but not listed in the hub — if the FSE never visits this screen they have no way to complete it.');
   const dupe = placements.find(p => p.id!==P.id && p.trainingId===P.trainingId
                                  && p.screen===P.screen && p.app===P.app && P.screen);
@@ -1039,7 +1091,7 @@ function syncScreens(){
         : (scr.length
             ? `In ${esc(appLabel(P.app))} that slot exists on: ${scr.map(esc).join(', ')}.`
             : `<span style="color:var(--red-fg)">No ${esc(appLabel(P.app))} screen carries that slot.</span> ${screensAnyApp(t.widget).length?`It is available on ${screensAnyApp(t.widget).map(esc).join(', ')}.`:''}`))
-    + (t.mandatory?' <span class="badge red">This training is mandatory</span>':'');
+    + (trainingIsMandatory(t)?' <span class="badge red">This training is mandatory</span>':'');
 
   // The hub listing is forced on when the hub *is* the placement.
   const hubForced = P.screen===HUB;
@@ -1055,8 +1107,9 @@ function flowP(){
   if(!t){ $('pFlow').innerHTML='<div class="k">Placement</div><div class="v">Choose a training to see what this will do.</div>'; return; }
   const aud = resolveAudience(P);
   const rules=[P.maxViews&&`stops after ${P.maxViews} views`,P.expiry&&`stops after ${P.expiry} days`,
-               P.blocker&&'gates the home screen until it is done',
-               P.self&&'self-marking allowed'].filter(Boolean);
+               P.blocker&&'is mandatory and gates the home screen until it is done',
+               P.allowSeek===false&&'no skipping ahead',
+               P.onceOnly&&'assessment is not repeated once cleared'].filter(Boolean);
   const where = P.screen===HUB
     ? `in <b>My trainings</b> in <b>${esc(appLabel(P.app))}</b>`
     : `as a <b>${esc(W[t.widget].label)}</b> on <b>${esc(appLabel(P.app))} · ${esc(P.screen||'— pick a screen —')}</b>`;
@@ -1128,14 +1181,16 @@ function renderP(){
   $('p_srcBody').innerHTML = audienceBody();
   $('p_app').value=P.app;
   $('p_maxviews').value=P.maxViews; $('p_expiry').value=P.expiry;
-  $('p_blocker').checked=P.blocker; $('p_self').checked=P.self; $('p_hub').checked=P.hub;
+  $('p_blocker').checked=P.blocker; $('p_hub').checked=P.hub;
+  $('p_seek').checked=P.allowSeek!==false; $('p_once').checked=!!P.onceOnly;
   const t=trainingById(P.trainingId);
-  const locked = !!(t && t.mandatory);
-  $('p_selfRow').classList.toggle('off',locked);
-  $('p_self').disabled=locked;
-  $('p_self').checked = locked ? false : P.self;
-  $('p_selfHint').textContent = locked
-    ?'Not available — this training\u2019s assessment is mandatory.':'Adds an \u201cI\u2019ve watched this\u201d button.';
+  // Mandatory content nobody may skim: forcing skip-ahead off is the only
+  // thing that makes its completion record mean anything.
+  $('p_seekRow').classList.toggle('off',P.blocker);
+  $('p_seek').disabled=P.blocker;
+  if(P.blocker){ P.allowSeek=false; $('p_seek').checked=false; }
+  const hasAssessment = !!(t && (t.final.enabled || (t.perVideo && t.videos.some(v=>v.questions.length))));
+  $('p_onceRow').hidden=!hasAssessment;
 
   const aud=resolveAudience(P);
   $('p_audNote').innerHTML = `<b>Reaches:</b> ${esc(aud.label)}`
@@ -1183,7 +1238,7 @@ function drawPLib(){
     const rules=[p.maxViews&&`${p.maxViews} views`,p.expiry&&`${p.expiry} days`].filter(Boolean);
     return `<tr>
       <td class="t">${t?esc(t.name):'<span style="color:var(--red-fg)">Training deleted</span>'}
-        ${t&&t.mandatory?' <span class="badge red">MANDATORY</span>':''}
+        ${t&&trainingIsMandatory(t)?' <span class="badge red">MANDATORY</span>':''}
         ${p.blocker?' <span class="badge red">⛔ Blocker</span>':''}</td>
       <td><span class="badge grey">${esc(appLabel(p.app))}</span></td>
       <td>${p.screen===HUB
@@ -1218,7 +1273,7 @@ function widgetChanged(prev){
   // says so rather than leaving orphaned questions on the record.
   const wasCombined = !!(W[prev]||{}).combined, nowCombined = allowsCombined(T);
   if(wasCombined && !nowCombined && T.final.questions.length){
-    T.final={enabled:false,questions:[],pass:70,maxq:'',timer:'',passMsg:'',failMsg:''};
+    T.final={enabled:false,questions:[],pass:1,total:'',passMsg:'',failMsg:''};
     toast('Combined assessment removed — this view puts checks after each video');
   }
   if(!wasCombined && nowCombined && T.videos.some(v=>v.questions.length)){
@@ -1240,7 +1295,7 @@ $('f_pervideo').onchange=e=>{T.perVideo=e.target.checked;
   if(T.perVideo) T.videos.forEach(v=>{if(!v.questions.length) v.questions.push(blankQ());}); renderT();};
 $('f_final').onchange=e=>{T.final.enabled=e.target.checked;
   if(T.final.enabled&&!T.final.questions.length) T.final.questions.push(blankQ()); renderT();};
-$('f_mand').onchange=e=>{T.mandatory=e.target.checked;renderT();};
+$('f_timer').oninput=e=>{T.timer=e.target.value;renderT();};
 $('addVideo').onclick=()=>{T.videos.push(blankVideo(T.videos.length+1));
   if(T.perVideo) T.videos[T.videos.length-1].questions.push(blankQ()); renderT();};
 $('addFinalQ').onclick=()=>{T.final.questions.push(blankQ());renderT();};
@@ -1262,10 +1317,16 @@ $('tSave').onclick=()=>{
   const badW=q=>!(+q.weight>0);
   if(T.final.questions.some(badW)||T.videos.some(v=>v.questions.some(badW)))
     return toast('Question weights must be greater than zero.');
-  const badCap=T.videos.findIndex(v=>v.maxq&&+v.maxq>v.questions.length);
-  if(T.perVideo&&badCap>-1) return toast(`Video ${badCap+1}: cannot show more questions than are uploaded.`);
-  if(T.final.enabled&&T.final.maxq&&+T.final.maxq>T.final.questions.length)
-    return toast('The combined assessment cannot show more questions than are uploaded.');
+  const setsToCheck=[['The assessment',T.final,T.final.enabled],
+                     ...T.videos.map((v,i)=>[`Video ${i+1}`,v,T.perVideo])];
+  for(const [label,set,active] of setsToCheck){
+    if(!active||!set.questions.length) continue;
+    const pool=totalWeight(set.questions), target=+set.total||0;
+    if(target && !reachableTotals(set.questions).includes(target))
+      return toast(`${label}: no combination of these questions adds up to ${target}.`);
+    if(+set.pass > (target||pool)) return toast(`${label}: the passing score is above the total.`);
+    if(+set.pass < 1) return toast(`${label}: the passing score must be at least 1.`);
+  }
 
   const copy=JSON.parse(JSON.stringify(T));
   if(editT){ trainings=trainings.map(x=>x.id===editT?copy:x); toast(`Updated “${copy.name}”`); }
@@ -1297,8 +1358,8 @@ $('p_src').onchange=e=>{
   renderP();
 };
 $('p_blocker').onchange=e=>{P.blocker=e.target.checked;renderP();};
-$('f_seek').onchange=e=>{T.allowSeek=e.target.checked;renderT();};
-$('p_self').onchange=e=>{P.self=e.target.checked;flowP();};
+$('p_seek').onchange=e=>{P.allowSeek=e.target.checked;flowP();};
+$('p_once').onchange=e=>{P.onceOnly=e.target.checked;flowP();};
 
 $('pSave').onclick=()=>{
   const {errors} = validateP(P);
