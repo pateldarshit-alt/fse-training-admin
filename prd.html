@@ -190,7 +190,7 @@
         <tr><td>Feature</td><td>Contextual Video Coaching — nine in-app widget views, My trainings hub, admin console</td></tr>
         <tr><td>Document owner</td><td>Product</td></tr>
         <tr><td>Status</td><td>Draft for review</td></tr>
-        <tr><td>Version</td><td>2.9</td></tr>
+        <tr><td>Version</td><td>2.10</td></tr>
         <tr><td>Date</td><td>7 September 2026</td></tr>
         <tr><td>Reviewers</td><td>Design, Frontend, Backend, Field Ops, L&amp;D</td></tr>
       </tbody>
@@ -539,7 +539,7 @@
     <p><strong>Mandatory and the homepage blocker are the same thing</strong>, expressed once, on the placement: <em>Mandatory training — Homepage blocker</em>. Content nobody may skip has to be enforced somewhere, and the home screen is that place. It follows that the same training can be mandatory for one audience and merely available to another, which is what a placement is for.</p>
   </div>
 
-  <h3>6.3b Stories: one paper across the whole story</h3>
+  <h3>6.3b Stories: one paper across every segment</h3>
   <p>Stories is the one view where both check types coexist, because it is the one view with a dependable running order and a real ending. Its scoring follows from that: there is a <strong>single total and a single pass mark for the whole story</strong>, not one per segment.</p>
   <div class="tw">
     <table>
@@ -580,6 +580,10 @@
 
   <h3>6.6 Time limit</h3>
   <p>One time limit is set <strong>on the training</strong> and covers every question in an attempt, whichever assessment is running. It appears in the header, turns amber at a quarter remaining and red at a tenth. On expiry the attempt is submitted as it stands and graded on what was answered — the result names the reason rather than showing a bare low score. The console warns when a limit allows under ten seconds a question.</p>
+
+  <h3>6.6a One vocabulary, every widget</h3>
+  <p>Every assessment reports itself the same way regardless of which widget it ran in: <strong>Assessment passed</strong> or <strong>Assessment failed</strong>, followed by the score and the pass mark. A timed attempt that expires reads <em>Assessment failed</em> with the reason underneath rather than a heading of its own.</p>
+  <p>The surrounding calls to action match: <em>Take the assessment</em>, <em>N-question assessment</em>, <em>Assessment passed</em>. Earlier builds said “quick check” in a mini banner, “check after this segment” in Stories and “combined assessment” on the hub, which read as three different obligations to an FSE who meets all three in a week. They are one thing, and one thing should have one name.</p>
 
   <h3>6.7 Result copy</h3>
   <p>Pass and fail messages are configured per question set. Defaults are used when left blank. The message is the last thing an FSE reads, so it carries the consequence — a fail on QR mapping says money settles to the wrong account, not <em>better luck next time</em>.</p>
