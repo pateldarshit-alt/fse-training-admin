@@ -471,8 +471,8 @@ const WIDGETS=[
    note:'Horizontal cards, swiped in order.'},
   {id:'inline-card', label:'Inline Embedded Card',     max:8,  plays:true,  combined:false, placeable:true,
    note:'Stacked cards in the page flow, in order.'},
-  {id:'stories',     label:'Stories',                  max:10, plays:true,  combined:false, placeable:true,
-   note:'One segment per video, auto-advancing.'},
+  {id:'stories',     label:'Stories',                  max:10, plays:true,  combined:true, aggregate:true, placeable:true,
+   note:'One segment per video, auto-advancing. The only view that can ask after each segment and again at the end — and the only one scored as a single paper across all of it.'},
 ];
 // An assessment sits directly after the video that taught it, on every widget
 // except My trainings page. On a screen widget there is no dependable moment at
@@ -498,7 +498,13 @@ const $=id=>document.getElementById(id);
 const fill=(el,items)=>el.innerHTML=items.map(i=>`<option value="${esc(i.id)}">${esc(i.label)}</option>`).join('');
 
 const capOf       = t => (W[t.widget]||{}).max ?? 1;
-const allowsCombined = t => !!(W[t.widget]||{}).combined;   // My trainings page only
+const allowsCombined = t => !!(W[t.widget]||{}).combined;
+// Stories is the one view where both check types coexist. Everything the FSE
+// answers across the whole story is added up and judged once at the end, so
+// there is a single pass mark rather than one per segment.
+const isAggregate  = t => !!(W[t.widget]||{}).aggregate;
+// Every question the FSE will face, in the order they meet them.
+const aggQuestions = t => [...t.videos.flatMap(v=>v.questions||[]), ...(t.final.questions||[])];
 const allowsPerVideo = t => !isModule(t);                   // everywhere else
 const isSingle    = t => capOf(t)===1;
 const isModule    = t => t.widget==='module';   // hub-only
@@ -587,8 +593,10 @@ function pickToTotal(questions, target){
 function normT(t){
   if(t.timer==null) t.timer='';
   if(typeof t.certificate!=='boolean') t.certificate=false;
-  // A combined assessment is only meaningful on My trainings page.
-  if(t.widget!=='module' && t.final) t.final.enabled = false;
+  // A combined assessment belongs to My trainings page and to Stories, which
+  // also keeps its per-segment checks.
+  const cap = (WIDGETS.find(w=>w.id===t.widget)||{});
+  if(!cap.combined && t.final) t.final.enabled = false;
   if(t.widget==='module') t.perVideo = false;
   t.videos.forEach(v=>{ v.kind=v.kind||'video'; normSet(v); });
   normSet(t.final);
@@ -718,6 +726,40 @@ function rulesRow(scope,set,count){
       <textarea rows="2" data-rfm="${scope}" placeholder="${esc(DEFAULT_FAIL_MSG)}">${esc(set.failMsg)}</textarea></div>
   </div>`;
 }
+function aggRulesRow(T, qs){
+  const pool = totalWeight(qs), reach = reachableTotals(qs);
+  const target = +T.final.total || 0;
+  const badTarget = target && !reach.includes(target);
+  const badPass = +T.final.pass > (target || pool);
+  const nearest = target && reach.length
+    ? reach.reduce((a,b)=>Math.abs(b-target)<Math.abs(a-target)?b:a) : null;
+  const perVideoQs = T.videos.reduce((a,v)=>a+scored(v.questions||[]).length,0);
+  const endQs = scored(T.final.questions||[]).length;
+  return `<div class="slotnote" style="text-align:left;margin-bottom:14px">
+      <b>Scored across the whole story.</b>
+      ${perVideoQs} question${perVideoQs===1?'':'s'} after segments${endQs?` and ${endQs} at the end`:''} —
+      worth <b>${pool}</b> together. The FSE sees one result when the story finishes.
+    </div>
+    <div class="rules">
+      <div class="fg"><label>Total score <small>of the whole story</small></label>
+        <input type="number" min="1" data-rtotal="final" value="${esc(T.final.total)}" placeholder="${pool||'—'}"></div>
+      <div class="fg"><label>Passing score</label>
+        <input type="number" min="1" data-rpass="final" value="${esc(T.final.pass)}"></div>
+      <div class="of ${badTarget||badPass?'bad':''}">${
+        !qs.length ? 'no questions uploaded yet'
+        : badPass ? `passing score cannot exceed ${target||pool}`
+        : badTarget ? `${target} is not reachable from these weights${nearest?` — nearest is ${nearest}`:''}`
+        : `pass at <b>${T.final.pass}</b> of <b>${target||pool}</b>`}</div>
+    </div>
+    ${qs.length?`<div class="slotnote" style="text-align:left;margin:-6px 0 12px">
+      Reachable totals: ${reach.slice(0,14).map(v=>`<b>${v}</b>`).join(' · ')}${reach.length>14?' …':''}.</div>`:''}
+    <div class="msgs">
+      <div class="fg"><label>Message when they pass</label>
+        <textarea rows="2" data-rpm="final" placeholder="${esc(DEFAULT_PASS_MSG)}">${esc(T.final.passMsg)}</textarea></div>
+      <div class="fg"><label>Message when they fail</label>
+        <textarea rows="2" data-rfm="final" placeholder="${esc(DEFAULT_FAIL_MSG)}">${esc(T.final.failMsg)}</textarea></div>
+    </div>`;
+}
 function fmtSecs(t){
   const s=+t||0, m=Math.floor(s/60), r=s%60;
   return m?`${m}m${r?` ${r}s`:''}`:`${s}s`;
@@ -805,11 +847,18 @@ function flowT(){
     const pool=totalWeight(set.questions||[]), target=+set.total||pool;
     return `<b>${set.pass} of ${target}</b> to pass${target<pool?` — drawn at random from a pool worth ${pool}`:''}`;
   };
-  if(T.perVideo){
-    const withQs=T.videos.filter(v=>v.questions.length).length;
-    bits.push(`answers a check after ${withQs===n?'each one':`${withQs} of them`} (${T.videos.filter(v=>v.questions.length).map(setLine)[0]||'no questions yet'})`);
+  if(isAggregate(T)){
+    const qs=aggQuestions(T), pool=totalWeight(qs), target=+T.final.total||pool;
+    const per=T.videos.filter(v=>v.questions.length).length;
+    if(qs.length) bits.push(`answers ${per?`questions after ${per} segment${per===1?'':'s'}`:''}${
+      per&&T.final.enabled?' and ':''}${T.final.enabled?'a set at the end':''}, scored as one paper — <b>${T.final.pass} of ${target}</b> to pass`);
+  } else {
+    if(T.perVideo){
+      const withQs=T.videos.filter(v=>v.questions.length).length;
+      bits.push(`answers a check after ${withQs===n?'each one':`${withQs} of them`} (${T.videos.filter(v=>v.questions.length).map(setLine)[0]||'no questions yet'})`);
+    }
+    if(T.final.enabled) bits.push(`then one assessment at the end — ${setLine(T.final)}`);
   }
-  if(T.final.enabled) bits.push(`then one assessment at the end — ${setLine(T.final)}`);
   if(!T.perVideo&&!T.final.enabled) bits.push('with no assessment — watching is enough');
   const kinds=[...new Set(T.videos.map(v=>kindOf(v).label))];
   if(kinds.length>1) bits.push(`mixed content — ${kinds.join(', ').toLowerCase()}`);
@@ -829,7 +878,16 @@ function flowT(){
   if(blankText.length) warns.push(`${blankText.join(', ')} has no question text yet.`);
   if(noAns.length) warns.push(`Nothing is marked correct on ${noAns.join(', ')} — ${noAns.length>1?'those questions':'that question'} can never be answered right.`);
   // A target the weights cannot add up to would leave the paper unbuildable.
-  const sets=[['The assessment',T.final],...T.videos.map((v,i)=>[`Video ${i+1}`,v])];
+  if(isAggregate(T)){
+    const qs=aggQuestions(T), pool=totalWeight(qs), target=+T.final.total||0;
+    if(qs.length){
+      if(target && !reachableTotals(qs).includes(target))
+        warns.push(`No combination of the story's questions adds up to ${target}.`);
+      if(+T.final.pass > (target||pool))
+        warns.push(`The passing score (${T.final.pass}) is above the story's total (${target||pool}).`);
+    }
+  }
+  const sets=isAggregate(T)?[]:[['The assessment',T.final],...T.videos.map((v,i)=>[`Video ${i+1}`,v])];
   sets.forEach(([label,set])=>{
     if(!set.questions||!set.questions.length) return;
     const pool=totalWeight(set.questions), target=+set.total||0;
@@ -895,8 +953,8 @@ function drawVideos(){
         </div>`:'<div style="font-size:13px;color:var(--faint)">All languages added.</div>'}
       </div>
       ${T.perVideo?`<div class="check">
-        <div class="ttl">Check after video ${i+1}</div>
-        ${rulesRow(`v${i}`,v,v.questions.length)}
+        <div class="ttl">${isAggregate(T)?`Questions after segment ${i+1} <span style="font-weight:400;text-transform:none;letter-spacing:0">— they add to the story's total</span>`:`Check after video ${i+1}`}</div>
+        ${isAggregate(T) ? '' : rulesRow(`v${i}`,v,v.questions.length)}
         ${v.questions.map((q,j)=>qEditor(q,`v${i}`,j)).join('')}
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
           <button class="btn btn-ghost btn-sm" data-vaq="${i}">＋ Add question</button>
@@ -963,25 +1021,39 @@ function renderT(){
         : ' <span class="badge red">No screen carries this slot yet</span>'))
     + (w.perVideo?' <span class="badge warn">per-video checks recommended</span>':'');
 
-  // Exactly one shape is offered, decided by the widget view.
-  if(canCombine){ T.perVideo=false; } else { T.final.enabled=false; }
-  $('perRow').hidden   = canCombine;
+  // Three shapes, decided by the widget view.
+  const agg = isAggregate(T);
+  if(!agg){ if(canCombine){ T.perVideo=false; } else { T.final.enabled=false; } }
+  $('perRow').hidden   = canCombine && !agg;
   $('finalRow').hidden = !canCombine;
-  $('assessSub').textContent = canCombine
-    ? 'One assessment at the end of the set.'
-    : 'A check sits directly after the video it belongs to.';
-  $('assessNote').innerHTML = canCombine
-    ? `<b>${esc(w.label)}</b> is the only view that carries a combined assessment. The FSE opens it from My trainings, works through the videos in order, then takes one question set at the end.`
-    : `<b>${esc(w.label)}</b> puts the check <b>immediately after the video</b>. On a screen widget there is no dependable point at which the set is finished, so a single pass mark across several videos has nothing to fire on.`
-      + (isSingle(T) ? '' : ' Each video carries its own questions, edited in its row above.');
-  $('perLabel').innerHTML = isSingle(T)
-    ? 'Add an assessment after the video<small>Shown as soon as the video ends. One question set and one pass mark.</small>'
-    : 'A check after <b>each</b> video<small>Questions are edited inside each video row above.</small>';
+  $('assessSub').textContent = agg
+    ? 'Ask after each segment, at the end, or both — scored as one paper.'
+    : canCombine
+      ? 'One assessment at the end of the set.'
+      : 'A check sits directly after the video it belongs to.';
+  $('assessNote').innerHTML = agg
+    ? `<b>${esc(w.label)}</b> can ask after each segment <b>and</b> again at the end. Everything the FSE answers across the whole story is added together and judged once — one total, one pass mark, one result. Individual segments are never passed or failed on their own.`
+    : canCombine
+      ? `<b>${esc(w.label)}</b> is the only view that carries a combined assessment. The FSE opens it from My trainings, works through the videos in order, then takes one question set at the end.`
+      : `<b>${esc(w.label)}</b> puts the check <b>immediately after the video</b>. On a screen widget there is no dependable point at which the set is finished, so a single pass mark across several videos has nothing to fire on.`
+        + (isSingle(T) ? '' : ' Each video carries its own questions, edited in its row above.');
+  $('perLabel').innerHTML = agg
+    ? 'A check after <b>each segment</b><small>Questions are edited inside each segment above. They contribute to the total rather than passing or failing on their own.</small>'
+    : isSingle(T)
+      ? 'Add an assessment after the video<small>Shown as soon as the video ends. One question set and one pass mark.</small>'
+      : 'A check after <b>each</b> video<small>Questions are edited inside each video row above.</small>';
   $('f_pervideo').checked=T.perVideo; $('f_final').checked=T.final.enabled;
 
   drawVideos();
-  $('finalBox').hidden=!T.final.enabled;
-  $('finalRules').innerHTML=rulesRow('final',T.final,T.final.questions.length);
+  // On Stories the scoring rules cover the whole story, so they show whenever
+  // there are questions anywhere — not only when the end assessment is on.
+  const aggQs = agg ? aggQuestions(T) : [];
+  $('finalBox').hidden = agg ? !(T.perVideo||T.final.enabled) : !T.final.enabled;
+  $('finalRules').innerHTML = agg
+    ? aggRulesRow(T, aggQs)
+    : rulesRow('final',T.final,T.final.questions.length);
+  $('finalQs').hidden = agg && !T.final.enabled;
+  $('addFinalQ').parentElement.hidden = agg && !T.final.enabled;
   $('finalQs').innerHTML=T.final.questions.map((q,j)=>qEditor(q,'final',j)).join('');
   wireQ($('finalQs')); wireRules($('finalBox'));
   flowT();
@@ -995,11 +1067,16 @@ function structOf(t){
     const pool=totalWeight(set.questions||[]), target=+set.total||pool;
     return `${label} · ${set.questions.length} Q · pass ${set.pass}/${target}`;
   };
-  if(t.perVideo){
-    const withQs=t.videos.filter(v=>v.questions.length);
-    if(withQs.length) parts.push(line('check after each',withQs[0]));
+  if(isAggregate(t)){
+    const qs=aggQuestions(t), pool=totalWeight(qs), target=+t.final.total||pool;
+    if(qs.length) parts.push(`whole story · ${scored(qs).length} Q · pass ${t.final.pass}/${target}`);
+  } else {
+    if(t.perVideo){
+      const withQs=t.videos.filter(v=>v.questions.length);
+      if(withQs.length) parts.push(line('check after each',withQs[0]));
+    }
+    if(t.final.enabled) parts.push(line('assessment at the end',t.final));
   }
-  if(t.final.enabled) parts.push(line('assessment at the end',t.final));
   if(t.timer) parts.push(`<span class="badge grey">⏱ ${fmtSecs(t.timer)}</span>`);
   if(t.certificate) parts.push('<span class="badge">🎓 certificate</span>');
   return parts.length?parts.join('<br>'):'<span style="color:var(--faint)">None</span>';
@@ -1390,6 +1467,9 @@ function widgetChanged(prev){
   // Moving between families discards the assessment the other shape used, and
   // says so rather than leaving orphaned questions on the record.
   const wasCombined = !!(W[prev]||{}).combined, nowCombined = allowsCombined(T);
+  const wasAgg = !!(W[prev]||{}).aggregate, nowAgg = isAggregate(T);
+  // Stories keeps both, so moving in or out of it never discards anything.
+  if(wasAgg || nowAgg) return;
   if(wasCombined && !nowCombined && T.final.questions.length){
     T.final={enabled:false,questions:[],pass:1,total:'',passMsg:'',failMsg:''};
     toast('Combined assessment removed — this view puts checks after each video');
@@ -1437,7 +1517,16 @@ $('tSave').onclick=()=>{
   const badW=q=>!isTextQ(q)&&!(+q.weight>0);
   if(T.final.questions.some(badW)||T.videos.some(v=>v.questions.some(badW)))
     return toast('Question weights must be greater than zero.');
-  const setsToCheck=[['The assessment',T.final,T.final.enabled],
+  if(isAggregate(T)){
+    const qs=aggQuestions(T), pool=totalWeight(qs), target=+T.final.total||0;
+    if(qs.length){
+      if(target && !reachableTotals(qs).includes(target))
+        return toast(`No combination of the story's questions adds up to ${target}.`);
+      if(+T.final.pass > (target||pool)) return toast('The passing score is above the story\u2019s total.');
+      if(+T.final.pass < 1) return toast('The passing score must be at least 1.');
+    }
+  }
+  const setsToCheck=isAggregate(T)?[]:[['The assessment',T.final,T.final.enabled],
                      ...T.videos.map((v,i)=>[`Video ${i+1}`,v,T.perVideo])];
   for(const [label,set,active] of setsToCheck){
     if(!active||!set.questions.length) continue;

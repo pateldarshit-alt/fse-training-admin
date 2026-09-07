@@ -190,7 +190,7 @@
         <tr><td>Feature</td><td>Contextual Video Coaching — nine in-app widget views, My trainings hub, admin console</td></tr>
         <tr><td>Document owner</td><td>Product</td></tr>
         <tr><td>Status</td><td>Draft for review</td></tr>
-        <tr><td>Version</td><td>2.8</td></tr>
+        <tr><td>Version</td><td>2.9</td></tr>
         <tr><td>Date</td><td>7 September 2026</td></tr>
         <tr><td>Reviewers</td><td>Design, Frontend, Backend, Field Ops, L&amp;D</td></tr>
       </tbody>
@@ -529,6 +529,7 @@
       <thead><tr><th>Widget view</th><th>Assessment</th></tr></thead>
       <tbody>
         <tr><td><strong>My trainings page</strong></td><td>One assessment after <strong>all</strong> the videos. The FSE opens the training from My trainings, works through the set in order, then takes a single question set covering the whole thing.</td></tr>
+        <tr><td><strong>Stories</strong></td><td>Both, and <strong>scored as one paper</strong>. Questions may follow each segment and again at the end; everything answered across the story is added together and judged once.</td></tr>
         <tr><td><strong>Every other view</strong></td><td>A check sits <strong>directly after the video it belongs to</strong>. No combined assessment.</td></tr>
       </tbody>
     </table>
@@ -537,6 +538,21 @@
   <div class="note">
     <p><strong>Mandatory and the homepage blocker are the same thing</strong>, expressed once, on the placement: <em>Mandatory training — Homepage blocker</em>. Content nobody may skip has to be enforced somewhere, and the home screen is that place. It follows that the same training can be mandatory for one audience and merely available to another, which is what a placement is for.</p>
   </div>
+
+  <h3>6.3b Stories: one paper across the whole story</h3>
+  <p>Stories is the one view where both check types coexist, because it is the one view with a dependable running order and a real ending. Its scoring follows from that: there is a <strong>single total and a single pass mark for the whole story</strong>, not one per segment.</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Moment</th><th>What happens</th></tr></thead>
+      <tbody>
+        <tr><td>After a segment</td><td>The questions are answered and the score is banked. <strong>No verdict is shown</strong> — the FSE sees “Answers recorded”, because a single segment is never passed or failed on its own.</td></tr>
+        <tr><td>Re-answering a segment</td><td>Replaces that segment's contribution rather than adding to it, so a segment can never be farmed for points.</td></tr>
+        <tr><td>At the end</td><td>The closing set is added to what was banked, and the total is judged once against the pass mark. One result, one message.</td></tr>
+        <tr><td>On failure</td><td>Every segment reopens and the banked total is cleared. The story is retaken whole.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>A segment is complete once it has been <strong>answered</strong>, not once it has been passed — passing is not a thing a segment can do. The panel reflects this: per-segment rows carry only their questions, and the total score, pass mark and result copy sit once, on the story.</p>
 
   <h3>6.4 Question types and weighting</h3>
   <ul>
@@ -736,6 +752,7 @@
         <tr><td class="mono">assessment_question_answered</td><td>Each option selection</td><td>position, correct</td></tr>
         <tr><td class="mono">assessment_passed</td><td>Score is at or above the pass mark</td><td>score, total, percent, pass_mark, attempt</td></tr>
         <tr><td class="mono">assessment_failed</td><td>Score is below the pass mark</td><td>score, total, percent, pass_mark, attempt</td></tr>
+        <tr><td class="mono">assessment_part_banked</td><td>A story segment's questions were answered and contributed to the running total</td><td>training_id, part_id, gained, possible</td></tr>
         <tr><td class="mono">assessment_reopened_content</td><td>A failure reset the videos the assessment covers</td><td>assessment_id, video_ids, attempt</td></tr>
         <tr><td class="mono">assessment_timed_out</td><td>The countdown reached zero and the attempt was auto-submitted</td><td>answered, total, seconds_limit, percent</td></tr>
         <tr><td class="mono">playback_resumed</td><td>Timed media opened at a stored position rather than the start</td><td>content_id, resume_seconds, duration</td></tr>
@@ -812,6 +829,7 @@
       <tr><td>final_enabled</td><td>boolean</td><td>Combined assessment on. Rejected where the widget view cannot support one</td></tr>
       <tr><td>final_pass_score</td><td>int</td><td>Absolute score needed. At or below final_total_score</td></tr>
       <tr><td>final_total_score</td><td>int, nullable</td><td>What one paper is worth. Null shows the whole pool. Must be reachable from the question weights</td></tr>
+      <tr><td>aggregate_scoring</td><td>boolean</td><td>Derived from the widget view. True for Stories: per-segment and closing questions share one total and one pass mark</td></tr>
       <tr><td>timer_seconds</td><td>int, nullable</td><td>On the training. Covers every question in one attempt, whichever assessment is running</td></tr>
       <tr><td>final_pass_message</td><td>text, nullable</td><td>Shown on the result screen when cleared. Null falls back to the default</td></tr>
       <tr><td>final_fail_message</td><td>text, nullable</td><td>Shown when not cleared</td></tr>
