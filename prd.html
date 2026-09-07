@@ -190,7 +190,7 @@
         <tr><td>Feature</td><td>Contextual Video Coaching — nine in-app widget views, Trainings &amp; Assessment hub, admin console</td></tr>
         <tr><td>Document owner</td><td>Product</td></tr>
         <tr><td>Status</td><td>Draft for review</td></tr>
-        <tr><td>Version</td><td>2.1</td></tr>
+        <tr><td>Version</td><td>2.2</td></tr>
         <tr><td>Date</td><td>7 September 2026</td></tr>
         <tr><td>Reviewers</td><td>Design, Frontend, Backend, Field Ops, L&amp;D</td></tr>
       </tbody>
@@ -456,6 +456,8 @@
         <tr><td><strong>Next up</strong></td><td>A single raised card resuming the exact video or assessment the FSE stopped at, with a one-tap call to action — <em>Start</em>, <em>Continue</em>, <em>Take assessment</em> or <em>Retry assessment</em>.</td></tr>
         <tr><td>Filters</td><td>Exactly three, each carrying its count: All, Pending, Completed. There is no free-text search — at this list size, priority ordering replaces it.</td></tr>
         <tr><td>Cards</td><td>Training name, step pips, status, assessment size and MANDATORY tag. Completed cards are de-emphasised.</td></tr>
+        <tr><td>Source tag</td><td>Every card says where it comes from: <strong>HUB ONLY</strong> for a training whose widget view is Hub only, or <strong>Also on {screen}</strong> for one that is additionally running on a screen. Nothing appears in the hub without one of those two reasons.</td></tr>
+        <tr><td>Deadline tag</td><td>Trainings under a blocker show <strong>by {time} · {n} left</strong>, amber inside four hours, and <strong>OVERDUE</strong> once the moment passes.</td></tr>
       </tbody>
     </table>
   </div>
@@ -494,6 +496,9 @@
     <table>
       <thead><tr><th>Content</th><th>How it can be completed</th></tr></thead>
       <tbody>
+        <tr><td><strong>Video</strong> or <strong>audio</strong></td><td>Played to the end. Position is stored continuously, so a call or a lost signal resumes rather than restarts.</td></tr>
+        <tr><td><strong>PDF or slides</strong></td><td>Opened and scrolled to the last page.</td></tr>
+        <tr><td><strong>Image</strong></td><td>Opened. A single still is consumed at a glance, so viewing is the completion.</td></tr>
         <tr><td><strong>Mandatory</strong>, first time</td><td>Every video watched to the end, every configured check passed, and the combined assessment passed. No self-declaration is offered.</td></tr>
         <tr><td><strong>Mandatory</strong>, already passed</td><td>Repeat viewings may be self-marked. The first clearance was earned; a refresher is not a gate.</td></tr>
         <tr><td><strong>Optional</strong>, self-mark enabled on the placement</td><td>Watching to the end, or “I’ve watched this”.</td></tr>
@@ -502,20 +507,80 @@
     </table>
   </div>
 
-  <h3>6.3 Question sampling</h3>
-  <p>Every question set — per-video and combined — carries a pass mark and an optional cap. With a cap set, that many questions are drawn at random from the uploaded pool on each attempt, so a retake is not the same paper. A cap higher than the pool is rejected at save.</p>
+  <h3>6.3 Playback</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Control</th><th>Behaviour</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Resume</strong></td><td>Video and audio store the furthest point reached and open there, with the position shown and a <em>Start over</em> beside it. An FSE interrupted mid-visit does not pay for it twice.</td></tr>
+        <tr><td><strong>Speed</strong></td><td>1×, 1.5× and 2×, cycled from one control and carried across items for the session. A second viewing is usually a refresher, and 2× respects that.</td></tr>
+        <tr><td><strong>Skipping</strong></td><td>Allowed by default. Turning it off on a training clamps seeking to the furthest point genuinely reached — scrubbing back and forward within watched content still works.</td></tr>
+        <tr><td><strong>Captions</strong></td><td>Video only, toggled from the player.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <p><strong>Skipping and mandatory content pull in opposite directions.</strong> With skipping on, an FSE can drag to the end and be recorded as having watched. The console therefore exposes the toggle per training and warns when a mandatory training leaves it on. Until completion is measured as a percentage of the timeline rather than an ended event (§10.1), that toggle is the only real defence.</p>
+  </div>
 
-  <h3>6.4 Feedback model</h3>
+  <h3>6.4 Question types and weighting</h3>
+  <ul>
+    <li><strong>Single answer</strong> — one option is correct; selecting it settles the question.</li>
+    <li><strong>Multiple answers</strong> — the FSE must select every correct option and none of the others, then submit. The prompt states how many are correct.</li>
+    <li><strong>Weight</strong> — each question carries a weight, defaulting to 1. The score is the weight earned over the weight shown, so a three-point question about mapping to the wrong MID counts for more than a one-point recall question.</li>
+  </ul>
+  <p>Multi-answer questions are marked whole: a partly correct selection scores nothing. Part credit would make a pass mark impossible to reason about, and every one of these questions is a case where half-knowing is the failure mode.</p>
+
+  <h3>6.5 Question sampling — round robin</h3>
+  <p>Every question set carries a pass mark and an optional cap on how many questions are shown. With a cap set, the questions are drawn as a <strong>rotating window</strong> over the pool rather than at random: the first attempt takes the first <em>n</em>, the next attempt continues from where that ended, wrapping around. A cap higher than the pool is rejected at save.</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Attempt</th><th>Pool of 4, cap of 3</th></tr></thead>
+      <tbody>
+        <tr><td>1st</td><td>Q1 Q2 Q3</td></tr>
+        <tr><td>2nd</td><td>Q4 Q1 Q2</td></tr>
+        <tr><td>3rd</td><td>Q3 Q4 Q1</td></tr>
+        <tr><td>4th</td><td>Q2 Q3 Q4</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Rotation guarantees two things random draw does not: a retake never repeats the previous paper, and every question in the pool is eventually asked. Because subsets can carry different total weight, the console warns when weights inside a capped set vary by more than a factor of three — attempts would not be equally hard.</p>
+
+  <h3>6.6 Time limit</h3>
+  <p>A question set may carry a countdown for the whole attempt, not per question. It appears in the header, turns amber at a quarter remaining and red at a tenth. On expiry the attempt is submitted as it stands and graded on what was answered — the result names the reason rather than showing a bare low score. The console warns when a limit allows under ten seconds a question.</p>
+
+  <h3>6.7 Result copy</h3>
+  <p>Pass and fail messages are configured per question set. Defaults are used when left blank. The message is the last thing an FSE reads, so it carries the consequence — a fail on QR mapping says money settles to the wrong account, not <em>better luck next time</em>.</p>
+
+  <h3>6.8 Feedback model</h3>
   <div class="note">
     <p><strong>The correct answer is never revealed.</strong> Feedback is given per selection, on the FSE’s own choice only.</p>
   </div>
   <ul>
-    <li>Selecting an option locks it for that question and marks it correct or not correct.</li>
+    <li>Selecting an option locks it for that question and marks it correct or not correct. On a multi-answer question, feedback follows the submitted set.</li>
+    <li>Feedback marks only what the FSE picked. A correct option they did not select is never highlighted, so the key cannot be reconstructed by elimination across retakes.</li>
     <li>Remaining options are disabled and de-emphasised. The right answer is not highlighted.</li>
     <li>An incorrect selection prompts a re-watch and notes the assessment can be retaken.</li>
     <li>The result screen shows the score and the pass mark only — no question list, no answer key.</li>
   </ul>
   <p>An end-of-quiz answer key would let an FSE memorise the options and clear a retake without engaging with the content, which defeats the purpose of gating anything on the result.</p>
+
+  <h3>6.9 The homepage blocker and its deadline</h3>
+  <p>A placement may mark a training as a homepage blocker, and give it a <strong>complete-by</strong> date and time. The deadline turns a permanent gate into a window the FSE can plan around.</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>State</th><th>What the FSE sees</th></tr></thead>
+      <tbody>
+        <tr><td>Blocker, deadline in the future</td><td>A dismissible card on the home screen listing each training with its deadline and how long is left, plus <em>Remind me later</em>. Work continues normally.</td></tr>
+        <tr><td>Blocker, deadline passed</td><td>A sealed gate. Every overdue training is listed with how long it has been outstanding and how many steps remain. There is no dismiss and no <em>later</em> — the only action is to go and finish it.</td></tr>
+        <tr><td>Blocker, no deadline set</td><td>Gates immediately on publish and stays up until the training is done. The console warns about this, because it is rarely what is intended.</td></tr>
+        <tr><td>Nothing outstanding</td><td>No gate at all.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <p>A deadline passing while an FSE is part-way through does not eject them. The gate is evaluated on the home screen, so a training already open stays open and can be finished.</p>
+  </div>
 
   <h2>7. Admin console</h2>
   <p>Two sections, matching the content model. Everything the FSE sees is configured in one of them, and neither shows a control the app does not honour.</p>
@@ -528,9 +593,13 @@
         <tr><td>Training name</td><td>Text, required</td><td>Displayed everywhere the training appears.</td></tr>
         <tr><td>Widget view</td><td>Select — one of nine, or Hub only</td><td>Sets video capacity and assessment capability. Also determines which screens can host it.</td></tr>
         <tr><td>Videos</td><td>Ordered list, reorderable</td><td>Capacity enforced by the widget view. Reducing capacity trims the list and says what it removed.</td></tr>
+        <tr><td>— Content type</td><td>Select — video, audio, PDF/slides, image</td><td>Drives the accepted file types, the player, and what counts as finishing the item. Changing it clears the uploaded files, since they no longer match.</td></tr>
         <tr><td>— Video file</td><td>Upload</td><td>The <strong>title is derived from the filename</strong> unless one has been typed.</td></tr>
         <tr><td>— Language versions</td><td>Upload, nested under each video</td><td>One file per language, listed inside that video so ownership is unambiguous. The player offers exactly this list.</td></tr>
-        <tr><td>— Check questions</td><td>Manual or CSV import</td><td>With their own pass mark and “show N of M”.</td></tr>
+        <tr><td>— Check questions</td><td>Manual or CSV import</td><td>With their own pass mark, “show N of M”, time limit and result copy.</td></tr>
+        <tr><td>— Question type</td><td>Checkbox per question</td><td><em>Several correct answers</em> switches the options from radio to tick boxes. Coming back to a single answer keeps the first selection so the question stays valid.</td></tr>
+        <tr><td>— Question weight</td><td>Number, default 1</td><td>What the question is worth in the score.</td></tr>
+        <tr><td>Allow skipping ahead</td><td>Checkbox, default on</td><td>Shown only when the training contains timed media. The hint changes to a warning when the training is mandatory.</td></tr>
         <tr><td>Per-video checks</td><td>Checkbox</td><td>Turns on the check block inside every video row.</td></tr>
         <tr><td>Combined assessment</td><td>Checkbox</td><td>Disabled with an explanation where the widget view cannot support one.</td></tr>
         <tr><td>Passing is mandatory</td><td>Checkbox</td><td>Drives the MANDATORY tag and the required call to action wherever the training is placed.</td></tr>
@@ -558,6 +627,8 @@
     </table>
   </div>
 
+  <p>Under <strong>Homepage blocker</strong> the console reveals a <strong>complete-by</strong> date and time, with live prose describing what will happen — how far away the deadline is, or that no deadline means an immediate gate. A deadline already in the past is refused at save, because it would block the whole segment the moment it is published.</p>
+
   <h3>7.3 Rules the console enforces</h3>
   <ul>
     <li><strong>A blocker must be listed in the hub.</strong> The gate’s only action is “Go to Trainings”, so a blocker on a training absent from the hub is a dead end. Warned, and corrected on save.</li>
@@ -567,6 +638,8 @@
     <li><strong>Question caps cannot exceed the pool</strong>, and pass marks must be 1–100.</li>
     <li><strong>Switching app clears an out-of-app screen</strong> rather than leaving an invalid pairing.</li>
   </ul>
+
+  <p>Added with this revision: a question with nothing marked correct cannot be saved; weights must be positive; a complete-by time in the past is refused; changing a content type clears files that no longer match; and warnings fire for a tight time limit, for widely varying weights inside a rotating set, and for a mandatory training that still allows skipping ahead.</p>
 
   <h3>7.4 Managing what exists</h3>
   <p>Both sections carry a list. <strong>Trainings</strong> shows widget view, the ordered video titles, the assessment structure, and a <em>Placed in</em> column with the screens and a count — so reuse and orphans are both visible at a glance. Rows support edit, duplicate and delete. <strong>Placements</strong> shows training, app, screen and view, segment, and rules, with edit and delete.</p>
@@ -591,6 +664,13 @@
         <tr><td class="mono">assessment_question_answered</td><td>Each option selection</td><td>position, correct</td></tr>
         <tr><td class="mono">assessment_passed</td><td>Score is at or above the pass mark</td><td>score, total, percent, pass_mark, attempt</td></tr>
         <tr><td class="mono">assessment_failed</td><td>Score is below the pass mark</td><td>score, total, percent, pass_mark, attempt</td></tr>
+        <tr><td class="mono">assessment_timed_out</td><td>The countdown reached zero and the attempt was auto-submitted</td><td>answered, total, seconds_limit, percent</td></tr>
+        <tr><td class="mono">playback_resumed</td><td>Timed media opened at a stored position rather than the start</td><td>content_id, resume_seconds, duration</td></tr>
+        <tr><td class="mono">playback_restarted</td><td>“Start over” chosen instead of resuming</td><td>content_id, discarded_seconds</td></tr>
+        <tr><td class="mono">playback_rate_changed</td><td>Speed switched</td><td>content_id, rate, previous_rate</td></tr>
+        <tr><td class="mono">seek_blocked</td><td>A forward seek was clamped because skipping is off</td><td>content_id, attempted_seconds, clamped_to</td></tr>
+        <tr><td class="mono">blocker_shown</td><td>The homepage gate rendered</td><td>tier (countdown | hard), training_ids, minutes_to_due</td></tr>
+        <tr><td class="mono">blocker_overdue</td><td>A deadline passed with the training unfinished</td><td>training_id, due_at, steps_remaining</td></tr>
         <tr><td class="mono">gate_shown</td><td>The homepage gate appears</td><td>tier — hard | soft, pending</td></tr>
         <tr><td class="mono">gate_cta_clicked</td><td>Go to Trainings is tapped</td><td>tier, pending</td></tr>
       </tbody>
@@ -658,7 +738,11 @@
       <tr><td>per_video_checks</td><td>boolean</td><td>Whether each video carries its own check</td></tr>
       <tr><td>final_enabled</td><td>boolean</td><td>Combined assessment on. Rejected where the widget view cannot support one</td></tr>
       <tr><td>final_pass_percent</td><td>int</td><td>Default 70</td></tr>
-      <tr><td>final_max_questions</td><td>int, nullable</td><td>Sampled from the pool per attempt</td></tr>
+      <tr><td>final_max_questions</td><td>int, nullable</td><td>Size of the rotating window over the pool</td></tr>
+      <tr><td>final_timer_seconds</td><td>int, nullable</td><td>Countdown for the whole attempt. Null means untimed</td></tr>
+      <tr><td>final_pass_message</td><td>text, nullable</td><td>Shown on the result screen when cleared. Null falls back to the default</td></tr>
+      <tr><td>final_fail_message</td><td>text, nullable</td><td>Shown when not cleared</td></tr>
+      <tr><td>allow_seek</td><td>boolean</td><td>Default true. False clamps seeking to the furthest point reached</td></tr>
       <tr><td>final_mandatory</td><td>boolean</td><td>Drives the MANDATORY tag everywhere the training is placed</td></tr>
       <tr><td>created_at</td><td>timestamptz</td><td></td></tr>
     </tbody></table></div>
@@ -671,9 +755,12 @@
       <tr><td>training_id</td><td>uuid</td><td>Cascade on delete</td></tr>
       <tr><td>position</td><td>int</td><td>Playback order</td></tr>
       <tr><td>title</td><td>text</td><td>Derived from the filename unless overridden</td></tr>
-      <tr><td>content_type</td><td>text</td><td>video | document</td></tr>
+      <tr><td>content_type</td><td>text</td><td>video | audio | pdf | image — drives the player and the completion rule</td></tr>
       <tr><td>check_pass_percent</td><td>int</td><td>Pass mark for this video’s own check</td></tr>
-      <tr><td>check_max_questions</td><td>int, nullable</td><td>Sampled from this video’s pool</td></tr>
+      <tr><td>check_max_questions</td><td>int, nullable</td><td>Size of the rotating window over this video’s pool</td></tr>
+      <tr><td>check_timer_seconds</td><td>int, nullable</td><td>Countdown for this check</td></tr>
+      <tr><td>check_pass_message</td><td>text, nullable</td><td>Result copy for this check</td></tr>
+      <tr><td>check_fail_message</td><td>text, nullable</td><td></td></tr>
     </tbody></table></div>
 
   <h3>9.3 training_video_file</h3>
@@ -697,6 +784,7 @@
       <tr><td>training_id</td><td>uuid</td><td>Restrict on delete — a training in use cannot be removed</td></tr>
       <tr><td>app</td><td>text</td><td>gg | force</td></tr>
       <tr><td>screen</td><td>text</td><td>App screen, or <span class="mono">hub_only</span></td></tr>
+      <tr><td>blocker_due_at</td><td>timestamptz, nullable</td><td>Complete-by moment. Null with the blocker on means gate immediately. Must be in the future at save</td></tr>
       <tr><td>team, subteam</td><td>text, nullable</td><td>Null means all</td></tr>
       <tr><td>fse_stage</td><td>text, nullable</td><td>AON bucket</td></tr>
       <tr><td>performance_trigger</td><td>text, nullable</td><td>Rule-driven assignment</td></tr>
@@ -717,13 +805,18 @@
       <tr><td>training_video_id</td><td>uuid, nullable</td><td>Set for per-video check questions</td></tr>
       <tr><td>question</td><td>text</td><td></td></tr>
       <tr><td>options</td><td>text[]</td><td>Four options</td></tr>
-      <tr><td>correct_index</td><td>int</td><td>Zero-based. Never sent to the client’s result screen</td></tr>
-      <tr><td>position</td><td>int</td><td>Authoring order; display order is shuffled</td></tr>
+      <tr><td>correct_indexes</td><td>int[]</td><td>Zero-based. One entry for a single-answer question, several for a multi-answer one. Never sent to the client’s result screen</td></tr>
+      <tr><td>is_multi</td><td>boolean</td><td>Renders tick boxes and requires an exact set match</td></tr>
+      <tr><td>weight</td><td>numeric</td><td>Default 1. Score is weight earned over weight shown</td></tr>
+      <tr><td>position</td><td>int</td><td>Authoring order, and the order the rotating window walks</td></tr>
     </tbody></table></div>
   <p>Exactly one of <span class="mono">training_id</span> / <span class="mono">training_video_id</span> is set — that is what makes a question belong to one level or the other.</p>
+  <div class="note">
+    <p><span class="mono">correct_indexes</span> replaces the earlier <span class="mono">correct_index</span>. Existing rows migrate by wrapping the single value in an array; both clients normalise on read, so the two shapes can coexist during rollout.</p>
+  </div>
 
   <h3>9.6 Progress</h3>
-  <p>Per FSE, per video and per training: watched, percent watched, attempted, passed, score, attempts. A training is complete when every video is complete and, where enabled, the combined assessment is passed. Held client-side in the current build — this must move server-side before enforcement is tied to payout or escalation.</p>
+  <p>Per FSE, per video and per training: watched, <strong>last position in seconds</strong> (what resume reads), <strong>rotation cursor</strong> per question set (which slice the next attempt draws), percent watched, attempted, passed, score, attempts. A training is complete when every video is complete and, where enabled, the combined assessment is passed. Held client-side in the current build — this must move server-side before enforcement is tied to payout or escalation.</p>
 
   <h2>10. Open items and roadmap</h2>
 

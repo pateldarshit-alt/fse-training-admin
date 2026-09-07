@@ -235,8 +235,54 @@ const ASSETS = {"video": "data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28y
 const CATALOG = ASSETS.catalog;
 // A training is an ordered set of videos plus its assessment rules — the unit the
 // FSE completes. Mirrors exactly what the admin panel publishes.
-const TRAININGS = [{"id": "tr1", "name": "SoundBox pitch masterclass", "widget": "stories", "inHub": true, "where": ["Home", "Onboarding"], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}, {"question": "What real-time benefit does SoundBox give a merchant?", "options": ["Free advertising on the box", "Instant voice and display confirmation for every payment", "Unlimited free phone calls", "A physical cash register"], "correct_index": 1}, {"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "pass": 70, "maxq": "", "mandatory": true}, "videos": [{"id": "tr1v0", "title": "Opening the conversation", "langs": ["English", "Hindi", "Tamil"], "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}], "pass": 60, "maxq": ""}, {"id": "tr1v1", "title": "Explaining the plan", "langs": ["English", "Hindi"], "questions": [{"question": "A merchant asks what the \u20b9125 a month actually covers. What is the accurate answer?", "options": ["A one-time purchase of the device", "The monthly rental for the SB-V2 Music 4G, GST included", "A refundable deposit returned after a year", "Unlimited free QR stickers"], "correct_index": 1}], "pass": 60, "maxq": ""}, {"id": "tr1v2", "title": "Handling the price objection", "langs": ["English"], "questions": [{"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "pass": 60, "maxq": ""}]}, {"id": "tr2", "name": "SoundBox device setup", "widget": "carousel", "inHub": true, "where": ["Payments"], "perVideo": true, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "mandatory": false}, "videos": [{"id": "tr2v0", "title": "Adding a new device", "langs": ["English", "Hindi", "Marathi"], "questions": [{"question": "On the Add Device Details screen, which device type do you select for a monthly rental plan?", "options": ["Purchase", "Rental", "Demo", "Replacement"], "correct_index": 1}], "pass": 70, "maxq": ""}, {"id": "tr2v1", "title": "Selecting the right plan", "langs": ["English", "Hindi"], "questions": [{"question": "For the Monthly Subscription plan at \u20b9125/month, what does the screen say about UPI Autopay?", "options": ["It is optional for the merchant", "It is not supported on rental plans", "It is required \u2014 the screen shows Yes", "It replaces the monthly rental"], "correct_index": 2}], "pass": 70, "maxq": ""}, {"id": "tr2v2", "title": "Verifying the first payment", "langs": ["English"], "questions": [{"question": "The screen shows \u20b9125 as the total amount to be collected. What does that figure include?", "options": ["Only the one-time charge", "A refundable security deposit", "The monthly rental, inclusive of 18% GST", "The full purchase price of the device"], "correct_index": 2}], "pass": 70, "maxq": ""}]}, {"id": "tr3", "name": "QR mapping \u2014 revised SOP", "widget": "interstitial", "inHub": true, "where": ["Home"], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "What does QR mapping actually link?", "options": ["The FSE's phone to the TL's phone", "The merchant's QR to the correct MID, so payments settle to the right account", "The SoundBox to the shop's WiFi router", "The merchant's Aadhaar to their PAN"], "correct_index": 1}, {"question": "What do you verify immediately after mapping a new QR?", "options": ["Nothing \u2014 mapping is instant and never fails", "That the merchant has restarted the shop", "Do a small test payment and confirm the SoundBox announces it", "Peel off the old sticker before checking anything"], "correct_index": 2}, {"question": "The QR you are about to map is already mapped to a different MID. What is the correct action?", "options": ["Stop and raise a remapping request instead of forcing a new mapping", "Map it anyway and inform the TL later", "Peel the sticker off and reuse it at another shop", "Ask the merchant to create a new business account"], "correct_index": 0}], "pass": 70, "maxq": "", "mandatory": true}, "videos": [{"id": "tr3v0", "title": "What changed in the SOP", "langs": ["English"], "questions": [], "pass": 70, "maxq": ""}]}, {"id": "tr4", "name": "New joiner essentials", "widget": "module", "inHub": true, "where": ["Trainings & Assessment"], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}, {"question": "Where does a merchant manage their business profile in the v2 app?", "options": ["Under the \"Manage your Business\" section", "Under Offers", "Under Refer & Earn", "Under chat support"], "correct_index": 0}, {"question": "A merchant cannot find a feature after the v2 update. What do you do?", "options": ["Ask them to downgrade the app", "Show them where it has moved to in the updated navigation", "Tell them the feature was removed", "Raise a device replacement request"], "correct_index": 1}], "pass": 80, "maxq": 2, "mandatory": true}, "videos": [{"id": "tr4v0", "title": "Your first login", "langs": ["English", "Hindi", "Tamil"], "questions": [{"question": "Where does a merchant change app language or notification preferences?", "options": ["In the Offers carousel", "On the QR sticker", "In the Settings section of the app", "On the SoundBox device itself"], "correct_index": 2}], "pass": 70, "maxq": ""}, {"id": "tr4v1", "title": "Finding your way around", "langs": ["English", "Hindi"], "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}], "pass": 70, "maxq": ""}, {"id": "tr4v2", "title": "Daily check-in", "langs": ["English"], "questions": [{"question": "On the Merchant Detail screen, which tab holds the merchant's open tasks?", "options": ["Details", "Tasks", "Interactions", "Offers"], "correct_index": 1}], "pass": 70, "maxq": ""}, {"id": "tr4v3", "title": "Reading your dashboard", "langs": ["English"], "questions": [{"question": "Which three tabs make up the Team Performance view?", "options": ["Participation, Productivity, Leaderboard", "Sales, Refunds, Payouts", "Attendance, Salary, Incentive", "Tasks, Merchants, Devices"], "correct_index": 0}], "pass": 70, "maxq": ""}]}, {"id": "tr5", "name": "Re-KYC walkthrough", "widget": "bottom-sheet", "inHub": true, "where": ["KYC"], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "On the Re-KYC check screen, which items sit under \"Action Required\"?", "options": ["Bank Details only", "KYC Details and Business Proof", "Device model and plan", "Nothing \u2014 Re-KYC completes automatically"], "correct_index": 1}, {"question": "The profile upgrade is pending on the P4B app. What do you ask the merchant to do?", "options": ["Visit the nearest bank branch", "Reinstall the consumer Paytm app", "Open Paytm for Business, scroll to \"Manage your Business\" and select \"Upgrade Profile\"", "Buy a new SoundBox"], "correct_index": 2}, {"question": "Bank Details already appears under \"Completed\". What does that mean?", "options": ["That part of the Re-KYC is done \u2014 only the pending items still need action", "The whole Re-KYC is finished", "The merchant's account has been blocked", "The bank account has to be entered again"], "correct_index": 0}], "pass": 70, "maxq": "", "mandatory": true}, "videos": [{"id": "tr5v0", "title": "Clearing Action Required items", "langs": ["English", "Hindi"], "questions": [], "pass": 70, "maxq": ""}]}, {"id": "tr6", "name": "Reading your performance dashboard", "widget": "inline-card", "inHub": true, "where": ["Dashboard", "Profile", "Reports"], "perVideo": false, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "mandatory": false}, "videos": [{"id": "tr6v0", "title": "Participation, productivity, leaderboard", "langs": ["English"], "questions": [], "pass": 70, "maxq": ""}]}];
+const TRAININGS = [{"id": "tr1", "name": "SoundBox pitch masterclass", "widget": "stories", "inHub": true, "where": ["Home", "Onboarding"], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0}, {"question": "What real-time benefit does SoundBox give a merchant?", "options": ["Free advertising on the box", "Instant voice and display confirmation for every payment", "Unlimited free phone calls", "A physical cash register"], "correct_index": 1}, {"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2}], "pass": 70, "maxq": "", "mandatory": true, "passMsg": "Nicely done. Use the objection lines from video 3 on your next visit.", "failMsg": "Not cleared. The objection-handling video is the one to rewatch.", "timer": ""}, "videos": [{"id": "tr1v0", "title": "Opening the conversation", "langs": ["English", "Hindi", "Tamil"], "questions": [{"question": "What's the best way to open a SoundBox pitch?", "options": ["Ask if they ever miss payment alerts on noisy shop days", "Immediately quote the rental price", "Ask for their Aadhaar number first", "Criticize a competitor's product"], "correct_index": 0, "weight": 1}], "pass": 60, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}, {"id": "tr1v1", "title": "Explaining the plan", "langs": ["English", "Hindi"], "questions": [{"question": "A merchant asks what the ₹125 a month actually covers. What is the accurate answer?", "options": ["A one-time purchase of the device", "The monthly rental for the SB-V2 Music 4G, GST included", "A refundable deposit returned after a year", "Unlimited free QR stickers"], "correct_index": 1, "weight": 1}], "pass": 60, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}, {"id": "tr1v2", "title": "Handling the price objection", "langs": ["English"], "questions": [{"question": "How should you handle an objection about the rental price?", "options": ["Walk away from the pitch", "Offer it for free permanently", "Bundle the rental with a cashback offer", "Tell them it's mandatory by law"], "correct_index": 2, "weight": 1}], "pass": 60, "maxq": "", "kind": "audio", "timer": "", "passMsg": "", "failMsg": ""}], "allowSeek": true, "blocker": false, "dueAt": ""}, {"id": "tr2", "name": "SoundBox device setup", "widget": "carousel", "inHub": true, "where": ["Payments"], "perVideo": true, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "mandatory": false, "timer": "", "passMsg": "", "failMsg": ""}, "videos": [{"id": "tr2v0", "title": "Adding a new device", "langs": ["English", "Hindi", "Marathi"], "questions": [{"question": "On the Add Device Details screen, which device type do you select for a monthly rental plan?", "options": ["Purchase", "Rental", "Demo", "Replacement"], "correct_index": 1, "weight": 1}], "pass": 70, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}, {"id": "tr2v1", "title": "Selecting the right plan", "langs": ["English", "Hindi"], "questions": [{"question": "For the Monthly Subscription plan at ₹125/month, what does the screen say about UPI Autopay?", "options": ["It is optional for the merchant", "It is not supported on rental plans", "It is required — the screen shows Yes", "It replaces the monthly rental"], "correct_index": 2, "weight": 1}], "pass": 70, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}, {"id": "tr2v2", "title": "Verifying the first payment", "langs": ["English"], "questions": [{"question": "The screen shows ₹125 as the total amount to be collected. What does that figure include?", "options": ["Only the one-time charge", "A refundable security deposit", "The monthly rental, inclusive of 18% GST", "The full purchase price of the device"], "correct_index": 2, "weight": 1}], "pass": 70, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}], "allowSeek": true, "blocker": false, "dueAt": ""}, {"id": "tr3", "name": "QR mapping — revised SOP", "widget": "interstitial", "inHub": true, "where": ["Home"], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "What does QR mapping actually link?", "options": ["The FSE's phone to the TL's phone", "The merchant's QR to the correct MID, so payments settle to the right account", "The SoundBox to the shop's WiFi router", "The merchant's Aadhaar to their PAN"], "correct_index": 1, "weight": 2}, {"question": "What do you verify immediately after mapping a new QR?", "options": ["Nothing — mapping is instant and never fails", "That the merchant has restarted the shop", "Do a small test payment and confirm the SoundBox announces it", "Peel off the old sticker before checking anything"], "correct_index": 2}, {"question": "The QR you are about to map is already mapped to a different MID. What is the correct action?", "options": ["Stop and raise a remapping request instead of forcing a new mapping", "Map it anyway and inform the TL later", "Peel the sticker off and reuse it at another shop", "Ask the merchant to create a new business account"], "correct_index": 0}, {"question": "Which two must be true before you map a QR? (select both)", "options": ["The merchant's MID is confirmed", "The shop has WiFi", "The sticker is not already mapped elsewhere", "The merchant has a SoundBox"], "correct": [0, 2], "multi": true, "weight": 3}], "pass": 70, "maxq": 3, "mandatory": true, "timer": 180, "passMsg": "Cleared. You may now map QRs under the revised SOP. Keep the test-payment step in every install.", "failMsg": "Not cleared. Mapping to the wrong MID sends a merchant's money to another account — rewatch the SOP and retake this."}, "videos": [{"id": "tr3v0", "title": "What changed in the SOP", "langs": ["English"], "questions": [], "pass": 70, "maxq": "", "kind": "pdf", "timer": "", "passMsg": "", "failMsg": ""}], "allowSeek": false, "blocker": true, "dueAt": "2026-09-07T18:00"}, {"id": "tr4", "name": "New joiner essentials", "widget": "module", "inHub": true, "where": ["Trainings & Assessment"], "perVideo": true, "final": {"enabled": true, "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2}, {"question": "Where does a merchant manage their business profile in the v2 app?", "options": ["Under the \"Manage your Business\" section", "Under Offers", "Under Refer & Earn", "Under chat support"], "correct_index": 0}, {"question": "A merchant cannot find a feature after the v2 update. What do you do?", "options": ["Ask them to downgrade the app", "Show them where it has moved to in the updated navigation", "Tell them the feature was removed", "Raise a device replacement request"], "correct_index": 1}], "pass": 80, "maxq": 2, "mandatory": true, "timer": 120, "passMsg": "Welcome aboard. You have covered the essentials — your TL will see this as complete.", "failMsg": "Not quite there. Have another look at the four videos and retake when you are ready."}, "videos": [{"id": "tr4v0", "title": "Your first login", "langs": ["English", "Hindi", "Tamil"], "questions": [{"question": "Where does a merchant change app language or notification preferences?", "options": ["In the Offers carousel", "On the QR sticker", "In the Settings section of the app", "On the SoundBox device itself"], "correct_index": 2, "weight": 1}], "pass": 70, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}, {"id": "tr4v1", "title": "Finding your way around", "langs": ["English", "Hindi"], "questions": [{"question": "What do you confirm before walking a merchant through the v2 app?", "options": ["That they already own a SoundBox", "Their Aadhaar number", "That they are on the latest version of Paytm for Business", "What a competitor charges them"], "correct_index": 2, "weight": 1}], "pass": 70, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}, {"id": "tr4v2", "title": "Daily check-in", "langs": ["English"], "questions": [{"question": "On the Merchant Detail screen, which tab holds the merchant's open tasks?", "options": ["Details", "Tasks", "Interactions", "Offers"], "correct_index": 1, "weight": 1}], "pass": 70, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}, {"id": "tr4v3", "title": "Reading your dashboard", "langs": ["English"], "questions": [{"question": "Which three tabs make up the Team Performance view?", "options": ["Participation, Productivity, Leaderboard", "Sales, Refunds, Payouts", "Attendance, Salary, Incentive", "Tasks, Merchants, Devices"], "correct_index": 0, "weight": 1}], "pass": 70, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}], "allowSeek": true, "blocker": false, "dueAt": ""}, {"id": "tr5", "name": "Re-KYC walkthrough", "widget": "bottom-sheet", "inHub": true, "where": ["KYC"], "perVideo": false, "final": {"enabled": true, "questions": [{"question": "On the Re-KYC check screen, which items sit under \"Action Required\"?", "options": ["Bank Details only", "KYC Details and Business Proof", "Device model and plan", "Nothing — Re-KYC completes automatically"], "correct_index": 1}, {"question": "The profile upgrade is pending on the P4B app. What do you ask the merchant to do?", "options": ["Visit the nearest bank branch", "Reinstall the consumer Paytm app", "Open Paytm for Business, scroll to \"Manage your Business\" and select \"Upgrade Profile\"", "Buy a new SoundBox"], "correct_index": 2}, {"question": "Bank Details already appears under \"Completed\". What does that mean?", "options": ["That part of the Re-KYC is done — only the pending items still need action", "The whole Re-KYC is finished", "The merchant's account has been blocked", "The bank account has to be entered again"], "correct_index": 0}, {"question": "Which of these count as Business Proof? (select all that apply)", "options": ["GST certificate", "A photo of the shopfront", "Shop & Establishment licence", "The merchant's Aadhaar"], "correct": [0, 2], "multi": true, "weight": 2}], "pass": 70, "maxq": "", "mandatory": true, "timer": 150, "passMsg": "Cleared. You can now take a merchant through Re-KYC end to end.", "failMsg": "Not cleared this time. Re-KYC errors block a merchant's settlements, so please rewatch and try again."}, "videos": [{"id": "tr5v0", "title": "Clearing Action Required items", "langs": ["English", "Hindi"], "questions": [], "pass": 70, "maxq": "", "kind": "video", "timer": "", "passMsg": "", "failMsg": ""}], "allowSeek": false, "blocker": true, "dueAt": "2026-09-09T18:00"}, {"id": "tr6", "name": "Reading your performance dashboard", "widget": "inline-card", "inHub": true, "where": ["Dashboard", "Profile", "Reports"], "perVideo": false, "final": {"enabled": false, "questions": [], "pass": 70, "maxq": "", "mandatory": false, "timer": "", "passMsg": "", "failMsg": ""}, "videos": [{"id": "tr6v0", "title": "Participation, productivity, leaderboard", "langs": ["English"], "questions": [], "pass": 70, "maxq": "", "kind": "image", "timer": "", "passMsg": "", "failMsg": ""}], "allowSeek": true, "blocker": false, "dueAt": ""}];
 const vDoneG = v => { const p = prog(v.id); return v.questions.length ? p.passed : p.watched; };
+// The panel now emits correct[] with multi and weight. Older records carried a
+// single correct_index, so normalise once here and let the rest of the file
+// assume the new shape.
+function normQ(q){
+  if(!Array.isArray(q.correct)) q.correct = [q.correct_index ?? 0];
+  if(typeof q.multi !== 'boolean') q.multi = q.correct.length > 1;
+  if(q.weight == null) q.weight = 1;
+  return q;
+}
+function normSet(set){
+  if(!set) return set;
+  set.timer   = set.timer   ?? '';
+  set.passMsg = set.passMsg ?? '';
+  set.failMsg = set.failMsg ?? '';
+  (set.questions || []).forEach(normQ);
+  return set;
+}
+(CATALOG || []).forEach(v => (v.questions || []).forEach(normQ));
+TRAININGS.forEach(t => {
+  normSet(t.final);
+  t.videos.forEach(v => { v.kind = v.kind || 'video'; normSet(v); });
+  if(typeof t.allowSeek !== 'boolean') t.allowSeek = true;
+});
+
+// A blocker with a deadline is a countdown the FSE can plan around; once it
+// passes the gate becomes unpassable. A blocker with no deadline gates at once.
+const dueDate = t => t.dueAt ? new Date(t.dueAt) : null;
+function dueState(t){
+  if(!t.blocker) return {kind:'none'};
+  const d = dueDate(t);
+  if(!d) return {kind:'now', label:'Blocks the app until done'};
+  const ms = d - new Date();
+  if(ms <= 0) return {kind:'over', at:d, label:'Overdue — the app is blocked'};
+  const mins = Math.round(ms/6e4);
+  const label = mins < 60 ? `${mins} min left`
+              : mins < 60*24 ? `${Math.round(mins/60)}h left`
+              : `${Math.round(mins/(60*24))}d left`;
+  return {kind:'due', at:d, ms, mins, label,
+          soon: mins <= 240,
+          when: d.toLocaleString([], {weekday:'short', hour:'numeric', minute:'2-digit'})};
+}
+// Every training that is past its deadline and still unfinished.
+const overdueTrainings = () => TRAININGS.filter(t => t.inHub && t.blocker && !tDone(t)
+                                                  && dueState(t).kind === 'over');
+const blockingTrainings = () => TRAININGS.filter(t => t.inHub && t.blocker && !tDone(t));
+
 const tDone = t => {
   const vids = t.videos.every(v => t.perVideo && v.questions.length ? prog(v.id).passed : prog(v.id).watched);
   return t.final.enabled ? (vids && prog(t.id+'-final').passed) : vids;
@@ -260,59 +306,187 @@ const langsOf = v => Object.keys(v.media_by_language || { English:1 });
 const canSelfMark = v => !v.mandatory && !!v.allow_manual_complete;
 const forView = t => CATALOG.filter(v => v.widget_type === t);
 
+/* ─ content kinds ─ */
+const KIND = {
+  video: {timed:true,  icon:'🎬', label:'Video'},
+  audio: {timed:true,  icon:'🎧', label:'Audio'},
+  pdf:   {timed:false, icon:'📄', label:'PDF'},
+  image: {timed:false, icon:'🖼️', label:'Image'},
+};
+const kindOf = v => KIND[v.kind || 'video'] || KIND.video;
+
+// Stand-in artwork for the non-video kinds, so each renders as itself rather
+// than as a broken <video>.
+const STILL = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(
+  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 960">
+     <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+       <stop offset="0" stop-color="#012b72"/><stop offset="1" stop-color="#00baf2"/></linearGradient></defs>
+     <rect width="720" height="960" fill="url(#g)"/>
+     <rect x="64" y="150" width="440" height="26" rx="13" fill="rgba(255,255,255,.92)"/>
+     <rect x="64" y="200" width="330" height="26" rx="13" fill="rgba(255,255,255,.62)"/>
+     <rect x="64" y="300" width="592" height="220" rx="16" fill="rgba(255,255,255,.16)"/>
+     <rect x="64" y="560" width="592" height="14" rx="7" fill="rgba(255,255,255,.35)"/>
+     <rect x="64" y="596" width="500" height="14" rx="7" fill="rgba(255,255,255,.35)"/>
+     <rect x="64" y="632" width="540" height="14" rx="7" fill="rgba(255,255,255,.35)"/>
+   </svg>`);
+
+let SPEED = 1;                       // carries across items within a session
+const SPEEDS = [1, 1.5, 2];
+const fmtT = s => { s = Math.max(0, Math.round(s));
+  return `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`; };
+
 /* ─ shared player ─ */
 function player(v, onClose){
   const langs = langsOf(v);
   if (!langs.includes(LANG)) LANG = langs[0];
+  const kindId = v.kind || 'video';
+  const kind = kindOf(v), timed = kind.timed;
+  const allowSeek = v.allow_seek !== false;
   const el = document.createElement('div');
   el.className = 'ov';
   el.style.cssText = 'position:absolute;inset:0;z-index:60;background:#0b0f18;display:flex;flex-direction:column;animation:fade .18s ease';
   document.getElementById('app').appendChild(el);
-  const close = () => { el.remove(); onClose && onClose(); };
+
+  let media = null, maxSeen = prog(v.id).pos || 0, page = 0;
+  const PAGES = 3;                   // stand-in page count for documents
+
+  function persistPos(){
+    if(media && timed && isFinite(media.currentTime)) save(v.id, {pos: media.currentTime});
+  }
+  const close = () => { persistPos(); el.remove(); onClose && onClose(); };
+
+  function mediaHtml(){
+    if(kindId === 'video') return `
+      <video data-m controls crossorigin="anonymous" preload="metadata"
+        style="width:100%;flex:1;min-height:0;object-fit:contain;background:#000" src="${VIDEO}">
+        <track kind="captions" srclang="en" label="English" src="${VTT}">
+      </video>`;
+    if(kindId === 'audio') return `
+      <div style="flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:22px;background:#0b0f18">
+        <div style="width:132px;height:132px;border-radius:50%;background:linear-gradient(135deg,#012b72,#00baf2);
+          display:flex;align-items:center;justify-content:center;font-size:46px">🎧</div>
+        <div style="color:#8b98b4;font-size:11.5px;font-weight:700;text-align:center;line-height:1.5">
+          Audio only — safe to play beside a merchant<br>without a screen to look at.</div>
+        <audio data-m controls preload="metadata" style="width:100%" src="${VIDEO}"></audio>
+      </div>`;
+    if(kindId === 'image') return `
+      <div style="flex:1;min-height:0;overflow:auto;background:#0b0f18;display:flex;align-items:center;justify-content:center;padding:14px">
+        <img src="${STILL}" alt="${esc(v.title)}" style="max-width:100%;max-height:100%;border-radius:10px">
+      </div>`;
+    return `
+      <div data-doc style="flex:1;min-height:0;overflow-y:auto;background:#141a27;padding:14px">
+        ${Array.from({length:PAGES},(_,i)=>`
+          <div data-pg="${i}" style="position:relative;margin-bottom:12px">
+            <img src="${STILL}" alt="Page ${i+1}" style="width:100%;border-radius:8px;display:block">
+            <span style="position:absolute;bottom:8px;right:10px;background:rgba(0,0,0,.7);color:#fff;
+              font-size:10px;font-weight:800;padding:2px 8px;border-radius:99px">${i+1} / ${PAGES}</span>
+          </div>`).join('')}
+      </div>`;
+  }
+
+  function controlsHtml(){
+    const resumable = timed && maxSeen > 3 && !prog(v.id).watched;
+    return `
+      <div style="background:#0e1220;padding:8px 14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.07)">
+        ${langs.length>1
+          ? `<button data-lang style="display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.19);color:#fff;border-radius:99px;padding:5px 11px;font:inherit;font-size:11px;font-weight:700;cursor:pointer">🌐 ${esc(LANG)} <span style="opacity:.6;font-size:8px">▾</span></button>`
+          : `<span style="color:#5f6b82;font-size:10.5px;font-weight:700">🌐 ${esc(LANG)} · only language uploaded</span>`}
+        ${kindId==='video'?`<button data-cc style="background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.19);color:#fff;border-radius:99px;padding:5px 11px;font:inherit;font-size:11px;font-weight:700;cursor:pointer">CC</button>`:''}
+        ${timed?`<button data-sp style="background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.19);color:#fff;border-radius:99px;padding:5px 11px;font:inherit;font-size:11px;font-weight:800;cursor:pointer">${SPEED}×</button>`:''}
+        ${timed&&!allowSeek?`<span style="color:#ffc46b;font-size:10.5px;font-weight:700">🔒 no skipping ahead</span>`:''}
+      </div>
+      ${resumable?`<div data-resume style="background:#132038;padding:9px 14px;display:flex;gap:9px;align-items:center;border-top:1px solid rgba(255,255,255,.07)">
+        <span style="flex:1;color:#a9c6ef;font-size:11.5px;font-weight:700">Picking up at ${fmtT(maxSeen)}</span>
+        <button data-over style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;
+          border-radius:99px;padding:5px 12px;font:inherit;font-size:11px;font-weight:700;cursor:pointer">Start over</button>
+      </div>`:''}`;
+  }
 
   function shell(){
     el.innerHTML = `
       <div style="display:flex;align-items:center;gap:9px;padding:11px 12px 9px">
         <button data-x style="background:none;border:none;color:#fff;font-size:20px;cursor:pointer;padding:2px 4px;line-height:1">←</button>
-        <div style="flex:1;min-width:0;color:#fff;font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(v.title)}</div>
+        <div style="flex:1;min-width:0;color:#fff;font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${kind.icon} ${esc(v.title)}</div>
         ${v.mandatory?'<span style="background:rgba(253,81,84,.2);color:#ff9a9d;font-size:8.5px;font-weight:800;padding:3px 8px;border-radius:5px">MANDATORY</span>':''}
       </div>
-      <video data-vid controls crossorigin="anonymous" style="width:100%;flex:1;min-height:0;object-fit:contain;background:#000" src="${VIDEO}">
-        <track kind="captions" srclang="en" label="English" src="${VTT}">
-      </video>
-      <div style="background:#0e1220;padding:8px 14px;display:flex;gap:8px;align-items:center;border-top:1px solid rgba(255,255,255,.07)">
-        ${langs.length>1
-          ? `<button data-lang style="display:flex;align-items:center;gap:5px;background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.19);color:#fff;border-radius:99px;padding:5px 11px;font:inherit;font-size:11px;font-weight:700;cursor:pointer">🌐 ${esc(LANG)} <span style="opacity:.6;font-size:8px">▾</span></button>`
-          : `<span style="color:#5f6b82;font-size:10.5px;font-weight:700">🌐 ${esc(LANG)} · only language uploaded</span>`}
-        <button data-cc style="background:rgba(255,255,255,.11);border:1px solid rgba(255,255,255,.19);color:#fff;border-radius:99px;padding:5px 11px;font:inherit;font-size:11px;font-weight:700;cursor:pointer">CC</button>
-      </div>
+      ${mediaHtml()}
+      ${controlsHtml()}
       <div data-cta style="background:#111726;padding:12px 14px 18px"></div>`;
+
     el.querySelector('[data-x]').onclick = close;
+    media = el.querySelector('[data-m]');
+
     const cc = el.querySelector('[data-cc]');
-    cc.onclick = () => {
-      const t = el.querySelector('[data-vid]').textTracks[0];
+    if(cc) cc.onclick = () => {
+      const t = media && media.textTracks[0];
       if(!t){ cc.textContent='No CC'; cc.style.opacity=.5; return; }
       const on = t.mode === 'showing';
       t.mode = on ? 'disabled' : 'showing';
       cc.style.background = on ? 'rgba(255,255,255,.11)' : '#00baf2';
       cc.style.color = on ? '#fff' : '#04263f';
     };
+
+    const sp = el.querySelector('[data-sp]');
+    if(sp) sp.onclick = () => {
+      SPEED = SPEEDS[(SPEEDS.indexOf(SPEED)+1) % SPEEDS.length];
+      if(media) media.playbackRate = SPEED;
+      sp.textContent = SPEED+'×';
+    };
+
     const lb = el.querySelector('[data-lang]');
-    if(lb) lb.onclick = () => langSheet(v, l => { LANG = l; shell(); });
-    el.querySelector('[data-vid]').addEventListener('ended', () => { save(v.id,{watched:true}); cta(); });
+    if(lb) lb.onclick = () => { persistPos(); langSheet(v, l => { LANG = l; shell(); }); };
+
+    const over = el.querySelector('[data-over]');
+    if(over) over.onclick = () => { maxSeen = 0; save(v.id,{pos:0}); if(media) media.currentTime = 0; shell(); };
+
+    if(media){
+      media.playbackRate = SPEED;
+      // Resume where they stopped rather than making them scrub back.
+      if(maxSeen > 3) media.addEventListener('loadedmetadata', () => {
+        if(maxSeen < media.duration - 1) media.currentTime = maxSeen;
+      }, {once:true});
+
+      media.addEventListener('timeupdate', () => {
+        if(media.currentTime > maxSeen) maxSeen = media.currentTime;
+        if(Math.floor(media.currentTime) % 3 === 0) persistPos();
+      });
+      // Without seek permission the furthest point reached is the ceiling.
+      if(!allowSeek) media.addEventListener('seeking', () => {
+        if(media.currentTime > maxSeen + 1.2) media.currentTime = maxSeen;
+      });
+      media.addEventListener('ended', () => { save(v.id,{watched:true,pos:0}); shell(); });
+    }
+
+    const doc = el.querySelector('[data-doc]');
+    if(doc) doc.addEventListener('scroll', () => {
+      if(doc.scrollTop + doc.clientHeight >= doc.scrollHeight - 24 && page < PAGES-1){ page = PAGES-1; cta(); }
+    });
+
     cta();
   }
 
   function cta(){
     const box = el.querySelector('[data-cta]');
     const p = prog(v.id), qs = (v.questions||[]).length;
+    // What "done" means depends on the kind of content.
+    const reachedEnd = kindId === 'image' ? true
+                     : kindId === 'pdf'   ? page >= PAGES-1
+                     : false;
+
     if(!p.watched){
       const m = canSelfMark(v);
+      if(!timed && reachedEnd){
+        box.innerHTML = `<button data-done style="width:100%;background:#00baf2;color:#04263f;border:none;border-radius:9px;padding:12px;font:inherit;font-size:13px;font-weight:800;cursor:pointer">
+          ${qs?`Continue to the ${qs}-question check`:'Mark as read'}</button>`;
+        box.querySelector('[data-done]').onclick = () => { save(v.id,{watched:true}); cta(); };
+        return;
+      }
       box.innerHTML = `
         <div style="color:#7f8ca8;font-size:11px;text-align:center;line-height:1.45;${m?'margin-bottom:9px':''}">
-          Watch to the end to ${qs?`unlock a ${qs}-question check`:'mark this complete'}.
+          ${timed ? `Play to the end to ${qs?`unlock a ${qs}-question check`:'mark this complete'}.`
+                  : `Scroll to page ${PAGES} to ${qs?'unlock the check':'mark this complete'}.`}
         </div>
-        ${m?`<button data-w style="width:100%;background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.22);border-radius:9px;padding:11px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer">I've watched this video</button>`:''}`;
+        ${m?`<button data-w style="width:100%;background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.22);border-radius:9px;padding:11px;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer">I've watched this</button>`:''}`;
       const w = box.querySelector('[data-w]');
       if(w) w.onclick = () => { save(v.id,{watched:true}); cta(); };
       return;
@@ -339,7 +513,7 @@ function langSheet(v, pick){
     <div data-s style="position:absolute;inset:0;background:rgba(8,10,18,.55)"></div>
     <div style="position:relative;width:100%;background:#fff;border-radius:16px 16px 0 0;padding:12px 0 18px;animation:up .2s ease">
       <div style="width:36px;height:4px;border-radius:4px;background:#dde3ee;margin:0 auto 11px"></div>
-      <div style="padding:0 18px 4px;font-size:13.5px;font-weight:800;color:#1a1a2e">Audio language</div>
+      <div style="padding:0 18px 4px;font-size:13.5px;font-weight:800;color:#1a1a2e">Language</div>
       <div style="padding:0 18px 10px;font-size:11px;color:#8a94a6">Only the languages uploaded for this training.</div>
       ${langsOf(v).map(l=>`<button data-l="${esc(l)}" style="width:100%;display:flex;gap:11px;align-items:center;padding:11px 18px;border:none;background:${l===LANG?'#f2f7ff':'transparent'};text-align:left;font:inherit;cursor:pointer">
         <span style="width:15px;color:#004299;font-weight:800;font-size:13px">${l===LANG?'✓':''}</span>
@@ -350,65 +524,162 @@ function langSheet(v, pick){
   wrap.querySelectorAll('[data-l]').forEach(b => b.onclick = () => { wrap.remove(); pick(b.dataset.l); });
 }
 
-/* ─ assessment: per-selection feedback, correct answer never revealed ─ */
+/* ─ assessment ─────────────────────────────────────────────────────────────
+   Per-selection feedback, weighted scoring, an optional countdown, and a
+   round-robin subset so a retry is not the same paper twice.               */
+const sameSet = (a,b) => a.length===b.length && [...a].sort().every((x,i)=>x===[...b].sort()[i]);
+const qWeight = q => +q.weight || 1;
+
+function pickQuestions(v){
+  const all = v.questions || [];
+  const cap = v.max_questions ? Math.min(+v.max_questions, all.length) : all.length;
+  if(cap >= all.length) return all;
+  // Rotate the window so consecutive attempts cover the pool rather than
+  // re-asking whichever questions happened to come up first.
+  const key = v.id + '-rr';
+  const start = prog(key).score || 0;
+  const out = [];
+  for(let n = 0; n < cap; n++) out.push(all[(start + n) % all.length]);
+  save(key, {score: (start + cap) % all.length});
+  return out;
+}
+
 function assessment(v, onClose){
-  const qs = [...(v.questions||[])].sort(()=>Math.random()-.5);
+  const qs = pickQuestions(v);
   if(!qs.length) return onClose && onClose();
-  let i = 0; const ans = new Array(qs.length).fill(null);
+
+  let i = 0;
+  const ans = new Array(qs.length).fill(null);   // null | number[] (settled)
+  let draft = [];                                // in-progress multi selection
+  const limit = +v.timer_seconds || 0;
+  let left = limit, tick = null, expired = false;
+
   const el = document.createElement('div');
   el.style.cssText='position:absolute;inset:0;z-index:90;background:#fff;display:flex;flex-direction:column;animation:fade .18s ease';
   document.getElementById('app').appendChild(el);
-  const shut = () => { el.remove(); onClose && onClose(); };
+  const stopTimer = () => { if(tick){ clearInterval(tick); tick = null; } };
+  const shut = () => { stopTimer(); el.remove(); onClose && onClose(); };
+
+  function startTimer(){
+    if(!limit || tick) return;
+    tick = setInterval(() => {
+      left--;
+      const box = el.querySelector('[data-clock]');
+      if(box){
+        box.textContent = '⏱ ' + fmtT(left);
+        box.style.color = left <= limit*0.1 ? '#c53030' : left <= limit*0.25 ? '#9c5a00' : '#8a94a6';
+      }
+      if(left <= 0){ expired = true; stopTimer(); fin(); }
+    }, 1000);
+  }
 
   function q(){
-    const Q = qs[i], a = ans[i], settled = a !== null;
+    const Q = qs[i], settled = ans[i] !== null;
+    const chosen = settled ? ans[i] : draft;
+    const right = settled && sameSet(ans[i], Q.correct);
     el.innerHTML = `
       <div style="display:flex;align-items:center;gap:9px;padding:12px 14px;border-bottom:1px solid #eef1f4">
         ${v.mandatory?'<span style="width:18px"></span>':'<button data-x style="background:none;border:none;font-size:18px;color:#555;cursor:pointer;line-height:1">✕</button>'}
-        <span style="flex:1;text-align:center;font-size:11.5px;font-weight:700;color:#8a94a6;margin-right:18px">Question ${i+1} of ${qs.length}</span>
+        <span style="flex:1;text-align:center;font-size:11.5px;font-weight:700;color:#8a94a6">Question ${i+1} of ${qs.length}</span>
+        ${limit?`<span data-clock style="font-size:11.5px;font-weight:800;color:${left<=limit*0.1?'#c53030':left<=limit*0.25?'#9c5a00':'#8a94a6'};font-variant-numeric:tabular-nums">⏱ ${fmtT(left)}</span>`
+               :'<span style="width:18px"></span>'}
       </div>
       <div style="padding:8px 15px 0"><div style="height:4px;background:#eef1f4;border-radius:2px;overflow:hidden">
         <div style="height:100%;width:${(i/qs.length)*100}%;background:#004299;transition:width .25s"></div></div></div>
       <div style="flex:1;overflow-y:auto;padding:17px 15px">
-        <div style="font-size:14.5px;font-weight:700;line-height:1.4;margin-bottom:15px">${esc(Q.question)}</div>
+        <div style="font-size:14.5px;font-weight:700;line-height:1.4;margin-bottom:6px">${esc(Q.question)}</div>
+        <div style="font-size:11px;color:#8a94a6;font-weight:700;margin-bottom:14px">
+          ${Q.multi?`Select all that apply — ${Q.correct.length} are correct`:'Select one'}${
+            qWeight(Q)!==1?` · worth ${qWeight(Q)} points`:''}</div>
         <div style="display:flex;flex-direction:column;gap:9px">
           ${Q.options.map((o,k)=>{
-            const chosen = a===k, right = chosen && k===Q.correct_index, wrong = chosen && !right;
+            const on = chosen.includes(k);
+            // Feedback marks only what they picked. Correct options they did
+            // not pick stay hidden, so the key is never handed over.
+            const ok = settled && on && Q.correct.includes(k);
+            const no = settled && on && !Q.correct.includes(k);
             return `<button data-o="${k}" ${settled?'disabled':''} style="display:flex;gap:9px;align-items:center;text-align:left;padding:11px 13px;border-radius:9px;
-              border:1.5px solid ${right?'#0a7a42':wrong?'#c53030':'#e2e8f0'};background:${right?'#e6faf0':wrong?'#fff0f0':'#fff'};
-              color:#1a1a2e;font:inherit;font-size:12.5px;font-weight:600;cursor:${settled?'default':'pointer'};opacity:${settled&&!chosen?.5:1}">
+              border:1.5px solid ${ok?'#0a7a42':no?'#c53030':on?'#004299':'#e2e8f0'};
+              background:${ok?'#e6faf0':no?'#fff0f0':on?'#f2f7ff':'#fff'};
+              color:#1a1a2e;font:inherit;font-size:12.5px;font-weight:600;cursor:${settled?'default':'pointer'};opacity:${settled&&!on?.5:1}">
+              ${Q.multi?`<span style="width:17px;height:17px;border-radius:4px;flex-shrink:0;border:1.5px solid ${on?'#004299':'#cbd5e0'};background:${on?'#004299':'#fff'};color:#fff;font-size:11px;display:flex;align-items:center;justify-content:center">${on?'✓':''}</span>`:''}
               <span style="flex:1">${esc(o)}</span>
-              ${right?'<span style="color:#0a7a42;font-weight:800">✓</span>':''}${wrong?'<span style="color:#c53030;font-weight:800">✕</span>':''}
+              ${ok?'<span style="color:#0a7a42;font-weight:800">✓</span>':''}${no?'<span style="color:#c53030;font-weight:800">✕</span>':''}
             </button>`;}).join('')}
         </div>
-        ${settled?`<div style="margin-top:13px;padding:10px 12px;border-radius:9px;background:${a===Q.correct_index?'#e6faf0':'#fff0f0'}">
-          <div style="font-size:12px;font-weight:800;color:${a===Q.correct_index?'#0a7a42':'#c53030'}">${a===Q.correct_index?'✓ Correct':'✕ Not correct'}</div>
-          ${a===Q.correct_index?'':'<div style="font-size:11px;color:#8a5555;margin-top:3px;line-height:1.45">Re-watch the training if you are unsure — the assessment can be retaken.</div>'}
+        ${settled?`<div style="margin-top:13px;padding:10px 12px;border-radius:9px;background:${right?'#e6faf0':'#fff0f0'}">
+          <div style="font-size:12px;font-weight:800;color:${right?'#0a7a42':'#c53030'}">${right?'✓ Correct':'✕ Not correct'}</div>
+          ${right?'':`<div style="font-size:11px;color:#8a5555;margin-top:3px;line-height:1.45">${
+            Q.multi?'Every correct option has to be selected, and nothing else. ':''}Re-watch the training if you are unsure — the assessment can be retaken.</div>`}
         </div>`:''}
       </div>
       <div style="padding:12px 15px 18px;border-top:1px solid #eef1f4">
-        <button data-n ${settled?'':'disabled'} style="width:100%;padding:12px;border-radius:8px;border:none;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;
-          background:${settled?'#004299':'#e2e8f0'};color:${settled?'#fff':'#a0aec0'}">${i===qs.length-1?'Submit':'Next'}</button>
+        ${!settled && Q.multi
+          ? `<button data-check ${draft.length?'':'disabled'} style="width:100%;padding:12px;border-radius:8px;border:none;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;
+              background:${draft.length?'#004299':'#e2e8f0'};color:${draft.length?'#fff':'#a0aec0'}">Check answer${draft.length?` · ${draft.length} selected`:''}</button>`
+          : `<button data-n ${settled?'':'disabled'} style="width:100%;padding:12px;border-radius:8px;border:none;font:inherit;font-size:13.5px;font-weight:700;cursor:pointer;
+              background:${settled?'#004299':'#e2e8f0'};color:${settled?'#fff':'#a0aec0'}">${i===qs.length-1?'Submit':'Next'}</button>`}
       </div>`;
+
     const x = el.querySelector('[data-x]'); if(x) x.onclick = shut;
-    el.querySelectorAll('[data-o]').forEach(b => b.onclick = () => { if(ans[i]!==null) return; ans[i]=+b.dataset.o; q(); });
-    el.querySelector('[data-n]').onclick = () => { if(ans[i]===null) return; if(i<qs.length-1){ i++; q(); } else fin(); };
+    el.querySelectorAll('[data-o]').forEach(b => b.onclick = () => {
+      if(ans[i] !== null) return;
+      const k = +b.dataset.o;
+      if(Q.multi){
+        const at = draft.indexOf(k);
+        if(at >= 0) draft.splice(at,1); else draft.push(k);
+        q();
+      } else { ans[i] = [k]; q(); }
+    });
+    const chk = el.querySelector('[data-check]');
+    if(chk) chk.onclick = () => { if(!draft.length) return; ans[i] = [...draft]; q(); };
+    const nx = el.querySelector('[data-n]');
+    if(nx) nx.onclick = () => {
+      if(ans[i] === null) return;
+      if(i < qs.length-1){ i++; draft = []; q(); } else fin();
+    };
+    startTimer();
   }
+
   function fin(){
-    const score = ans.reduce((s,a,k)=>s+(a===qs[k].correct_index?1:0),0);
-    const pct = Math.round(score/qs.length*100), passed = pct >= v.pass_percent;
-    save(v.id,{attempted:true,score,total:qs.length,passed});
+    stopTimer();
+    const possible = qs.reduce((s,Q)=>s+qWeight(Q),0);
+    const gained = qs.reduce((s,Q,k)=>s+(ans[k]!==null&&sameSet(ans[k],Q.correct)?qWeight(Q):0),0);
+    const rightN = qs.reduce((s,Q,k)=>s+(ans[k]!==null&&sameSet(ans[k],Q.correct)?1:0),0);
+    const pct = possible ? Math.round(gained/possible*100) : 0;
+    const passed = pct >= v.pass_percent;
+    const weighted = qs.some(Q=>qWeight(Q)!==1);
+    save(v.id,{attempted:true,score:rightN,total:qs.length,passed});
+
+    const msg = passed
+      ? (v.pass_message || 'Well done — you have cleared this assessment.')
+      : (v.fail_message || 'You have not cleared it this time. Rewatch the content and try again.');
+
     el.innerHTML = `
-      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center">
-        <div style="width:80px;height:80px;border-radius:50%;background:${passed?'#e6faf0':'#fff5f5'};display:flex;align-items:center;justify-content:center;font-size:34px;margin-bottom:16px">${passed?'🎉':'📘'}</div>
-        <div style="font-size:17px;font-weight:800">${passed?'Passed!':'Almost there'}</div>
-        <div style="font-size:12.5px;color:#718096;margin-top:6px;line-height:1.5">You scored ${score}/${qs.length} (${pct}%)<br>${v.pass_percent}% needed to pass</div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;overflow-y:auto">
+        <div style="width:80px;height:80px;border-radius:50%;background:${passed?'#e6faf0':expired?'#fff4dc':'#fff5f5'};display:flex;align-items:center;justify-content:center;font-size:34px;margin-bottom:16px">${passed?'🎉':expired?'⏱':'📘'}</div>
+        <div style="font-size:17px;font-weight:800">${passed?'Passed':expired?'Time is up':'Not cleared'}</div>
+        <div style="font-size:12.5px;color:#718096;margin-top:6px;line-height:1.5">
+          ${rightN} of ${qs.length} correct${weighted?` · ${gained} of ${possible} points`:''} (${pct}%)<br>
+          ${v.pass_percent}% needed to pass
+          ${expired?'<br><span style="color:#9c5a00;font-weight:700">Graded on what was answered before time ran out.</span>':''}
+        </div>
+        <div style="margin-top:18px;padding:13px 15px;border-radius:11px;max-width:280px;
+          background:${passed?'#e6faf0':'#f4f6f9'};color:${passed?'#0a7a42':'#3b4557'};
+          font-size:12.5px;font-weight:600;line-height:1.55">${esc(msg)}</div>
       </div>
       <div style="padding:12px 15px 18px;border-top:1px solid #eef1f4;display:flex;flex-direction:column;gap:7px">
-        <button data-p style="width:100%;padding:12px;border-radius:9px;border:none;background:#004299;color:#fff;font:inherit;font-size:13.5px;font-weight:800;cursor:pointer">${passed?'Done':'Retry Assessment'}</button>
+        <button data-p style="width:100%;padding:12px;border-radius:9px;border:none;background:#004299;color:#fff;font:inherit;font-size:13.5px;font-weight:800;cursor:pointer">${passed?'Done':'Retry assessment'}</button>
         ${!passed && !v.mandatory?'<button data-c style="background:none;border:none;color:#718096;font:inherit;font-size:12.5px;font-weight:700;cursor:pointer;padding:8px">I&rsquo;ll try later</button>':''}
       </div>`;
-    el.querySelector('[data-p]').onclick = () => { if(passed) shut(); else { i=0; ans.fill(null); q(); } };
+    el.querySelector('[data-p]').onclick = () => {
+      if(passed) return shut();
+      // A retry draws the next slice of the pool, not the same paper again.
+      const next = pickQuestions(v);
+      qs.length = 0; qs.push(...next);
+      ans.length = 0; for(let n=0;n<qs.length;n++) ans.push(null);
+      i = 0; draft = []; left = limit; expired = false; q();
+    };
     const c = el.querySelector('[data-c]'); if(c) c.onclick = shut;
   }
   q();
@@ -650,35 +921,55 @@ const VIEWS = [
   },
   {
     id:'gate', n:'Homepage gate', on:'FSE Home', extra:true,
-    desc:'Not a widget. When mandatory trainings are outstanding, the home screen names what is pending and hands off to the hub — it never plays content here.',
-    look:['Deliberately moves the interruption <b>off the workflow</b> and into the hub.','Hard tier (no dismiss) fires when any pending training has <b>Homepage blocker</b> ticked.','Soft tier adds <b>“Remind me later”</b> and shows once per session.','Lists the first three pending, then “+N more”.'],
+    desc:'Not a widget. Trainings under a blocker carry a complete-by time. Before it the FSE sees a countdown and can carry on; once it passes the home screen is sealed until the training is finished.',
+    look:['Two tiers, decided by the clock: <b>countdown</b> before the deadline, <b>hard block</b> after it.','The countdown is dismissible — the hard block is not, and has no “later”.','Every overdue training is listed with how long it has been outstanding, not just the first three.','A blocker with no deadline set gates immediately, which is why the panel warns about it.'],
     render(app){
       app.innerHTML = HOST.home + HOST.homeBody;
-      const pending = CATALOG.filter(v => v.mandatory && !done(v));
-      if(!pending.length){
-        app.insertAdjacentHTML('afterbegin', `<div style="background:#e6faf0;color:#0a7a42;font-size:11.5px;font-weight:700;padding:9px 14px;text-align:center">✓ Nothing mandatory outstanding — no gate.</div>`);
+      const blocking = blockingTrainings();
+      const overdue  = overdueTrainings();
+      if(!blocking.length){
+        app.insertAdjacentHTML('afterbegin', `<div style="background:#e6faf0;color:#0a7a42;font-size:11.5px;font-weight:700;padding:9px 14px;text-align:center">✓ Nothing under a blocker outstanding — no gate.</div>`);
         return;
       }
-      const hard = pending.some(v => v.homepage_blocker);
-      const show = pending.slice(0,3);
+      // Past the deadline the gate is sealed. Before it, it is a warning.
+      const hard = overdue.length > 0;
+      const list = hard ? overdue : blocking;
       const el = document.createElement('div');
       el.style.cssText='position:absolute;inset:0;z-index:70;background:rgba(8,10,18,.62);display:flex;align-items:center;justify-content:center;padding:20px';
       el.innerHTML = `
-        <div style="background:#fff;border-radius:16px;width:100%;overflow:hidden;box-shadow:0 14px 36px rgba(0,0,0,.34);animation:up .22s ease">
+        <div style="background:#fff;border-radius:16px;width:100%;max-height:100%;overflow-y:auto;box-shadow:0 14px 36px rgba(0,0,0,.34);animation:up .22s ease">
           <div style="padding:20px 18px 14px;text-align:center">
-            <div style="width:50px;height:50px;border-radius:50%;background:${hard?'#fff0f0':'#fff4dc'};display:flex;align-items:center;justify-content:center;font-size:23px;margin:0 auto 11px">${hard?'🔒':'🔔'}</div>
-            <div style="font-size:15px;font-weight:800;line-height:1.35">${pending.length} mandatory training${pending.length>1?'s':''} pending</div>
-            <div style="font-size:12px;color:#718096;margin-top:6px;line-height:1.5">${hard?'These must be completed before you continue.':'Complete these in Trainings &amp; Assessment to stay compliant.'}</div>
+            <div style="width:50px;height:50px;border-radius:50%;background:${hard?'#fff0f0':'#fff4dc'};display:flex;align-items:center;justify-content:center;font-size:23px;margin:0 auto 11px">${hard?'🔒':'⏰'}</div>
+            <div style="font-size:15px;font-weight:800;line-height:1.35">${hard
+              ? `${list.length} training${list.length>1?'s are':' is'} past due`
+              : `${list.length} training${list.length>1?'s':''} to complete`}</div>
+            <div style="font-size:12px;color:#718096;margin-top:6px;line-height:1.5">${hard
+              ? 'The app stays locked until these are finished. Nothing else can be done from here.'
+              : 'You can carry on for now — these must be done before the times shown.'}</div>
           </div>
           <div style="padding:0 18px;display:flex;flex-direction:column;gap:6px">
-            ${show.map(v=>`<div style="display:flex;align-items:center;gap:9px;background:#f7f9fc;border-radius:9px;padding:7px 9px">
-              ${thumb(v,34,27,12)}<div style="flex:1;min-width:0"><div style="font-size:11px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(v.title)}</div>
-              <div style="font-size:8.5px;color:#c53030;font-weight:800;margin-top:2px">MANDATORY</div></div></div>`).join('')}
-            ${pending.length>3?`<div style="font-size:10.5px;color:#a0aec0;font-weight:600;text-align:center">+${pending.length-3} more</div>`:''}
+            ${list.map(t=>{const d=dueState(t);
+              return `<div style="display:flex;align-items:center;gap:9px;background:#f7f9fc;border-radius:9px;padding:8px 9px">
+              <div style="width:34px;height:27px;border-radius:6px;background:linear-gradient(135deg,#012b72,#00baf2);flex-shrink:0;
+                display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px">▶</div>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:11px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(t.name)}</div>
+                <div style="font-size:8.5px;font-weight:800;margin-top:2px;color:${d.kind==='due'?'#9c5a00':'#c53030'}">${
+                  d.kind==='due' ? `DUE ${esc(d.when.toUpperCase())} · ${esc(d.label.toUpperCase())}`
+                                 : d.kind==='over' ? `OVERDUE SINCE ${esc(d.at.toLocaleString([], {weekday:'short',hour:'numeric',minute:'2-digit'}).toUpperCase())}`
+                                 : 'BLOCKING UNTIL COMPLETE'}</div>
+              </div>
+              <div style="font-size:9px;font-weight:800;color:#8a94a6;white-space:nowrap">${
+                (()=>{const total=t.videos.length+(t.final.enabled?1:0);
+                      const vd=t.videos.filter(v=>{const pr=prog(v.id);
+                        return (t.perVideo&&v.questions.length)?pr.passed:pr.watched;}).length
+                        +(t.final.enabled&&prog(t.id+'-final').passed?1:0);
+                      return `${total-vd} left`;})()}</div></div>`;}).join('')}
           </div>
           <div style="padding:14px 18px 18px">
-            <button data-go style="width:100%;background:#004299;color:#fff;border:none;border-radius:9px;padding:13px;font:inherit;font-size:13.5px;font-weight:800;cursor:pointer">Go to Trainings</button>
-            ${hard?'':'<button data-l style="width:100%;background:none;border:none;color:#a0aec0;font:inherit;font-size:12px;font-weight:700;cursor:pointer;padding:10px 0 0">Remind me later</button>'}
+            <button data-go style="width:100%;background:#004299;color:#fff;border:none;border-radius:9px;padding:13px;font:inherit;font-size:13.5px;font-weight:800;cursor:pointer">${hard?'Complete now':'Go to Trainings'}</button>
+            ${hard?'<div style="text-align:center;font-size:10.5px;color:#a0aec0;font-weight:600;padding:9px 0 0">There is no way past this until the training is done.</div>'
+                  :'<button data-l style="width:100%;background:none;border:none;color:#a0aec0;font:inherit;font-size:12px;font-weight:700;cursor:pointer;padding:10px 0 0">Remind me later</button>'}
           </div></div>`;
       app.appendChild(el);
       el.querySelector('[data-go]').onclick = () => select('hub');
@@ -801,12 +1092,18 @@ const VIEWS = [
         if(!step) return;
         if(step.kind==='video'){
           const v=t.videos[step.idx];
-          player({id:v.id,title:v.title,questions:t.perVideo?v.questions:[],
+          player({id:v.id,title:v.title,kind:v.kind||'video',
+                  questions:t.perVideo?v.questions:[],
                   pass_percent:v.pass,mandatory:t.final.mandatory,
+                  max_questions:v.maxq,timer_seconds:v.timer,
+                  pass_message:v.passMsg,fail_message:v.failMsg,
+                  allow_seek:t.allowSeek!==false,
                   media_by_language:Object.fromEntries(v.langs.map(l=>[l,1]))}, ()=>detail(t));
         } else {
           assessment({id:t.id+'-final',title:t.name,questions:t.final.questions,
-                      pass_percent:t.final.pass,mandatory:t.final.mandatory}, ()=>detail(t));
+                      pass_percent:t.final.pass,mandatory:t.final.mandatory,
+                      max_questions:t.final.maxq,timer_seconds:t.final.timer,
+                      pass_message:t.final.passMsg,fail_message:t.final.failMsg}, ()=>detail(t));
         }
       }
 
@@ -837,6 +1134,24 @@ const VIEWS = [
           `<div style="flex:1;height:4px;border-radius:99px;background:${i<d?'#004299':'#e7ecf3'}"></div>`).join('')}</div>`;
       }
 
+      // Where a training comes from, said plainly: either it lives only in the
+      // hub, or it is also running on a screen somewhere.
+      function sourceTag(t){
+        if(t.widget==='module') return `<span style="font-size:8.5px;font-weight:800;padding:2px 6px;border-radius:4px;background:#ede9fe;color:#5b21b6;white-space:nowrap">HUB ONLY</span>`;
+        const where=(t.where||[]).filter(w=>w!=='Trainings & Assessment');
+        if(!where.length) return '';
+        return `<span style="font-size:8.5px;font-weight:700;padding:2px 6px;border-radius:4px;background:#eef2f7;color:#5a7290;white-space:nowrap">Also on ${esc(where[0])}${where.length>1?` +${where.length-1}`:''}</span>`;
+      }
+      function dueTag(t){
+        const d=dueState(t);
+        if(d.kind==='none') return '';
+        if(tDone(t)) return '';
+        const style=(bg,c)=>`font-size:8.5px;font-weight:800;padding:2px 6px;border-radius:4px;background:${bg};color:${c};white-space:nowrap`;
+        if(d.kind==='over') return `<span style="${style('#fff0f0','#c53030')}">⛔ OVERDUE</span>`;
+        if(d.kind==='now')  return `<span style="${style('#fff0f0','#c53030')}">⛔ BLOCKING</span>`;
+        return `<span style="${style(d.soon?'#fff4dc':'#eef2f7', d.soon?'#9c5a00':'#5a7290')}">⏰ by ${esc(d.when)} · ${esc(d.label)}</span>`;
+      }
+
       const thumb = (n,size) => `<div style="position:relative;width:${size}px;height:${size}px;border-radius:9px;
         background:linear-gradient(135deg,#012b72,#00baf2);flex-shrink:0;display:flex;align-items:center;
         justify-content:center;color:#fff;font-size:${size>50?16:13}px">▶${n>1?`
@@ -858,6 +1173,14 @@ const VIEWS = [
             </div>
             ${t.final.mandatory&&!tDone(t)?'<span style="background:#fff0f0;color:#c53030;font-size:9px;font-weight:800;padding:3px 8px;border-radius:4px;flex-shrink:0">MANDATORY</span>':''}
           </div>
+          ${(()=>{const d=dueState(t); if(d.kind==='none'||tDone(t)) return '';
+            const over=d.kind!=='due';
+            return `<div style="background:${over?'#fff0f0':d.soon?'#fff4dc':'#eef4fb'};
+              color:${over?'#c53030':d.soon?'#9c5a00':'#31507d'};padding:9px 14px;font-size:11.5px;font-weight:700;
+              display:flex;gap:7px;align-items:center;border-bottom:1px solid rgba(0,0,0,.05)">
+              <span>${over?'⛔':'⏰'}</span><span>${over
+                ? 'Past its complete-by time — the app stays blocked until this is finished.'
+                : `Complete by ${esc(d.when)} — ${esc(d.label)}. The app is blocked after that.`}</span></div>`;})()}
 
           <div style="padding:13px 14px ${step?'86px':'22px'};display:flex;flex-direction:column;gap:9px">
             ${t.videos.map((v,i)=>{
@@ -944,6 +1267,9 @@ const VIEWS = [
                 <div style="width:34px;height:34px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#004299">${pct}%</div>
               </div>
             </div>
+            ${(()=>{const od=overdueTrainings(); if(!od.length) return '';
+              return `<div style="margin-top:10px;background:#fff0f0;color:#c53030;font-size:11.5px;font-weight:700;padding:9px 11px;border-radius:9px;display:flex;gap:7px;align-items:flex-start">
+                <span>⛔</span><span style="flex:1">${od.length} training${od.length>1?'s are':' is'} past its complete-by time — the app is blocked until ${od.length>1?'they are':'it is'} done.</span></div>`;})()}
             ${mand.length?`<button data-mand style="margin-top:10px;width:100%;text-align:left;border:none;cursor:pointer;
               background:#fff4dc;color:#9c5a00;font:inherit;font-size:11.5px;font-weight:700;padding:9px 11px;border-radius:9px;
               display:flex;align-items:center;gap:7px">
@@ -987,6 +1313,7 @@ const VIEWS = [
                     <div style="font-size:12.5px;font-weight:700;line-height:1.3;flex:1;min-width:0">${esc(t.name)}</div>
                     ${!d&&t.final.mandatory?'<span style="font-size:8.5px;font-weight:800;padding:2px 6px;border-radius:4px;background:#fff0f0;color:#c53030;flex-shrink:0">MANDATORY</span>':''}
                   </div>
+                  <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">${sourceTag(t)}${dueTag(t)}</div>
                   ${pips(t)}
                   <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
                     <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;white-space:nowrap;background:${s.bg};color:${s.c}">${s.t}</span>

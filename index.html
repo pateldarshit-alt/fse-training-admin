@@ -179,6 +179,24 @@
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 <style>
+  .rules .fg textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:7px 9px;font:inherit;
+    font-size:12.5px;resize:vertical;background:var(--card);color:var(--ink)}
+  .msgs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 14px}
+  @media (max-width:640px){.msgs{grid-template-columns:1fr}}
+  .msgs .fg label{display:block;font-size:11.5px;font-weight:700;color:var(--faint);margin-bottom:4px}
+  .msgs .fg textarea{width:100%;border:1px solid var(--line);border-radius:7px;padding:7px 9px;font:inherit;
+    font-size:12.5px;resize:vertical;background:var(--card);color:var(--ink)}
+  .q-editor .hd2{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .q-editor .hd2 .sp{flex:1}
+  .qopt{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;color:var(--faint);cursor:pointer}
+  .qhint{font-size:11.5px;color:var(--faint);margin-top:7px;line-height:1.5}
+  .qhint.bad{color:var(--red-fg);font-weight:600}
+  .kindsel{border:1px solid var(--line);border-radius:7px;padding:5px 8px;font:inherit;font-size:12px;
+    background:var(--card);color:var(--ink)}
+  .subfield{margin:-4px 0 14px 26px;padding:11px 13px;border-radius:9px;background:var(--wash);border:1px solid var(--line)}
+  .subfield label{display:block;font-size:11.5px;font-weight:700;color:var(--faint);margin-bottom:5px}
+  .subfield input{border:1px solid var(--line);border-radius:7px;padding:7px 9px;font:inherit;font-size:12.5px;
+    background:var(--card);color:var(--ink)}
   .sectionbar{display:flex;gap:0;background:var(--card);border-bottom:1px solid var(--line);padding:0 24px;overflow-x:auto}
   .sectionbar .sec{background:none;border:none;border-bottom:3px solid transparent;padding:14px 18px 12px;
     font:inherit;font-size:14px;font-weight:600;color:var(--dim);cursor:pointer;text-align:left;white-space:nowrap}
@@ -222,6 +240,8 @@
       </div>
     </div>
     <div class="slotnote" id="capNote" style="margin-top:14px;text-align:left"></div>
+    <label class="toggle-row" id="seekRow" style="margin-top:14px"><input type="checkbox" id="f_seek">
+      <span>Let the FSE skip ahead<small id="seekHint">Scrubbing and 2× playback stay available either way; turning this off only stops them jumping past content they have not reached. Resume and speed controls are unaffected.</small></span></label>
   </div>
 
   <div class="card">
@@ -325,6 +345,11 @@
         <span>Also list this in <b>Trainings &amp; Assessment</b><small id="p_hubHint">The FSE can find and complete it from the hub as well as on the screen.</small></span></label>
       <label class="toggle-row" id="p_blockRow"><input type="checkbox" id="p_blocker">
         <span>Homepage blocker<small id="p_blockHint">A gate on the home screen sends the FSE to Trainings &amp; Assessment, with no way past it until this is done. Available whatever screen the training sits on.</small></span></label>
+      <div class="subfield" id="p_dueBox" hidden>
+        <label for="p_due">Complete by <small>— the app is blocked from this moment until the training is done</small></label>
+        <input type="datetime-local" id="p_due">
+        <div id="p_dueNote" style="font-size:11.5px;color:var(--faint);margin-top:7px;line-height:1.5"></div>
+      </div>
       <label class="toggle-row" id="p_selfRow"><input type="checkbox" id="p_self">
         <span>Let the FSE mark videos watched without finishing them<small id="p_selfHint">Adds an “I’ve watched this” button.</small></span></label>
     </div>
@@ -435,8 +460,49 @@ const allowsPerVideo = t => !!(W[t.widget]||{}).plays;
 const isSingle    = t => capOf(t)===1;
 const isModule    = t => t.widget==='module';   // hub-only
 
-const blankQ=()=>({question:'',options:['','','',''],correct_index:0});
-const blankVideo=n=>({title:`Video ${n}`,files:[{lang:'English',name:''}],questions:[],pass:70,maxq:''});
+const blankQ=()=>({question:'',options:['','','',''],correct:[0],multi:false,weight:1});
+const blankVideo=n=>({title:`Video ${n}`,kind:'video',files:[{lang:'English',name:''}],
+  questions:[],pass:70,maxq:'',timer:'',passMsg:'',failMsg:''});
+
+// What a piece of content is decides how it is uploaded, how it plays, and
+// what counts as finishing it. Only timed media can resume or change speed.
+const KINDS=[
+  {id:'video', label:'Video',        icon:'🎬', accept:'video/*',        timed:true,
+   done:'plays to the end'},
+  {id:'audio', label:'Audio',        icon:'🎧', accept:'audio/*',        timed:true,
+   done:'plays to the end'},
+  {id:'pdf',   label:'PDF / slides', icon:'📄', accept:'.pdf,.ppt,.pptx', timed:false,
+   done:'opened and scrolled to the last page'},
+  {id:'image', label:'Image',        icon:'🖼️', accept:'image/*',         timed:false,
+   done:'opened and viewed'},
+];
+const kindOf = v => KINDS.find(k=>k.id===(v.kind||'video')) || KINDS[0];
+
+// Older records stored a single correct_index. Normalise on load so the rest
+// of the panel only ever deals with correct[] plus multi and weight.
+function normQ(q){
+  if(!Array.isArray(q.correct)) q.correct=[q.correct_index??0];
+  if(typeof q.multi!=='boolean') q.multi=q.correct.length>1;
+  if(q.weight==null||q.weight==='') q.weight=1;
+  delete q.correct_index;
+  return q;
+}
+function normSet(set){
+  set.timer   = set.timer   ?? '';
+  set.passMsg = set.passMsg ?? '';
+  set.failMsg = set.failMsg ?? '';
+  (set.questions||[]).forEach(normQ);
+  return set;
+}
+function normT(t){
+  if(typeof t.allowSeek!=='boolean') t.allowSeek=true;
+  t.videos.forEach(v=>{ v.kind=v.kind||'video'; normSet(v); });
+  normSet(t.final);
+  return t;
+}
+const DEFAULT_PASS_MSG='Well done — you have cleared this assessment.';
+const DEFAULT_FAIL_MSG='You have not cleared it this time. Rewatch the content and try again.';
+const totalWeight = qs => qs.reduce((a,q)=>a+(+q.weight||1),0);
 const uid=()=>'t'+Math.random().toString(36).slice(2,9);
 
 function titleFromFile(name){
@@ -460,52 +526,88 @@ function questionsFromRows(rows){
   const out=[],errs=[];
   rows.forEach((r,i)=>{
     if(i===0&&/question/i.test(r[0]||'')) return;
-    const [qt,a,b,c,d,correct]=r.map(x=>(x||'').trim());
+    const [qt,a,b,c,d,correct,weight]=r.map(x=>(x||'').trim());
     if(!qt||!a||!b||!c||!d){errs.push(`Row ${i+1}: needs a question and all four options.`);return;}
-    const n=parseInt(correct,10);
-    if(!(n>=1&&n<=4)){errs.push(`Row ${i+1}: correct_option must be 1–4.`);return;}
-    out.push({question:qt,options:[a,b,c,d],correct_index:n-1});
+    // "2" for one answer, "2;4" or "2,4" for several.
+    const idx=(correct||'').split(/[;|]/).map(x=>parseInt(x,10)).filter(x=>!isNaN(x));
+    if(!idx.length||idx.some(x=>x<1||x>4)){
+      errs.push(`Row ${i+1}: correct_options must be 1–4, or several separated by ";".`);return;}
+    const w=weight===''||weight==null?1:Number(weight);
+    if(!(w>0)){errs.push(`Row ${i+1}: weight must be a positive number.`);return;}
+    const uniq=[...new Set(idx)].map(x=>x-1).sort((x,y)=>x-y);
+    out.push({question:qt,options:[a,b,c,d],correct:uniq,multi:uniq.length>1,weight:w});
   });
   return {out,errs};
 }
-const CSV_TEMPLATE='question,option1,option2,option3,option4,correct_option\n'
-  +'"What does the SoundBox confirm?","Nothing","Every payment, by voice","Only refunds","Stock levels",2\n';
+const CSV_TEMPLATE='question,option1,option2,option3,option4,correct_options,weight\n'
+  +'"What does the SoundBox confirm?","Nothing","Every payment, by voice","Only refunds","Stock levels",2,1\n'
+  +'"Which two are required on a rental plan? (select both)","UPI Autopay mandate","A cash deposit","Correct MID mapping","A new SIM","1;3",2\n';
 const CSV_HREF='data:text/csv;charset=utf-8,'+encodeURIComponent(CSV_TEMPLATE);
 
 /* ── state ─────────────────────────────────────────────────────────────── */
-let trainings = SEED.trainings.map(t=>JSON.parse(JSON.stringify(t)));
+let trainings = SEED.trainings.map(t=>normT(JSON.parse(JSON.stringify(t))));
 let placements = SEED.placements.map(p=>JSON.parse(JSON.stringify(p)));
 let T = freshT(), P = freshP();
 let editT = null, editP = null;
 
-function freshT(){ return {id:uid(),name:'',widget:'mini-banner',videos:[blankVideo(1)],
-  perVideo:false,final:{enabled:false,questions:[],pass:70,maxq:'',mandatory:false}}; }
+function freshT(){ return {id:uid(),name:'',widget:'mini-banner',videos:[blankVideo(1)],allowSeek:true,
+  perVideo:false,final:{enabled:false,questions:[],pass:70,maxq:'',timer:'',passMsg:'',failMsg:'',mandatory:false}}; }
 function freshP(){ return {id:uid(),trainingId:'',app:'gg',screen:'',team:'',subteam:'',aon:'',trigger:'',
-  ecodes:0,maxViews:'',expiry:'',blocker:false,hub:true,self:false}; }
+  ecodes:0,maxViews:'',expiry:'',blocker:false,dueAt:'',hub:true,self:false}; }
 
 const trainingById = id => trainings.find(t=>t.id===id);
 const placementsFor = id => placements.filter(p=>p.trainingId===id);
 
 /* ── shared editors ────────────────────────────────────────────────────── */
-function rulesRow(scope,pass,maxq,total){
+function rulesRow(scope,set,total){
+  const {pass,maxq,timer,passMsg,failMsg}=set;
   const over=maxq&&+maxq>total;
+  const shown=maxq?Math.min(+maxq,total):total;
+  const tight=timer&&shown&&(+timer/shown)<10;
   return `<div class="rules">
     <div class="fg"><label>Passing score</label>
       <input type="number" min="1" max="100" data-rpass="${scope}" value="${esc(pass)}"></div>
     <div class="fg"><label>Questions to show</label>
       <input type="number" min="1" data-rmax="${scope}" value="${esc(maxq)}" placeholder="All"></div>
+    <div class="fg"><label>Time limit <small>seconds</small></label>
+      <input type="number" min="10" data-rtime="${scope}" value="${esc(timer)}" placeholder="None"></div>
     <div class="of ${over?'bad':''}">${total
-      ? (over?`only ${total} uploaded`:`of <b>${total}</b> uploaded${maxq?' · picked at random each attempt':' · blank shows all'}`)
+      ? (over?`only ${total} uploaded`
+             :`of <b>${total}</b> uploaded${maxq?' · rotated round-robin, so a retry asks a different set':' · blank shows all'}`)
       : 'no questions uploaded yet'}</div>
+  </div>
+  ${timer?`<div class="slotnote" style="text-align:left;margin:-6px 0 12px${tight?';background:var(--amber-bg);color:var(--amber-fg)':''}">
+    ⏱ ${fmtSecs(timer)} for ${shown||'—'} question${shown===1?'':'s'}${
+      shown?` — about ${Math.round(+timer/shown)}s each`:''}. When it runs out the attempt is submitted as it stands.
+    ${tight?'<b>That is tight.</b> Allow at least 10 seconds per question.':''}</div>`:''}
+  <div class="msgs">
+    <div class="fg"><label>Message when they pass</label>
+      <textarea rows="2" data-rpm="${scope}" placeholder="${esc(DEFAULT_PASS_MSG)}">${esc(passMsg)}</textarea></div>
+    <div class="fg"><label>Message when they fail</label>
+      <textarea rows="2" data-rfm="${scope}" placeholder="${esc(DEFAULT_FAIL_MSG)}">${esc(failMsg)}</textarea></div>
   </div>`;
 }
+function fmtSecs(t){
+  const s=+t||0, m=Math.floor(s/60), r=s%60;
+  return m?`${m}m${r?` ${r}s`:''}`:`${s}s`;
+}
 function qEditor(q,scope,j){
+  const multi=!!q.multi, none=!q.correct.length;
   return `<div class="q-editor">
-    <div class="hd2"><b>Q${j+1}</b><button class="btn btn-danger btn-sm" data-qrm="${scope}-${j}">Remove</button></div>
+    <div class="hd2"><b>Q${j+1}</b>
+      <label class="qopt"><input type="checkbox" data-qm="${scope}-${j}" ${multi?'checked':''}>
+        <span>Several correct answers</span></label>
+      <label class="qopt">Weight
+        <input type="number" min="0.5" step="0.5" data-qw="${scope}-${j}" value="${esc(q.weight)}" style="width:62px"></label>
+      <span class="sp"></span>
+      <button class="btn btn-danger btn-sm" data-qrm="${scope}-${j}">Remove</button></div>
     <input type="text" data-qt="${scope}-${j}" value="${esc(q.question)}" placeholder="Question text">
     ${q.options.map((o,k)=>`<div class="opt-row">
-      <input type="radio" name="c-${scope}-${j}" data-qc="${scope}-${j}-${k}" ${q.correct_index===k?'checked':''} title="Correct answer">
+      <input type="${multi?'checkbox':'radio'}" name="c-${scope}-${j}" data-qc="${scope}-${j}-${k}"
+        ${q.correct.includes(k)?'checked':''} title="Correct answer">
       <input type="text" data-qo="${scope}-${j}-${k}" value="${esc(o)}" placeholder="Option ${k+1}"></div>`).join('')}
+    ${multi?`<div class="qhint">The FSE must select <b>every</b> correct option and none of the others. Marked right or wrong as a whole — there is no part credit.</div>`:''}
+    ${none?`<div class="qhint bad">Nothing is marked correct — this question can never be answered right.</div>`:''}
   </div>`;
 }
 const bucket=s=>s==='final'?T.final.questions:T.videos[+s.slice(1)].questions;
@@ -513,14 +615,36 @@ function wireQ(root){
   root.querySelectorAll('[data-qrm]').forEach(b=>b.onclick=()=>{const[s,j]=b.dataset.qrm.split('-');bucket(s).splice(+j,1);renderT();});
   root.querySelectorAll('[data-qt]').forEach(i=>i.oninput=()=>{const[s,j]=i.dataset.qt.split('-');bucket(s)[+j].question=i.value;});
   root.querySelectorAll('[data-qo]').forEach(i=>i.oninput=()=>{const[s,j,k]=i.dataset.qo.split('-');bucket(s)[+j].options[+k]=i.value;});
-  root.querySelectorAll('[data-qc]').forEach(r=>r.onchange=()=>{const[s,j,k]=r.dataset.qc.split('-');bucket(s)[+j].correct_index=+k;});
+  root.querySelectorAll('[data-qc]').forEach(r=>r.onchange=()=>{
+    const[s,j,k]=r.dataset.qc.split('-'); const q=bucket(s)[+j], i=+k;
+    if(q.multi){
+      const at=q.correct.indexOf(i);
+      if(at>=0) q.correct.splice(at,1); else q.correct.push(i);
+      q.correct.sort((a,b)=>a-b);
+      renderT();                       // the warning line may appear or clear
+    } else { q.correct=[i]; }
+  });
+  root.querySelectorAll('[data-qm]').forEach(c=>c.onchange=()=>{
+    const[s,j]=c.dataset.qm.split('-'); const q=bucket(s)[+j];
+    q.multi=c.checked;
+    // Coming back to a single answer, keep the first pick so the question stays valid.
+    if(!q.multi&&q.correct.length>1) q.correct=[q.correct[0]];
+    renderT();
+  });
+  root.querySelectorAll('[data-qw]').forEach(i=>i.oninput=()=>{
+    const[s,j]=i.dataset.qw.split('-'); bucket(s)[+j].weight=i.value===''?1:Number(i.value); flowT();});
 }
 function wireRules(root){
   root.querySelectorAll('[data-rpass]').forEach(i=>i.oninput=()=>{
     const s=i.dataset.rpass; if(s==='final') T.final.pass=i.value; else T.videos[+s.slice(1)].pass=i.value; flowT();});
   root.querySelectorAll('[data-rmax]').forEach(i=>i.oninput=()=>{
-    const s=i.dataset.rmax; if(s==='final') T.final.maxq=i.value; else T.videos[+s.slice(1)].maxq=i.value; flowT();});
+    const s=i.dataset.rmax; setOf(s).maxq=i.value; renderT();});
+  root.querySelectorAll('[data-rtime]').forEach(i=>i.oninput=()=>{
+    const s=i.dataset.rtime; setOf(s).timer=i.value; renderT();});
+  root.querySelectorAll('[data-rpm]').forEach(i=>i.oninput=()=>{ setOf(i.dataset.rpm).passMsg=i.value; });
+  root.querySelectorAll('[data-rfm]').forEach(i=>i.oninput=()=>{ setOf(i.dataset.rfm).failMsg=i.value; });
 }
+const setOf = s => s==='final' ? T.final : T.videos[+s.slice(1)];
 function loadQuestions(file,target){
   if(!file) return;
   const r=new FileReader();
@@ -551,10 +675,25 @@ function flowT(){
   const warns=[];
   if(T.final.enabled&&!T.final.questions.length) warns.push('The combined assessment has no questions yet.');
   if(T.perVideo&&T.videos.some(v=>!v.questions.length)) warns.push('Some videos have no check questions yet.');
+  const kinds=[...new Set(T.videos.map(v=>kindOf(v).label))];
+  if(kinds.length>1) bits.push(`mixed content — ${kinds.join(', ').toLowerCase()}`);
+  if(T.final.enabled&&T.final.timer) bits.push(`timed at ${fmtSecs(T.final.timer)}`);
   T.videos.forEach((v,i)=>{if(v.maxq&&+v.maxq>v.questions.length)
     warns.push(`Video ${i+1} shows ${v.maxq} questions but only ${v.questions.length} are uploaded.`);});
   if(T.final.maxq&&+T.final.maxq>T.final.questions.length)
     warns.push(`The combined assessment shows ${T.final.maxq} questions but only ${T.final.questions.length} are uploaded.`);
+  // A question with nothing marked correct can never be passed.
+  const noAns=[];
+  T.videos.forEach((v,i)=>v.questions.forEach((q,j)=>{ if(!q.correct.length) noAns.push(`video ${i+1} Q${j+1}`); }));
+  T.final.questions.forEach((q,j)=>{ if(!q.correct.length) noAns.push(`combined Q${j+1}`); });
+  if(noAns.length) warns.push(`Nothing is marked correct on ${noAns.join(', ')} — ${noAns.length>1?'those questions':'that question'} can never be answered right.`);
+  // Round-robin over uneven weights means attempts are not equally hard.
+  [['The combined assessment',T.final],...T.videos.map((v,i)=>[`Video ${i+1}`,v])].forEach(([label,set])=>{
+    if(!set.maxq||!set.questions.length) return;
+    const ws=set.questions.map(q=>+q.weight||1);
+    if(Math.max(...ws)/Math.min(...ws)>=3)
+      warns.push(`${label} shows a rotating subset while question weights range from ${Math.min(...ws)} to ${Math.max(...ws)} — attempts will not be equally hard.`);
+  });
   if(!isModule(T)&&!screensAnyApp(T.widget).length)
     warns.push(`No screen currently carries a ${W[T.widget].label} slot — this cannot be placed yet.`);
 
@@ -580,22 +719,26 @@ function drawVideos(){
           <input type="text" data-vt="${i}" value="${esc(v.title)}" placeholder="Video title"
             style="font-weight:700;border:none;padding:2px 0;background:transparent">
           <div class="filerow">
-            <label class="fpick">📁 ${prim.name?'Replace file':'Choose video file'}
-              <input type="file" accept="video/*,.pdf,.ppt,.pptx" data-vf="${i}"></label>
+            <select data-vk="${i}" class="kindsel" title="Content type">
+              ${KINDS.map(k=>`<option value="${k.id}" ${(v.kind||'video')===k.id?'selected':''}>${k.icon} ${k.label}</option>`).join('')}
+            </select>
+            <label class="fpick">📁 ${prim.name?'Replace file':`Choose ${kindOf(v).label.toLowerCase()} file`}
+              <input type="file" accept="${kindOf(v).accept}" data-vf="${i}"></label>
             ${prim.name?`<span class="fname">${esc(prim.name)}</span>`
               :'<span class="fname" style="color:var(--amber-fg)">No file yet — the title fills in from the filename</span>'}
+            <span class="badge grey" title="How this item is marked done">Done when ${kindOf(v).done}</span>
             ${T.perVideo?`<span class="badge ${v.questions.length?'grey':'warn'}">${v.questions.length} check Q${v.questions.length===1?'':'s'}</span>`:''}
           </div>
         </div>
         ${T.videos.length>1?`<button class="btn btn-danger btn-sm" data-vrm="${i}">Remove</button>`:''}
       </div>
       <div class="langs">
-        <div class="ttl">Language versions of video ${i+1}</div>
+        <div class="ttl">Language versions of ${kindOf(v).label.toLowerCase()} ${i+1}</div>
         ${v.files.map((f,k)=>`<div class="lrow">
           <span class="lg">${esc(f.lang)}</span>${k===0?'<span class="pf">PRIMARY</span>':''}
           <span class="fn">${f.name?esc(f.name):'— no file —'}</span>
           <label class="fpick" style="padding:3px 9px;font-size:11px">${f.name?'Replace':'Choose'}
-            <input type="file" accept="video/*,.pdf,.ppt,.pptx" data-lf="${i}-${k}"></label>
+            <input type="file" accept="${kindOf(v).accept}" data-lf="${i}-${k}"></label>
           ${k>0?`<button class="btn btn-danger btn-sm" data-lrm="${i}-${k}">×</button>`:''}</div>`).join('')}
         ${spare.length?`<div class="addlang">
           <select data-ladd="${i}">${spare.map(l=>`<option>${esc(l)}</option>`).join('')}</select>
@@ -605,7 +748,7 @@ function drawVideos(){
       </div>
       ${T.perVideo?`<div class="check">
         <div class="ttl">Check after video ${i+1}</div>
-        ${rulesRow(`v${i}`,v.pass??70,v.maxq??'',v.questions.length)}
+        ${rulesRow(`v${i}`,v,v.questions.length)}
         ${v.questions.map((q,j)=>qEditor(q,`v${i}`,j)).join('')}
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
           <button class="btn btn-ghost btn-sm" data-vaq="${i}">＋ Add question</button>
@@ -619,6 +762,15 @@ function drawVideos(){
   L.querySelectorAll('[data-dn]').forEach(b=>b.onclick=()=>{const i=+b.dataset.dn;[T.videos[i+1],T.videos[i]]=[T.videos[i],T.videos[i+1]];renderT();});
   L.querySelectorAll('[data-vrm]').forEach(b=>b.onclick=()=>{T.videos.splice(+b.dataset.vrm,1);renderT();});
   L.querySelectorAll('[data-vt]').forEach(i=>i.oninput=()=>{T.videos[+i.dataset.vt].title=i.value;flowT();});
+  L.querySelectorAll('[data-vk]').forEach(sel=>sel.onchange=()=>{
+    const v=T.videos[+sel.dataset.vk];
+    // The old file almost certainly no longer matches the new type.
+    if(v.kind!==sel.value && v.files.some(f=>f.name)){
+      v.files.forEach(f=>f.name='');
+      toast('Content type changed — re-upload the files for this item');
+    }
+    v.kind=sel.value; renderT();
+  });
   L.querySelectorAll('[data-vaq]').forEach(b=>b.onclick=()=>{T.videos[+b.dataset.vaq].questions.push(blankQ());renderT();});
   L.querySelectorAll('[data-vf]').forEach(inp=>inp.onchange=e=>{
     const f=e.target.files[0]; if(!f) return;
@@ -646,6 +798,12 @@ function drawVideos(){
 function renderT(){
   $('f_name').value=T.name; $('f_widget').value=T.widget;
   $('f_pervideo').checked=T.perVideo; $('f_final').checked=T.final.enabled; $('f_mand').checked=T.final.mandatory;
+  $('f_seek').checked=T.allowSeek!==false;
+  const timed=T.videos.some(v=>kindOf(v).timed);
+  $('seekRow').hidden=!timed;
+  $('seekHint').textContent = T.final.mandatory && T.allowSeek!==false
+    ? 'This training is mandatory. Leaving skip-ahead on means an FSE can jump to the end and be marked as having watched it.'
+    : 'Scrubbing and 2× playback stay available either way; turning this off only stops them jumping past content they have not reached.';
 
   const w=W[T.widget], canCombine=allowsCombined(T), canPer=allowsPerVideo(T), single=isSingle(T);
   const scr=screensAnyApp(T.widget);
@@ -671,7 +829,7 @@ function renderT(){
 
   drawVideos();
   $('finalBox').hidden=!T.final.enabled;
-  $('finalRules').innerHTML=rulesRow('final',T.final.pass,T.final.maxq,T.final.questions.length);
+  $('finalRules').innerHTML=rulesRow('final',T.final,T.final.questions.length);
   $('finalQs').innerHTML=T.final.questions.map((q,j)=>qEditor(q,'final',j)).join('');
   wireQ($('finalQs')); wireRules($('finalBox'));
   flowT();
@@ -802,6 +960,8 @@ function renderP(){
   $('p_team').value=P.team; $('p_aon').value=P.aon; $('p_trigger').value=P.trigger;
   $('p_maxviews').value=P.maxViews; $('p_expiry').value=P.expiry;
   $('p_blocker').checked=P.blocker; $('p_self').checked=P.self; $('p_hub').checked=P.hub;
+  $('p_due').value=P.dueAt||''; $('p_dueBox').hidden=!P.blocker;
+  $('p_dueNote').innerHTML=dueNote(P);
   $('p_app').value=P.app;
   const subs=TEAMS[P.team]||[];
   $('p_subteam').innerHTML='<option value="">All subteams</option>'+subs.map(s=>`<option>${esc(s)}</option>`).join('');
@@ -827,6 +987,9 @@ function drawPLib(){
                p.aon&&(AON.find(a=>a.id===p.aon)||{}).label,
                p.ecodes&&`${p.ecodes} ecodes`].filter(Boolean);
     const trig=p.trigger&&(TRIGGERS.find(x=>x.id===p.trigger)||{}).label;
+    const due=p.blocker?(p.dueAt
+      ? `<span class="badge red">Blocks ${new Date(p.dueAt).toLocaleString([], {dateStyle:'medium',timeStyle:'short'})}</span>`
+      : '<span class="badge red">Blocks immediately</span>'):'';
     const rules=[p.maxViews&&`${p.maxViews} views`,p.expiry&&`${p.expiry} days`].filter(Boolean);
     return `<tr>
       <td class="t">${t?esc(t.name):'<span style="color:var(--red-fg)">Training deleted</span>'}
@@ -840,6 +1003,7 @@ function drawPLib(){
       <td class="struct">${seg.length?seg.map(esc).join('<br>'):'<span style="color:var(--faint)">Everyone</span>'}
         ${trig?`<br><span class="badge warn">⚡ ${esc(trig)}</span>`:''}</td>
       <td class="struct">${rules.length?rules.join(' · '):'<span style="color:var(--faint)">No limit</span>'}
+        ${due?`<br>${due}`:''}
         ${p.self?'<br><span class="badge grey">Self-mark</span>':''}</td>
       <td style="white-space:nowrap">
         <button class="btn btn-ghost btn-sm" data-ped="${p.id}">Edit</button>
@@ -888,6 +1052,15 @@ $('tSave').onclick=()=>{
   if(T.final.enabled&&!T.final.questions.length) return toast('The combined assessment has no questions.');
   if(T.final.enabled&&T.final.questions.some(bad)) return toast('Every final question needs text and all four options.');
   if(T.perVideo&&T.videos.some(v=>v.questions.some(bad))) return toast('Every per-video question needs text and all four options.');
+  // A question with nothing ticked is unanswerable, so it must not be saved.
+  const noAns=q=>!q.correct||!q.correct.length;
+  if(T.final.enabled&&T.final.questions.some(noAns))
+    return toast('Every combined-assessment question needs at least one correct answer ticked.');
+  if(T.perVideo&&T.videos.some(v=>v.questions.some(noAns)))
+    return toast('Every per-video question needs at least one correct answer ticked.');
+  const badW=q=>!(+q.weight>0);
+  if(T.final.questions.some(badW)||T.videos.some(v=>v.questions.some(badW)))
+    return toast('Question weights must be greater than zero.');
   const badCap=T.videos.findIndex(v=>v.maxq&&+v.maxq>v.questions.length);
   if(T.perVideo&&badCap>-1) return toast(`Video ${badCap+1}: cannot show more questions than are uploaded.`);
   if(T.final.enabled&&T.final.maxq&&+T.final.maxq>T.final.questions.length)
@@ -918,7 +1091,24 @@ $('p_subteam').onchange=e=>{P.subteam=e.target.value;flowP();};
 ['aon','trigger'].forEach(k=>$('p_'+k).onchange=e=>{P[k]=e.target.value;flowP();});
 $('p_maxviews').oninput=e=>{P.maxViews=e.target.value;flowP();};
 $('p_expiry').oninput=e=>{P.expiry=e.target.value;flowP();};
-$('p_blocker').onchange=e=>{P.blocker=e.target.checked;flowP();};
+// A blocker with no deadline gates the FSE from the moment it is published.
+// A blocker with one is a countdown they can see and plan around.
+function dueNote(P){
+  if(!P.blocker) return '';
+  if(!P.dueAt) return 'No deadline set — the gate applies immediately and stays up until the training is done. '
+    + 'Set a time to give the FSE a window instead.';
+  const d=new Date(P.dueAt);
+  if(isNaN(d)) return '<span style="color:var(--red-fg)">That is not a valid date and time.</span>';
+  const ms=d-new Date();
+  if(ms<=0) return '<span style="color:var(--red-fg)">That time has already passed — '
+    + 'anyone in this segment is blocked the moment this is saved.</span>';
+  const h=Math.round(ms/36e5);
+  return `The FSE can carry on as normal until then. Blocked from <b>${d.toLocaleString()}</b> — `
+    + (h<24?`about ${h} hour${h===1?'':'s'} away.`:`about ${Math.round(h/24)} day${Math.round(h/24)===1?'':'s'} away.`);
+}
+$('p_blocker').onchange=e=>{P.blocker=e.target.checked; if(!P.blocker) P.dueAt=''; renderP();};
+$('p_due').oninput=e=>{P.dueAt=e.target.value; $('p_dueNote').innerHTML=dueNote(P); flowP();};
+$('f_seek').onchange=e=>{T.allowSeek=e.target.checked;renderT();};
 $('p_self').onchange=e=>{P.self=e.target.checked;flowP();};
 $('p_ecodeFile').onchange=e=>{
   const f=e.target.files[0]; if(!f) return;
@@ -932,6 +1122,11 @@ $('p_ecodeClear').onclick=()=>{P.ecodes=0;renderP();};
 $('pSave').onclick=()=>{
   if(!P.trainingId) return toast('Choose a training.');
   if(!P.screen) return toast('Choose a screen.');
+  if(P.blocker&&P.dueAt){
+    const d=new Date(P.dueAt);
+    if(isNaN(d)) return toast('The complete-by time is not a valid date.');
+    if(d<=new Date()) return toast('The complete-by time is in the past — everyone in this segment would be blocked straight away.');
+  }
   if(P.blocker&&!P.hub){
     P.hub=true; $('p_hub').checked=true;
     toast('A blocker routes to Trainings & Assessment, so hub listing was turned on');
