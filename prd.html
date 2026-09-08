@@ -189,7 +189,7 @@
         <tr><td>Product</td><td>GG App and Force App — Field Sales Executive mobile applications</td></tr>
         <tr><td>Owner</td><td>Product</td></tr>
         <tr><td>Status</td><td>Draft for review</td></tr>
-        <tr><td>Version</td><td>3.1</td></tr>
+        <tr><td>Version</td><td>3.2</td></tr>
         <tr><td>Date</td><td>8 September 2026</td></tr>
         <tr><td>Reviewers</td><td>Design, Frontend, Backend, Field Ops, L&amp;D</td></tr>
       </tbody>
@@ -620,7 +620,155 @@
 
   <p>Questions can be typed or imported as CSV: question, four options, the correct answers, and a weight. Several correct answers are given as <span class="mono">1;3</span>. A written answer is marked by putting <span class="mono">text</span> in the correct-answers column, with the hint in the first option. Bad rows are rejected individually and counted, rather than failing the whole file.</p>
 
-  <h2>15. Edge cases we have decided</h2>
+  <h2>15. How questions are chosen</h2>
+
+  <p>An author uploads a pool of questions. The FSE never sees the whole pool — they see a <strong>paper drawn from it</strong>, worth exactly what the author said a paper should be worth. This section is the rule for how that draw happens.</p>
+
+  <h3>15.1 The inputs</h3>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Set by the author</th><th>Meaning</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Question weight</strong></td><td>What one question is worth. Default 1. A question about mapping to the wrong MID can be worth 3 where a recall question is worth 1.</td></tr>
+        <tr><td><strong>Paper total</strong></td><td>What one attempt is worth. Left blank, the whole pool is shown.</td></tr>
+        <tr><td><strong>Passing score</strong></td><td>The score needed to clear it, at or below the paper total.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>15.2 The draw, step by step</h3>
+
+  <ol>
+    <li><strong>Set aside the written answers.</strong> They carry no score and take no part in the draw.</li>
+    <li><strong>Shuffle the scored pool.</strong></li>
+    <li><strong>Take questions in that shuffled order</strong>, adding each one whose weight still fits inside the remaining room.</li>
+    <li><strong>Stop the moment the running total equals the paper total.</strong> That is the paper.</li>
+    <li>If a particular shuffle cannot land on the total exactly, <strong>reshuffle and try again</strong>. A configuration the console allowed will always land within a few attempts.</li>
+    <li><strong>Append the written answers</strong> at the end, in the order they were authored.</li>
+  </ol>
+
+  <h3>15.3 A worked example</h3>
+
+  <p>A pool of six questions weighted 3, 3, 2, 2, 1, 1 — twelve points in total. The author sets a paper total of <strong>6</strong> and a passing score of <strong>4</strong>.</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Attempt</th><th>Questions drawn</th><th>Worth</th><th>Pass at</th></tr></thead>
+      <tbody>
+        <tr><td>Ajay, first go</td><td>Two questions weighted 3 + 3</td><td>6</td><td>4</td></tr>
+        <tr><td>Priya, same day</td><td>Three questions weighted 3 + 2 + 1</td><td>6</td><td>4</td></tr>
+        <tr><td>Ajay, retake</td><td>Four questions weighted 2 + 2 + 1 + 1</td><td>6</td><td>4</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Three different papers. All worth the same, all needing the same score. Ajay's retake is not the paper he just failed, and Priya cannot usefully tell him what came up.</p>
+
+  <p>Those three shapes are not equally likely — filling to a total naturally favours some combinations over others, and on this pool the three-question paper comes up about twice as often as the other two. What matters is that <strong>no question gets starved</strong>: across a couple of thousand papers each of the six appears between 44% and 59% of the time. An author who uploads a question can expect it to be asked.</p>
+
+  <div class="note">
+    <p><strong>A paper can hold a different number of questions each time.</strong> That is a consequence of drawing to a total rather than to a count, and it is the point: what matters is what the paper is worth, not how many taps it takes. The FSE always sees the paper's worth and the score they need before they start.</p>
+  </div>
+
+  <h3>15.4 Which totals are possible</h3>
+
+  <p>Because the draw must hit the total <strong>exactly</strong>, not every number can be built. A pool weighted 3, 2 and 1 can make 1, 2, 3, 4, 5 and 6 — but never 7, because no combination of those three adds to it.</p>
+
+  <p>The console works this out from the uploaded weights, lists the totals that are reachable, names the nearest achievable figure when the author misses, and refuses to save an impossible one. Without that check an author could publish a paper the app can never assemble, and the FSE would meet a training that cannot start.</p>
+
+  <h3>15.5 When no total is set</h3>
+
+  <p>The whole pool is shown, in a shuffled order, and the paper is worth the pool. This is the right setting for a three-question check after a single video — there is nothing to draw from.</p>
+
+  <h3>15.6 Stories</h3>
+
+  <p>Each segment's questions are drawn by the same rule, and each draw's score is carried forward. The closing set is drawn the same way. Only when the last of them is submitted is the carried total judged, once, against the pass mark for the whole story.</p>
+
+  <h2>16. What we track in the app</h2>
+
+  <p>Every measure in §3 has to be answerable from what the app sends. These are grouped by the question they exist to answer, not by where they happen to fire.</p>
+
+  <h3>16.1 Did the nudge land?</h3>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Event</th><th>Fires when</th></tr></thead>
+      <tbody>
+        <tr><td>Placement shown</td><td>The widget rendered on screen for this FSE</td></tr>
+        <tr><td>Opened</td><td>They tapped it</td></tr>
+        <tr><td>Dismissed</td><td>They closed it without opening the content</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Shown against opened is the honest measure of whether a placement is help or furniture. Dismissed against shown, per screen and position, is how we decide a nudge is in the wrong place.</p>
+
+  <h3>16.2 Did they actually watch it?</h3>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Event</th><th>Fires when</th></tr></thead>
+      <tbody>
+        <tr><td>Play started</td><td>Playback begins</td></tr>
+        <tr><td>Quarter, half, three-quarter, complete</td><td>Those points in the timeline are reached</td></tr>
+        <tr><td>Resumed / restarted</td><td>They picked up where they left off, or chose to start over</td></tr>
+        <tr><td>Speed changed</td><td>With the rate</td></tr>
+        <tr><td>Language switched</td><td>With the language chosen</td></tr>
+        <tr><td>Skip blocked</td><td>A forward seek was refused because skipping is off</td></tr>
+        <tr><td>Content completed</td><td>Played to the end, or the document reached its last page</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>The quarter marks give the drop-off curve — the single most useful thing for deciding how long a video should be. Language switching tells us which languages to commission next, from behaviour rather than from a survey.</p>
+
+  <h3>16.3 Did they understand it?</h3>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Event</th><th>Fires when</th></tr></thead>
+      <tbody>
+        <tr><td>Assessment started</td><td>With the paper's worth, the pass mark and the attempt number</td></tr>
+        <tr><td>Answer submitted</td><td>Per question — which question, whether it was right, and how long it took</td></tr>
+        <tr><td>Segment carried forward</td><td>A story segment's score was banked</td></tr>
+        <tr><td>Passed / failed</td><td>With the score and the attempt number</td></tr>
+        <tr><td>Timed out</td><td>The clock expired; how much was answered</td></tr>
+        <tr><td>Content reopened</td><td>A failure sent them back to the videos</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Per-question results are what tell us whether a question is doing any work. A question nearly everyone gets right is not testing anything; one nearly everyone gets wrong is usually a badly worded question rather than a badly trained field force, and it should be looked at before the content is.</p>
+
+  <h3>16.4 Did enforcement work?</h3>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Event</th><th>Fires when</th></tr></thead>
+      <tbody>
+        <tr><td>Blocker shown</td><td>The home screen was sealed, with what was outstanding</td></tr>
+        <tr><td>Blocker cleared</td><td>The last outstanding training was completed</td></tr>
+        <tr><td>Certificate downloaded</td><td>They saved their certificate</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Time between blocker shown and blocker cleared is how much working time enforcement costs the field. If that number is large, the content is too long or the gate is too aggressive.</p>
+
+  <h3>16.5 Carried on every event</h3>
+
+  <p>FSE and ecode, training, placement, app, screen, position, widget view, audience source, language, and attempt number where one applies. Without placement and position we can compare trainings but not the decisions about where to put them, which is where most of the tuning will happen.</p>
+
+  <h3>16.6 What we deliberately do not track</h3>
+
+  <ul>
+    <li><strong>Written answers do not go to analytics.</strong> They are captured for the trainer to read, not to be counted. They are free text an FSE wrote about their own difficulties, and treating them as a metric would change what people write.</li>
+    <li><strong>No location.</strong> The app knows where the FSE is for other reasons; training has no business joining that data.</li>
+    <li><strong>No merchant identifiers on training events.</strong> A training event says what was watched and by whom, never which merchant was in front of them.</li>
+  </ul>
+
+  <h2>17. Edge cases we have decided</h2>
 
   <div class="tw">
     <table>
@@ -638,7 +786,7 @@
     </table>
   </div>
 
-  <h2>16. What we are not doing</h2>
+  <h2>18. What we are not doing</h2>
 
   <ul>
     <li><strong>No content authoring.</strong> Videos are made elsewhere and uploaded.</li>
@@ -648,7 +796,7 @@
     <li><strong>No manager-facing reporting screen</strong> in v1. Data goes to the existing analytics stack.</li>
   </ul>
 
-  <h2>17. Open decisions</h2>
+  <h2>19. Open decisions</h2>
 
   <div class="tw">
     <table>
@@ -665,7 +813,7 @@
     </table>
   </div>
 
-  <h2>18. Appendix — for the build team</h2>
+  <h2>20. Appendix — for the build team</h2>
 
   <h3>Data model, in brief</h3>
 
@@ -680,9 +828,9 @@
 
   <h3>Events</h3>
 
-  <p>Impression, open, play, 25/50/75/100% watched, language switched, speed changed, resumed, restarted, seek blocked, dismissed, assessment started, answer submitted, segment carried forward, passed, failed, timed out, content reopened, blocker shown, certificate downloaded.</p>
+  <p>Listed in full in §16, grouped by the question each one answers.</p>
 
-  <p class="end">End of document</p>
+<p class="end">End of document</p>
 
 </article>
 
