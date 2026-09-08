@@ -189,7 +189,7 @@
         <tr><td>Product</td><td>GG App and Force App — Field Sales Executive mobile applications</td></tr>
         <tr><td>Owner</td><td>Product</td></tr>
         <tr><td>Status</td><td>Draft for review</td></tr>
-        <tr><td>Version</td><td>3.2</td></tr>
+        <tr><td>Version</td><td>3.3</td></tr>
         <tr><td>Date</td><td>8 September 2026</td></tr>
         <tr><td>Reviewers</td><td>Design, Frontend, Backend, Field Ops, L&amp;D</td></tr>
       </tbody>
@@ -422,7 +422,7 @@
     <li>The author sets the <strong>score needed to pass</strong>, at or below the paper's worth.</li>
   </ul>
 
-  <p>Two FSEs therefore sit different papers of equal weight, and a retake is never the paper just failed.</p>
+  <p>Two FSEs sit different papers of equal weight. A retake is drawn fresh too — though because nothing is remembered between attempts it can repeat questions, which §15.5 covers.</p>
 
   <div class="note">
     <p><strong>Not every total is buildable.</strong> Because the target must be met exactly, a pool of questions worth 3, 2 and 1 can make any total from 1 to 6 — but never 7. The console works out which totals are reachable from the uploaded weights, lists them, names the nearest achievable figure, and refuses to save a target that cannot be built. Without that an author could configure a paper the app can never assemble.</p>
@@ -622,66 +622,99 @@
 
   <h2>15. How questions are chosen</h2>
 
-  <p>An author uploads a pool of questions. The FSE never sees the whole pool — they see a <strong>paper drawn from it</strong>, worth exactly what the author said a paper should be worth. This section is the rule for how that draw happens.</p>
+  <p>An author uploads a pool of questions. The FSE never sees the whole pool — they see a <strong>paper drawn from it</strong>. This section is the rule for that draw, stated so it can be implemented and tested without interpretation.</p>
 
-  <h3>15.1 The inputs</h3>
+  <h3>15.1 The three numbers the author sets</h3>
 
   <div class="tw">
     <table>
-      <thead><tr><th>Set by the author</th><th>Meaning</th></tr></thead>
+      <thead><tr><th>Number</th><th>Set on</th><th>Meaning</th></tr></thead>
       <tbody>
-        <tr><td><strong>Question weight</strong></td><td>What one question is worth. Default 1. A question about mapping to the wrong MID can be worth 3 where a recall question is worth 1.</td></tr>
-        <tr><td><strong>Paper total</strong></td><td>What one attempt is worth. Left blank, the whole pool is shown.</td></tr>
-        <tr><td><strong>Passing score</strong></td><td>The score needed to clear it, at or below the paper total.</td></tr>
+        <tr><td><strong>Question weight</strong></td><td>Each question</td><td>What that question is worth. Default 1. A question about mapping to the wrong MID might be worth 3 where a recall question is worth 1.</td></tr>
+        <tr><td><strong>Paper total</strong></td><td>The question set</td><td>What one attempt is worth. Leave blank to show the whole pool.</td></tr>
+        <tr><td><strong>Passing score</strong></td><td>The question set</td><td>What they need to clear it. Must be at or below the paper total.</td></tr>
       </tbody>
     </table>
   </div>
 
-  <h3>15.2 The draw, step by step</h3>
+  <h3>15.2 The rule</h3>
+
+  <p>When an FSE opens an assessment, the app builds their paper like this:</p>
 
   <ol>
-    <li><strong>Set aside the written answers.</strong> They carry no score and take no part in the draw.</li>
-    <li><strong>Shuffle the scored pool.</strong></li>
-    <li><strong>Take questions in that shuffled order</strong>, adding each one whose weight still fits inside the remaining room.</li>
+    <li>Put the <strong>written-answer questions to one side</strong>. They carry no score and take no part in the draw.</li>
+    <li><strong>Shuffle</strong> the remaining questions into a random order.</li>
+    <li>Walk that order from the start. <strong>Take a question if its weight still fits</strong> in the room left; skip it if it does not.</li>
     <li><strong>Stop the moment the running total equals the paper total.</strong> That is the paper.</li>
-    <li>If a particular shuffle cannot land on the total exactly, <strong>reshuffle and try again</strong>. A configuration the console allowed will always land within a few attempts.</li>
-    <li><strong>Append the written answers</strong> at the end, in the order they were authored.</li>
+    <li>If walking the whole shuffled order never lands exactly on the total, <strong>discard it, reshuffle and start again</strong>. A configuration the console allowed will land within a handful of tries.</li>
+    <li><strong>Add the written answers back</strong>, at the end, in the order they were authored.</li>
   </ol>
 
-  <h3>15.3 A worked example</h3>
+  <h3>15.3 Watching it happen</h3>
 
-  <p>A pool of six questions weighted 3, 3, 2, 2, 1, 1 — twelve points in total. The author sets a paper total of <strong>6</strong> and a passing score of <strong>4</strong>.</p>
+  <p>Take a pool of six questions weighted <strong>3, 3, 2, 2, 1, 1</strong> — twelve points in all. The author has set a paper total of <strong>6</strong>.</p>
+
+  <p>Suppose the shuffle comes out as <strong>2, 1, 3, 3, 2, 1</strong>:</p>
 
   <div class="tw">
     <table>
-      <thead><tr><th>Attempt</th><th>Questions drawn</th><th>Worth</th><th>Pass at</th></tr></thead>
+      <thead><tr><th>Step</th><th>Question</th><th>Room left</th><th>Decision</th><th>Running total</th></tr></thead>
       <tbody>
-        <tr><td>Ajay, first go</td><td>Two questions weighted 3 + 3</td><td>6</td><td>4</td></tr>
-        <tr><td>Priya, same day</td><td>Three questions weighted 3 + 2 + 1</td><td>6</td><td>4</td></tr>
-        <tr><td>Ajay, retake</td><td>Four questions weighted 2 + 2 + 1 + 1</td><td>6</td><td>4</td></tr>
+        <tr><td>1</td><td>weight 2</td><td>6</td><td>Fits — take it</td><td>2</td></tr>
+        <tr><td>2</td><td>weight 1</td><td>4</td><td>Fits — take it</td><td>3</td></tr>
+        <tr><td>3</td><td>weight 3</td><td>3</td><td>Fits exactly — take it</td><td><strong>6 — stop</strong></td></tr>
       </tbody>
     </table>
   </div>
 
-  <p>Three different papers. All worth the same, all needing the same score. Ajay's retake is not the paper he just failed, and Priya cannot usefully tell him what came up.</p>
+  <p>The paper is three questions worth 6. The remaining three are not used this time.</p>
 
-  <p>Those three shapes are not equally likely — filling to a total naturally favours some combinations over others, and on this pool the three-question paper comes up about twice as often as the other two. What matters is that <strong>no question gets starved</strong>: across a couple of thousand papers each of the six appears between 44% and 59% of the time. An author who uploads a question can expect it to be asked.</p>
+  <p>Had the shuffle instead started <strong>3, 3, …</strong>, the paper would have been those two questions and stopped at step 2. Had it started <strong>3, 2, 2, …</strong>, the third question would have been skipped — no room for a 2 with only 1 left — and the walk would have carried on looking for a 1.</p>
+
+  <h3>15.4 What the draw is <em>not</em> allowed to depend on</h3>
 
   <div class="note">
-    <p><strong>A paper can hold a different number of questions each time.</strong> That is a consequence of drawing to a total rather than to a count, and it is the point: what matters is what the paper is worth, not how many taps it takes. The FSE always sees the paper's worth and the score they need before they start.</p>
+    <p><strong>Each paper is drawn fresh, for that FSE, at that moment, from nothing but the pool and the total.</strong> The draw keeps no memory and reads no history.</p>
   </div>
 
-  <h3>15.4 Which totals are possible</h3>
+  <p>Specifically, it must never consider:</p>
 
-  <p>Because the draw must hit the total <strong>exactly</strong>, not every number can be built. A pool weighted 3, 2 and 1 can make 1, 2, 3, 4, 5 and 6 — but never 7, because no combination of those three adds to it.</p>
+  <ul>
+    <li><strong>What another FSE was shown.</strong> We do not track what one person saw in order to decide what a different person gets. There is no shared rotation, no “questions least used across the field force”, no balancing across people.</li>
+    <li><strong>What this FSE saw last time.</strong> A retake is drawn the same way as a first attempt.</li>
+    <li><strong>Anything else</strong> — time of day, team, tenure, past score.</li>
+  </ul>
 
-  <p>The console works this out from the uploaded weights, lists the totals that are reachable, names the nearest achievable figure when the author misses, and refuses to save an impossible one. Without that check an author could publish a paper the app can never assemble, and the FSE would meet a training that cannot start.</p>
+  <p>This keeps the feature honest in two ways. It cannot become a place where one FSE's behaviour quietly shapes another's experience. And it stays testable: given a pool and a total, the set of papers that can come out is fully determined, so QA can enumerate them rather than trying to reproduce a stateful sequence.</p>
 
-  <h3>15.5 When no total is set</h3>
+  <h3>15.5 What this means for retakes</h3>
 
-  <p>The whole pool is shown, in a shuffled order, and the paper is worth the pool. This is the right setting for a three-question check after a single video — there is nothing to draw from.</p>
+  <p>Because nothing is remembered, <strong>a retake can repeat questions from the failed attempt, and can occasionally be the same paper outright.</strong> On the six-question pool above, a retake draws an identical paper about one time in nine, and shares at least one question about nine times in ten.</p>
 
-  <h3>15.6 Stories</h3>
+  <p>We are accepting that, for two reasons:</p>
+
+  <ul>
+    <li>Failing already sends the FSE back through the content before they can retry (§9.5). The cost of a second attempt is watching again, not guessing again.</li>
+    <li>Avoiding repeats would mean storing what each person was last shown and consulting it — memory we have just said the draw should not have.</li>
+  </ul>
+
+  <p>If repeat rate becomes a real complaint, the fix is <strong>a larger pool</strong>, not a cleverer draw. Twelve questions at a paper total of 6 makes an identical retake vanishingly rare, and that is a content decision an author can make without a code change.</p>
+
+  <h3>15.6 Which totals are possible</h3>
+
+  <p>Because the draw must hit the total exactly, not every number can be built. A pool weighted 3, 2 and 1 can make 1, 2, 3, 4, 5 and 6 — but never 7, because no combination of those three adds to it.</p>
+
+  <p>The console works this out from the uploaded weights, lists the reachable totals, names the nearest achievable figure when the author misses, and refuses to save an impossible one. Without that an author could publish a paper the app can never assemble, and the FSE would meet a training that cannot start.</p>
+
+  <h3>15.7 Even coverage</h3>
+
+  <p>Filling toward a total naturally favours some paper shapes over others — on the pool above, the three-question paper comes up about twice as often as the two- or four-question ones. That is a property of the method, not a problem, provided no question is starved. Across a couple of thousand draws each of the six questions appears between 44% and 59% of the time, so an author who uploads a question can expect it to be asked.</p>
+
+  <h3>15.8 When no total is set</h3>
+
+  <p>The whole pool is shown, shuffled, and the paper is worth the pool. This is the right setting for a three-question check after a single video — there is nothing to draw from.</p>
+
+  <h3>15.9 Stories</h3>
 
   <p>Each segment's questions are drawn by the same rule, and each draw's score is carried forward. The closing set is drawn the same way. Only when the last of them is submitted is the carried total judged, once, against the pass mark for the whole story.</p>
 
