@@ -1,0 +1,8 @@
+question,option1,option2,option3,option4,option5,option6,correct_options,weight
+"What does the SoundBox confirm for a merchant?","Nothing, it is only a speaker","Every payment, out loud","Only refunds","The day's closing stock","","",2,1
+"A merchant asks what the ₹125 a month covers. What is accurate?","A one-time purchase of the device","Monthly rental for the SB-V2 Music 4G, GST included","A refundable deposit returned after a year","Unlimited free QR stickers","","",2,2
+"Which two are required on a SoundBox rental plan?","UPI Autopay mandate","A cash security deposit","Correct MID mapping","A new SIM card","","","1;3",3
+"Which of these count as Business Proof for Re-KYC?","GST certificate","A photo of the shopfront","Shop & Establishment licence","The merchant's Aadhaar","Electricity bill in the business name","Rent agreement","1;3;5",3
+"The QR you are about to map is already mapped to another MID. What do you do?","Map it anyway and tell the TL later","Stop and raise a remapping request","Peel the sticker off and reuse it elsewhere","Ask the merchant to open a new account","","",2,3
+"Is UPI Autopay optional on a monthly rental plan?","Yes","No","","","","",2,1
+"What objection did you hear most from merchants this week?","Type what the merchant actually said, in their words","","","","","",text,

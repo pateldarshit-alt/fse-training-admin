@@ -189,7 +189,7 @@
         <tr><td>Product</td><td>GG App and Force App — Field Sales Executive mobile applications</td></tr>
         <tr><td>Owner</td><td>Product</td></tr>
         <tr><td>Status</td><td>Draft for review</td></tr>
-        <tr><td>Version</td><td>3.3</td></tr>
+        <tr><td>Version</td><td>3.4</td></tr>
         <tr><td>Date</td><td>8 September 2026</td></tr>
         <tr><td>Reviewers</td><td>Design, Frontend, Backend, Field Ops, L&amp;D</td></tr>
       </tbody>
@@ -401,7 +401,7 @@
     <table>
       <thead><tr><th>Type</th><th>Rule</th></tr></thead>
       <tbody>
-        <tr><td><strong>One answer</strong></td><td>One option is correct.</td></tr>
+        <tr><td><strong>One answer</strong></td><td>One option is correct. A question carries between two and eight options — two for a yes/no, more where the distinctions matter.</td></tr>
         <tr><td><strong>Several answers</strong></td><td>Every correct option must be selected and nothing else. Marked <strong>whole — there is no part credit.</strong> The prompt says how many are correct.</td></tr>
         <tr><td><strong>Written answer</strong></td><td>Free text. Carries no score, sits outside the pass calculation, always asked last. Recorded for the trainer, never marked.</td></tr>
       </tbody>
@@ -582,7 +582,7 @@
   <ul>
     <li>A training with no name, or a video with no title</li>
     <li>An assessment turned on with no questions</li>
-    <li>A question missing text or any of its options</li>
+    <li>A question missing its text, or with a blank option between filled ones</li>
     <li>A question with nothing marked correct — it could never be answered right</li>
     <li>A question weight of zero or less</li>
     <li>A paper total no combination of weights can reach</li>
@@ -616,9 +616,64 @@
     <li>A video's title fills in from its filename unless one has been typed</li>
   </ul>
 
-  <h3>14.4 Importing questions</h3>
+  <h3>14.4 Importing questions — the CSV format</h3>
 
-  <p>Questions can be typed or imported as CSV: question, four options, the correct answers, and a weight. Several correct answers are given as <span class="mono">1;3</span>. A written answer is marked by putting <span class="mono">text</span> in the correct-answers column, with the hint in the first option. Bad rows are rejected individually and counted, rather than failing the whole file.</p>
+  <p>Questions can be typed in the console or uploaded as a CSV. A blank template is downloadable from beside every <em>Add question</em> button, and lives at <span class="mono">questions-template.csv</span>.</p>
+
+  <h4>Columns</h4>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Column</th><th>Required</th><th>What goes in it</th></tr></thead>
+      <tbody>
+        <tr><td><span class="mono">question</span></td><td>Yes</td><td>The question as the FSE will read it.</td></tr>
+        <tr><td><span class="mono">option1</span> … <span class="mono">optionN</span></td><td>At least 2</td><td>The answers to choose from. Add as many <span class="mono">option</span> columns as you need, up to eight. Leave the trailing ones empty on rows that use fewer.</td></tr>
+        <tr><td><span class="mono">correct_options</span></td><td>Yes</td><td>Which option numbers are correct — <span class="mono">2</span> for one, <span class="mono">"1;3"</span> for several. Or the word <span class="mono">text</span> to make it a written answer.</td></tr>
+        <tr><td><span class="mono">weight</span></td><td>No</td><td>What the question is worth. Blank means 1.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4>An example file</h4>
+
+  <div class="tw">
+    <table>
+      <thead>
+        <tr><th>question</th><th>option1</th><th>option2</th><th>option3</th><th>option4</th><th>correct_options</th><th>weight</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>What does the SoundBox confirm?</td><td>Nothing</td><td>Every payment, out loud</td><td>Only refunds</td><td>Closing stock</td><td>2</td><td>1</td></tr>
+        <tr><td>Which two are required on a rental plan?</td><td>UPI Autopay mandate</td><td>A cash deposit</td><td>Correct MID mapping</td><td>A new SIM</td><td>1;3</td><td>3</td></tr>
+        <tr><td>Is Autopay optional on a rental plan?</td><td>Yes</td><td>No</td><td></td><td></td><td>2</td><td>1</td></tr>
+        <tr><td>What objection did you hear most this week?</td><td>Type what the merchant said</td><td></td><td></td><td></td><td>text</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Row three uses two options and leaves the rest blank. Row four is a written answer: the first option becomes the hint shown in the box, the rest are ignored, and no weight applies.</p>
+
+  <h4>Rules the importer applies</h4>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Rule</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td>Header row</td><td>Recommended. With one, columns are found by name, so you can have any number of <span class="mono">option</span> columns and order them how you like. Without one, the file is read as the fixed shape: question, four options, correct, weight.</td></tr>
+        <tr><td>Number of options</td><td>Between <strong>2 and 8</strong>. Trailing blanks are trimmed, so a row can use fewer than the header allows.</td></tr>
+        <tr><td>Gaps</td><td>A blank <em>between</em> filled options is rejected — it usually means a column was missed rather than intended.</td></tr>
+        <tr><td>Separators for several answers</td><td><span class="mono">;</span> is canonical. <span class="mono">|</span> and a quoted <span class="mono">,</span> also work.</td></tr>
+        <tr><td>Answer numbers</td><td>Must be within the number of options on <em>that row</em>. Duplicates collapse.</td></tr>
+        <tr><td>Every option correct</td><td>Rejected. A question where nothing can be wrong tests nothing.</td></tr>
+        <tr><td>Weight</td><td>Must be a positive number. Blank means 1.</td></tr>
+        <tr><td>Quoting</td><td>Standard CSV. Wrap in double quotes any value containing a comma; write a literal quote as <span class="mono">""</span>.</td></tr>
+        <tr><td>Bad rows</td><td>Rejected <strong>individually</strong>, with the row number and the reason. The good rows still import, and the console reports how many of each.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <p><strong>Why comma is accepted as a separator.</strong> It is the first thing an author reaches for. Before it was allowed, a quoted <span class="mono">"1,3"</span> parsed as plain <span class="mono">1</span> — the row imported without complaint as a single-answer question with half its key missing. Silently wrong is worse than rejected, so comma now works and a value the importer cannot fully read is refused outright.</p>
+  </div>
 
   <h2>15. How questions are chosen</h2>
 
