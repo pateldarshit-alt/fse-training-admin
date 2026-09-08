@@ -189,7 +189,7 @@
         <tr><td>Product</td><td>GG App and Force App — Field Sales Executive mobile applications</td></tr>
         <tr><td>Owner</td><td>Product</td></tr>
         <tr><td>Status</td><td>Draft for review</td></tr>
-        <tr><td>Version</td><td>3.0</td></tr>
+        <tr><td>Version</td><td>3.1</td></tr>
         <tr><td>Date</td><td>8 September 2026</td></tr>
         <tr><td>Reviewers</td><td>Design, Frontend, Backend, Field Ops, L&amp;D</td></tr>
       </tbody>
@@ -200,7 +200,7 @@
 
   <p>An FSE learns the job in a classroom on day three and is then expected to remember it in front of a merchant six weeks later. Everything since has been a PDF on a group chat.</p>
 
-  <p>The cost of that shows up in specific, measurable places:</p>
+  <p>The cost shows up in specific, measurable places:</p>
 
   <ul>
     <li>QRs mapped to the wrong MID, so a merchant's money settles into someone else's account</li>
@@ -234,10 +234,10 @@
     <table>
       <thead><tr><th>Measure</th><th>What it tells us</th></tr></thead>
       <tbody>
-        <tr><td><strong>Completion rate of mandatory content</strong></td><td>Whether the enforcement mechanism works at all. This is the first thing to watch.</td></tr>
-        <tr><td><strong>First-attempt pass rate</strong></td><td>Below 60%, the content is not teaching what the assessment tests. Above 85%, the questions are too easy to be worth asking.</td></tr>
         <tr><td><strong>Error rate on the taught behaviour</strong></td><td>The real measure. Mis-mapped QRs, missing Autopay mandates, stalled Re-KYC — before and after, for FSEs who completed versus those who have not.</td></tr>
-        <tr><td><strong>Dismissal rate per placement</strong></td><td>Whether a nudge is help or noise. A high dismissal rate on one screen is a placement problem, not a content problem.</td></tr>
+        <tr><td><strong>Completion rate of mandatory content</strong></td><td>Whether the enforcement mechanism works at all.</td></tr>
+        <tr><td><strong>First-attempt pass rate</strong></td><td>Below 60%, the content is not teaching what the assessment tests. Above 85%, the questions are too easy to be worth asking.</td></tr>
+        <tr><td><strong>Dismissal rate per placement</strong></td><td>Whether a nudge is help or noise. A high rate on one screen is a placement problem, not a content problem.</td></tr>
         <tr><td><strong>Drop-off point within a video</strong></td><td>Where attention is lost. If most FSEs stop at forty seconds, the video should be forty seconds.</td></tr>
       </tbody>
     </table>
@@ -251,18 +251,69 @@
     <table>
       <thead><tr><th></th><th>Is</th><th>Answers</th></tr></thead>
       <tbody>
-        <tr><td><strong>Content</strong></td><td>A video, an audio clip, a PDF or an image — with its language versions</td><td>What are we showing?</td></tr>
-        <tr><td><strong>Training</strong></td><td>An ordered set of content, the widget it appears in, and its assessment</td><td>What is the FSE meant to learn, and how do we know they did?</td></tr>
-        <tr><td><strong>Placement</strong></td><td>A training put on a screen, for an audience, under rules</td><td>Who sees it, where, and how hard does it push?</td></tr>
+        <tr><td><strong>Content</strong></td><td>A video, audio clip, PDF or image — with its language versions</td><td>What are we showing?</td></tr>
+        <tr><td><strong>Training</strong></td><td>An ordered set of content, the widget it appears in, and its assessment</td><td>What should they learn, and how do we know they did?</td></tr>
+        <tr><td><strong>Placement</strong></td><td>A training put on a screen, in a position, for an audience, under rules</td><td>Who sees it, where, how hard does it push?</td></tr>
       </tbody>
     </table>
   </div>
 
   <div class="note">
-    <p><strong>Why separate training from placement.</strong> The same QR-mapping training belongs on the home screen for everyone, and on the merchant screen for FSEs missing their target, with different urgency in each case. One object, placed twice. Without the split, we would be maintaining two copies of the same content and they would drift apart.</p>
+    <p><strong>Why separate training from placement.</strong> The same QR-mapping training belongs on the home screen for everyone, and on the merchant screen for FSEs missing their target, with different urgency in each case. One object, placed twice. Without the split we maintain two copies of the same content and they drift apart.</p>
   </div>
 
-  <h2>5. Where training appears</h2>
+  <h2>5. User flows</h2>
+
+  <h3>5.1 The everyday case — help offered, not forced</h3>
+
+  <p>Ajay opens a merchant's SoundBox plan screen. A mini banner sits below the plan selector: <em>“How to explain the ₹125 plan · 0:40”</em>.</p>
+
+  <ol>
+    <li>He taps it. The banner expands <strong>in place</strong> — the plan selector stays on screen and reachable.</li>
+    <li>He taps play. The video opens over the screen, in Hindi, because Hindi is one of the languages uploaded for it.</li>
+    <li>A merchant interrupts him at 0:18. He closes it.</li>
+    <li>Ten minutes later he taps the banner again. It opens at <strong>0:18</strong>, with a <em>Start over</em> beside it.</li>
+    <li>It ends. There is no assessment on this one, so it is marked complete and the banner shows a tick.</li>
+    <li>He has now seen it twice; the placement is capped at three views, so it will appear once more and then stop.</li>
+  </ol>
+
+  <h3>5.2 The enforced case — a mandatory SOP</h3>
+
+  <p>The QR mapping SOP changes. Ops publishes it as an interstitial on the home screen, mandatory.</p>
+
+  <ol>
+    <li>Ajay opens the app. The home screen is <strong>sealed</strong>: a gate listing the training and how many steps remain. There is no dismiss and no “later”.</li>
+    <li>The only action is <em>Complete now</em>, which takes him to My trainings.</li>
+    <li>He opens the training. Skipping is off — mandatory content cannot be skimmed — so the scrubber will not go past what he has actually watched.</li>
+    <li>The video ends. The assessment unlocks: three questions drawn to a paper worth 3, needing 2 to pass.</li>
+    <li>He answers. <strong>Nothing tells him right or wrong as he goes.</strong> He can change an answer until he moves on.</li>
+    <li>He scores 1. <strong>Assessment failed.</strong> The video is marked unwatched again and the assessment re-locks — he must watch it before retrying. The message explains why this matters: money settles to the wrong account.</li>
+    <li>Second time he passes. The gate lifts. The card moves to Completed and offers a certificate.</li>
+  </ol>
+
+  <h3>5.3 The long case — onboarding in My trainings</h3>
+
+  <p>A new joiner is assigned <em>New joiner essentials</em>: four videos and one assessment at the end, as a My trainings page training.</p>
+
+  <ol>
+    <li>It appears in My trainings under <strong>Pending</strong>, sorted near the top because it is mandatory.</li>
+    <li>Opening it shows the four videos in order. The first is ringed and marked <strong>NEXT</strong>; a sticky button at the bottom says <em>Start</em>.</li>
+    <li>The assessment sits at the end, visibly locked: <em>“Finish the remaining 4 videos to unlock this.”</em></li>
+    <li>He does two, closes the app, comes back. The card reads <em>2 of 4 videos</em>, the button now says <em>Continue</em>, and it resumes at video 3.</li>
+    <li>With all four done the assessment unlocks. It is timed at three minutes for the whole attempt.</li>
+    <li>He passes. The training moves to Completed and the certificate becomes available.</li>
+  </ol>
+
+  <h3>5.4 The admin's flow — publishing</h3>
+
+  <ol>
+    <li><strong>Create the training.</strong> Name it, pick the widget view, upload the videos in order — the title fills in from the filename. Add language versions beneath each. Add the questions, or import them.</li>
+    <li><strong>Place it.</strong> Pick the training, the app, the screen, and the <strong>position on that screen</strong>. Choose the audience. Set the rules.</li>
+    <li><strong>The console argues back</strong> where the configuration cannot work — see §14.</li>
+    <li><strong>Place it again</strong> somewhere else if you want, with different targeting. The training itself is untouched.</li>
+  </ol>
+
+  <h2>6. Where training appears</h2>
 
   <p>Nine ways a training can surface. The choice is a judgement about how much of the FSE's attention we are entitled to at that moment.</p>
 
@@ -270,26 +321,64 @@
     <table>
       <thead><tr><th>View</th><th>Use it when</th><th>Holds</th></tr></thead>
       <tbody>
-        <tr><td><strong>Direct CTA</strong></td><td>You want help available without spending any screen — a link or icon in the screen's own controls. The only view that fits <em>anywhere</em>.</td><td>1</td></tr>
-        <tr><td><strong>Mini banner</strong></td><td>A persistent, low-cost offer of help on a busy screen.</td><td>1</td></tr>
-        <tr><td><strong>Interstitial</strong></td><td>The FSE genuinely must see it before continuing. Interrupts the screen.</td><td>1</td></tr>
+        <tr><td><strong>Direct CTA</strong></td><td>Help available without spending any screen — a link or icon in the screen's own controls. The one view that fits <em>anywhere</em>.</td><td>1</td></tr>
+        <tr><td><strong>Mini banner</strong></td><td>A persistent, low-cost offer of help on a busy screen. Expands in place; covers nothing.</td><td>1</td></tr>
+        <tr><td><strong>Interstitial</strong></td><td>They genuinely must see it before continuing. Takes the screen.</td><td>1</td></tr>
         <tr><td><strong>Bottom sheet</strong></td><td>Help attached to a specific action, surfaced when they take it.</td><td>1</td></tr>
-        <tr><td><strong>Picture-in-picture</strong></td><td>They need to watch and do at the same time — following steps while filling a form.</td><td>1</td></tr>
+        <tr><td><strong>Picture-in-picture</strong></td><td>They must watch and do at once — following steps while filling a form.</td><td>1</td></tr>
         <tr><td><strong>Inline accordion</strong></td><td>Several related answers on one screen, browsed in any order.</td><td>8</td></tr>
         <tr><td><strong>Inline embedded card</strong></td><td>Training that belongs in the page's own flow rather than over it.</td><td>8</td></tr>
-        <tr><td><strong>Carousel</strong></td><td>A library to pick from — the card that matches the merchant in front of them.</td><td>12</td></tr>
+        <tr><td><strong>Carousel</strong></td><td>A library to pick from — the card matching the merchant in front of them.</td><td>12</td></tr>
         <tr><td><strong>Stories</strong></td><td>A short sequence with a real beginning and end, watched in order.</td><td>10</td></tr>
       </tbody>
     </table>
   </div>
 
-  <p>Plus <strong>My trainings page</strong>, which is not a screen widget at all: a training that lives only in the hub, worked through start to finish. Use it for onboarding and anything long.</p>
+  <p>Plus <strong>My trainings page</strong> — not a screen widget at all, but a training that lives only in the hub and is worked through start to finish. Use it for onboarding and anything long.</p>
 
-  <h2>6. Assessment</h2>
+  <h3>6.1 Position on the screen</h3>
 
-  <h3>6.1 Where the questions sit</h3>
+  <p>A screen can carry more than one widget of the same type, so choosing a screen also means choosing a <strong>named position</strong> — “Mini banner — top of page”, “Mini banner — after performance”. The position is what tells two placements apart, and what lets the console warn when two trainings want the same one.</p>
 
-  <p>This is decided by the widget, not by the author, because not every view has a moment where "the set is finished".</p>
+  <h2>7. The content itself</h2>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Type</th><th>Counts as finished when</th></tr></thead>
+      <tbody>
+        <tr><td>Video</td><td>It plays to the end</td></tr>
+        <tr><td>Audio</td><td>It plays to the end — usable beside a merchant with nothing to look at</td></tr>
+        <tr><td>PDF or slides</td><td>Scrolled to the last page</td></tr>
+        <tr><td>Image</td><td>Opened. A single still is consumed at a glance</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p><strong>Languages.</strong> Each item has one primary file and any number of language versions beneath it. The player offers exactly what has been uploaded and nothing more — no empty language options. Captions are available on video.</p>
+
+  <h2>8. Watching</h2>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th></th><th>Behaviour</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Resume</strong></td><td>Always on, everywhere. Reopening picks up at the furthest point reached, with the position shown and a <em>Start over</em> beside it. No setting can take this away — an FSE interrupted mid-visit must not pay for it twice.</td></tr>
+        <tr><td><strong>Speed</strong></td><td>1×, 1.5×, 2×, carried across items for the session. A second viewing is usually a refresher.</td></tr>
+        <tr><td><strong>Skipping ahead</strong></td><td>A placement rule, on by default. With it off, seeking is clamped to the furthest point actually watched — scrubbing back and forward within that still works.</td></tr>
+        <tr><td><strong>Skippable after N views</strong></td><td>An alternative to the toggle: locked for the first viewings, open afterwards. The player says which view this is and when it opens up.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <p><strong>There is no “I've watched this”.</strong> Self-declaring and dragging to the end were the same escape hatch under two names. One control remains, and it is off for anything mandatory — which is the only thing making a mandatory completion record mean anything.</p>
+  </div>
+
+  <h2>9. Assessment</h2>
+
+  <h3>9.1 Where the questions sit</h3>
+
+  <p>Decided by the widget, not the author, because not every view has a moment where “the set is finished”.</p>
 
   <div class="tw">
     <table>
@@ -303,15 +392,32 @@
   </div>
 
   <div class="note">
-    <p><strong>Why not offer a combined assessment everywhere.</strong> On a carousel the FSE opens the one card relevant to the merchant they are about to see. Asking about all twelve afterwards tests content they never opened. On a bottom sheet, nothing says they reached the last item. A single pass mark needs a moment to fire on, and only Stories and the hub have one.</p>
+    <p><strong>Why not a combined assessment everywhere.</strong> On a carousel the FSE opens the one card relevant to the merchant they are about to see; asking about all twelve afterwards tests content they never opened. On a bottom sheet nothing says they reached the last item. A single pass mark needs a moment to fire on, and only Stories and the hub have one.</p>
   </div>
 
-  <h3>6.2 How scoring works</h3>
+  <h3>9.2 Question types</h3>
 
-  <p>Everything is expressed as a score, never a percentage.</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Type</th><th>Rule</th></tr></thead>
+      <tbody>
+        <tr><td><strong>One answer</strong></td><td>One option is correct.</td></tr>
+        <tr><td><strong>Several answers</strong></td><td>Every correct option must be selected and nothing else. Marked <strong>whole — there is no part credit.</strong> The prompt says how many are correct.</td></tr>
+        <tr><td><strong>Written answer</strong></td><td>Free text. Carries no score, sits outside the pass calculation, always asked last. Recorded for the trainer, never marked.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Part credit on a multi-answer question would make a pass mark impossible to reason about, and every question of this kind is one where half-knowing is the failure mode — <em>“which two are required on a rental plan”</em> is not half-right if you name one.</p>
+
+  <p>A set containing <strong>only</strong> written answers is valid. There is nothing to score, so it reports <em>Answers recorded</em> rather than a pass or fail.</p>
+
+  <h3>9.3 Scoring</h3>
+
+  <p>Everything is a score. There are no percentages in the model.</p>
 
   <ul>
-    <li>Each question is worth a number of points — a mis-mapped QR question can be worth three where a recall question is worth one.</li>
+    <li>Each question is worth points — a mis-mapped-QR question can be worth three where a recall question is worth one.</li>
     <li>The author sets what <strong>one paper is worth</strong>. Questions are drawn at random until they add up to exactly that.</li>
     <li>The author sets the <strong>score needed to pass</strong>, at or below the paper's worth.</li>
   </ul>
@@ -319,83 +425,121 @@
   <p>Two FSEs therefore sit different papers of equal weight, and a retake is never the paper just failed.</p>
 
   <div class="note">
-    <p><strong>One consequence to know about.</strong> Because the target must be met exactly, not every number is buildable — a pool of questions worth 3, 2 and 1 can make any total from 1 to 6, but never 7. The console works out which totals are reachable, shows them, and refuses a target that cannot be built. Without that check an author could configure a paper the app can never assemble.</p>
+    <p><strong>Not every total is buildable.</strong> Because the target must be met exactly, a pool of questions worth 3, 2 and 1 can make any total from 1 to 6 — but never 7. The console works out which totals are reachable from the uploaded weights, lists them, names the nearest achievable figure, and refuses to save a target that cannot be built. Without that an author could configure a paper the app can never assemble.</p>
   </div>
 
-  <h3>6.3 Written answers</h3>
-
-  <p>A question can ask for a written response instead of options — <em>“What objection did you hear most this week?”</em>. It carries no score, sits outside the pass calculation, and is always asked last. It is recorded for the trainer, never marked. A set containing only written answers is valid and simply reports <strong>Answers recorded</strong>.</p>
-
-  <h3>6.4 What the FSE sees, and does not</h3>
+  <h3>9.4 What the FSE sees, and does not</h3>
 
   <div class="tw">
     <table>
       <thead><tr><th>Rule</th><th>Why</th></tr></thead>
       <tbody>
         <tr><td>The correct answer is never shown — during or after</td><td>An answer key turns a retake into a memory test.</td></tr>
-        <tr><td>No right/wrong feedback per question either</td><td>Marking each selection as it is made is worse than a key: across two or three retakes an FSE can map the whole paper by elimination without watching anything.</td></tr>
+        <tr><td>No right/wrong feedback per question either</td><td>Marking each selection as it is made is worse than a key: across two or three retakes an FSE can map a whole paper by elimination without watching anything.</td></tr>
         <tr><td>Answers can be changed until they move on</td><td>It is a test of knowledge, not of tapping accuracy.</td></tr>
-        <tr><td>Failing reopens the content</td><td>No instant retry. The videos are marked unwatched and the assessment locks until they have been through them again — otherwise a random paper can simply be brute-forced.</td></tr>
-        <tr><td>Every result reads the same</td><td><strong>Assessment passed</strong> or <strong>Assessment failed</strong>, whichever widget it ran in. Three names for one obligation confuses the FSE meeting all three in a week.</td></tr>
+        <tr><td>Every result reads the same</td><td><strong>Assessment passed</strong> or <strong>Assessment failed</strong>, whichever widget it ran in. Three names for one obligation confuses an FSE who meets all three in a week.</td></tr>
       </tbody>
     </table>
   </div>
 
-  <p>A time limit can be set for the whole attempt. When it expires the attempt is submitted as it stands, graded on what was answered, and says so.</p>
+  <h3>9.5 Failing</h3>
 
-  <h2>7. Watching</h2>
+  <p>There is no immediate retry. The content the assessment covers is <strong>marked unwatched</strong>, so the assessment locks until the FSE has been through it again — a per-video check reopens its own video, a combined assessment reopens the whole set.</p>
+
+  <p>This is what makes the pass mark mean anything. With random papers, an instant retry lets an FSE resubmit until a favourable draw appears. Sending them back to the content, with skipping already off on mandatory trainings, makes a second attempt cost what the first did.</p>
+
+  <h3>9.6 Time limit</h3>
+
+  <p>One limit per training, covering every question in an attempt. It shows in the header, turns amber at a quarter remaining and red at a tenth. On expiry the attempt is submitted as it stands and graded on what was answered — the result says so rather than showing a bare low score.</p>
+
+  <h3>9.7 Stories, scored as one paper</h3>
+
+  <p>Stories is the only view carrying both question types, so its scoring needs stating explicitly.</p>
 
   <div class="tw">
     <table>
-      <thead><tr><th></th><th>Behaviour</th></tr></thead>
+      <thead><tr><th>Moment</th><th>What happens</th></tr></thead>
       <tbody>
-        <tr><td><strong>Resume</strong></td><td>Always on, everywhere. An FSE interrupted mid-visit picks up where they stopped. There is no setting that can take this away.</td></tr>
-        <tr><td><strong>Speed</strong></td><td>1×, 1.5×, 2×. A second viewing is usually a refresher.</td></tr>
-        <tr><td><strong>Language</strong></td><td>Only the languages actually uploaded for that video are offered.</td></tr>
-        <tr><td><strong>Skipping ahead</strong></td><td>A placement rule. Off wherever the training is mandatory.</td></tr>
+        <tr><td>After a segment</td><td>The answers are scored and <strong>carried forward</strong>. No verdict is shown — <em>Answers recorded</em> — because a segment is never passed or failed on its own.</td></tr>
+        <tr><td>Re-answering a segment</td><td>Replaces that segment's contribution rather than adding to it, so a segment cannot be farmed for points.</td></tr>
+        <tr><td>Reaching the end early</td><td>The closing set is <strong>locked</strong> until every segment carrying questions has been answered, naming how many are owed. Scoring a partial story would judge it against a smaller pool than the pass mark was set for — making a skipped story easier than a complete one.</td></tr>
+        <tr><td>At the end</td><td>The closing set is added to what was carried, and the total judged once. One result, one message.</td></tr>
+        <tr><td>On failure</td><td>Every segment reopens and the carried total is cleared. The story is retaken whole.</td></tr>
       </tbody>
     </table>
   </div>
 
-  <p>What counts as finishing depends on the content: video and audio play to the end, a PDF is scrolled to the last page, an image is opened.</p>
+  <p>A segment is complete once <strong>answered</strong>, not once passed — passing is not something a segment can do.</p>
 
-  <div class="note">
-    <p><strong>There is no “I've watched this”.</strong> Self-declaring and dragging to the end were the same escape hatch by two names. Only one control remains, and it is off for anything mandatory — which is the only thing making a mandatory completion record mean anything.</p>
-  </div>
+  <h2>10. My trainings</h2>
 
-  <h2>8. My trainings</h2>
+  <p>One list of everything assigned to this FSE.</p>
 
-  <p>One list of everything assigned to this FSE. Four tabs: <strong>All</strong>, <strong>Pending</strong>, <strong>Pending mandatory</strong>, <strong>Completed</strong>.</p>
+  <h3>10.1 The list</h3>
 
   <ul>
-    <li>Order is priority, not upload date: mandatory and part-done first, completed last.</li>
-    <li>Progress counts <em>steps</em> — three videos into a four-step training reads as progress, not zero.</li>
-    <li>A training can issue a <strong>certificate</strong> on completion, downloadable from the Completed tab.</li>
+    <li>Four tabs, each with a live count: <strong>All</strong>, <strong>Pending</strong>, <strong>Pending mandatory</strong>, <strong>Completed</strong>.</li>
+    <li>Order is priority, not upload date: mandatory and part-done first, not-started next, completed last and de-emphasised.</li>
+    <li>Progress counts <strong>steps</strong> — a step is one video or the assessment. Three videos into a four-step training reads as progress, not zero.</li>
+    <li>A banner names how many mandatory trainings are outstanding, and jumps to that tab.</li>
+    <li>No search. At this list size, priority ordering does the job.</li>
   </ul>
 
-  <h2>9. Rules an admin can set</h2>
+  <p>Each card carries the training name, step pips, a status and the MANDATORY tag where it applies. Statuses are: <em>Not started</em>, <em>2 of 3 videos</em>, <em>Assessment ready</em>, <em>Assessment failed</em>, <em>Assessment passed</em>.</p>
 
-  <p>Set per placement, so the same training can be gentle for one audience and mandatory for another.</p>
+  <h3>10.2 Inside a training</h3>
+
+  <ul>
+    <li>Videos in order. Completed ones ticked; the next one ringed and marked <strong>NEXT</strong>.</li>
+    <li>A sticky button always naming the next action — <em>Start</em>, <em>Continue</em>, <em>Take the assessment</em>.</li>
+    <li>Where there is a combined assessment it sits at the end, locked until the videos are done, and says why: <em>“Finish the remaining 2 videos to unlock this.”</em></li>
+    <li>Nothing is locked that the admin has not locked. Videos can be watched out of order unless a rule says otherwise.</li>
+  </ul>
+
+  <h3>10.3 Empty states</h3>
+
+  <p>Each tab says something useful when empty rather than showing nothing: <em>“Every training assigned to you is done”</em>, <em>“No mandatory work outstanding”</em>, <em>“Finish a training and it will show up here”</em>.</p>
+
+  <h3>10.4 Certificates</h3>
+
+  <p>A training can issue one on completion — set per training, so nothing appears the panel has not turned on. It names the FSE and their code, the training, the score where there was an assessment, the date and a reference, and downloads as a file they can keep, share or print. Available from the Completed tab and from inside the training.</p>
+
+  <h2>11. Mandatory and the homepage blocker</h2>
+
+  <p>They are <strong>one switch</strong>, set on the placement: <em>Mandatory training — homepage blocker</em>.</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>State</th><th>What the FSE sees</th></tr></thead>
+      <tbody>
+        <tr><td>Outstanding</td><td>The home screen is sealed. Every blocking training is listed with how many steps remain. The only action is <em>Complete now</em>, which hands off to My trainings. No dismiss, no “later”.</td></tr>
+        <tr><td>Nothing outstanding</td><td>No gate at all.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    <p><strong>Why one switch.</strong> Content nobody may skip has to be enforced somewhere, and the home screen is the only place we can be sure the FSE passes through. A “mandatory” flag that did not block would be a label, not a rule. Because it lives on the placement, the same training can be mandatory for one audience and merely available to another.</p>
+  </div>
+
+  <h2>12. Rules an admin can set</h2>
 
   <div class="tw">
     <table>
       <thead><tr><th>Rule</th><th>Effect</th></tr></thead>
       <tbody>
-        <tr><td>Stop after N views / N days</td><td>Stops a helpful nudge becoming wallpaper.</td></tr>
+        <tr><td>Stop after N views</td><td>Stops a helpful nudge becoming wallpaper.</td></tr>
+        <tr><td>Stop after N days</td><td>Expiry, counted from first view.</td></tr>
         <tr><td>Also list in My trainings</td><td>Findable in the hub as well as on the screen.</td></tr>
         <tr><td>Let the FSE skip ahead</td><td>On by default.</td></tr>
         <tr><td>Make skippable after N views</td><td>Locked for the first viewings, open afterwards. Replaces the toggle above when set.</td></tr>
-        <tr><td>Do not repeat the assessment once cleared</td><td>A repeat visit shows the score they passed with.</td></tr>
-        <tr><td><strong>Mandatory training — homepage blocker</strong></td><td>Carries the MANDATORY tag and seals the home screen until it is done.</td></tr>
+        <tr><td>Do not repeat the assessment once cleared</td><td>A repeat visit shows the score they passed with instead of re-testing. Offered only where there is an assessment.</td></tr>
+        <tr><td><strong>Mandatory — homepage blocker</strong></td><td>MANDATORY tag, seals the home screen, and forces skipping off.</td></tr>
       </tbody>
     </table>
   </div>
 
-  <div class="note">
-    <p><strong>Mandatory and blocking are one switch, deliberately.</strong> Content nobody may skip has to be enforced somewhere, and the home screen is the only place we can be sure the FSE will pass through. A "mandatory" flag that did not block would be a label, not a rule.</p>
-  </div>
-
-  <h2>10. Who sees it</h2>
+  <h2>13. Who sees it</h2>
 
   <p>An audience comes from exactly one source. They are alternatives, not filters to combine:</p>
 
@@ -411,62 +555,132 @@
     </table>
   </div>
 
-  <p>CleverTap remains the system of record — the console reads segments, never creates them. We store only the segment id, so a segment that changes shape in CleverTap changes who a training reaches with no edit here. That is the point of the integration, and it is why a segment withdrawn in CleverTap is flagged loudly wherever it was used.</p>
+  <p>Switching source clears the previous one rather than leaving values that would be saved and never read. A live line states the resolved audience, and it is the same calculation the placements table and the save guard use.</p>
 
-  <h2>11. The admin console</h2>
+  <h3>13.1 The CleverTap integration</h3>
 
-  <p>Two sections, matching the model:</p>
+  <p>CleverTap stays the system of record — the console <strong>reads</strong> segments and never creates one. We store only the segment id, so a segment that changes shape in CleverTap changes who a training reaches with no edit here. That is the point of the integration, and it is why the failure cases have to be loud:</p>
 
-  <ol>
-    <li><strong>Training creation</strong> — content, the widget it appears in, and its assessment.</li>
-    <li><strong>Placement</strong> — app, screen, position on that screen, audience, rules.</li>
-  </ol>
+  <div class="tw">
+    <table>
+      <thead><tr><th>State</th><th>Behaviour</th></tr></thead>
+      <tbody>
+        <tr><td>Not yet fetched</td><td>Choosing the source triggers the fetch. A saved segment id still renders and is not treated as an error before the list arrives.</td></tr>
+        <tr><td>Reachable</td><td>Segments listed with their size; footer shows the count and last sync, with a manual refresh.</td></tr>
+        <tr><td>Unreachable</td><td>An error panel with retry. Cached segments are kept and existing placements keep working — only the picker is affected.</td></tr>
+        <tr><td><strong>Segment withdrawn</strong></td><td>A placement pointing at an id CleverTap no longer returns is flagged in the editor, flagged in the table, and refused at save. The dead id stays visible so the admin can see what it pointed at.</td></tr>
+      </tbody>
+    </table>
+  </div>
 
-  <p>Choosing a screen also asks for a <strong>position</strong> on it — “Mini banner — top of page”, “Mini banner — after performance”. A screen can carry two widgets of the same type, and the position is what tells the placements apart and lets the console warn when two trainings want the same one.</p>
+  <h2>14. The admin console</h2>
 
-  <p>The console will not let an author save something the app cannot honour: a paper that cannot be built, a pass mark above the total, a question with no correct answer, a training placed where its widget does not exist, a blocker that routes to a hub the training is not listed in.</p>
+  <p>Two sections, matching the model: <strong>training creation</strong> (content, widget, assessment) and <strong>placement</strong> (app, screen, position, audience, rules).</p>
 
-  <h2>12. What we are not doing</h2>
+  <h3>14.1 What it refuses to save</h3>
+
+  <ul>
+    <li>A training with no name, or a video with no title</li>
+    <li>An assessment turned on with no questions</li>
+    <li>A question missing text or any of its options</li>
+    <li>A question with nothing marked correct — it could never be answered right</li>
+    <li>A question weight of zero or less</li>
+    <li>A paper total no combination of weights can reach</li>
+    <li>A passing score above the total, or below 1</li>
+    <li>A placement with no training, screen or position</li>
+    <li>A placement pointing at a CleverTap segment that no longer exists</li>
+    <li>Deleting a training that is still placed — it names where</li>
+  </ul>
+
+  <h3>14.2 What it warns about but allows</h3>
+
+  <ul>
+    <li>Two trainings competing for the same position on the same screen</li>
+    <li>The same training placed twice on one screen in different positions</li>
+    <li>A widget view no screen currently carries — it cannot be placed yet</li>
+    <li>A blocker on non-mandatory content, which the FSE gets past by watching</li>
+    <li>Mandatory content not listed in My trainings, which they may never find</li>
+    <li>A skip threshold at or above the frequency cap — skipping would unlock on a view they never reach</li>
+    <li>A skip threshold on mandatory content, where it can never apply</li>
+    <li>A time limit allowing under ten seconds a question</li>
+    <li>A written-answer question with no question text yet</li>
+  </ul>
+
+  <h3>14.3 What it does for you, and says so</h3>
+
+  <ul>
+    <li>Turning on a blocker turns on hub listing, because the gate hands off there</li>
+    <li>Reducing a widget's capacity trims the video list and names what it removed</li>
+    <li>Changing widget family discards the assessment shape the other one used</li>
+    <li>Changing a content type clears files that no longer match it</li>
+    <li>A video's title fills in from its filename unless one has been typed</li>
+  </ul>
+
+  <h3>14.4 Importing questions</h3>
+
+  <p>Questions can be typed or imported as CSV: question, four options, the correct answers, and a weight. Several correct answers are given as <span class="mono">1;3</span>. A written answer is marked by putting <span class="mono">text</span> in the correct-answers column, with the hint in the first option. Bad rows are rejected individually and counted, rather than failing the whole file.</p>
+
+  <h2>15. Edge cases we have decided</h2>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Case</th><th>Decision</th></tr></thead>
+      <tbody>
+        <tr><td>Assessment with only written answers</td><td>Valid. Reports <em>Answers recorded</em>; no pass mark applies and no content is reopened.</td></tr>
+        <tr><td>FSE fails on a timeout</td><td>Counts as an attempt, graded on what was answered, content reopened as with any failure.</td></tr>
+        <tr><td>FSE reaches a story's end with segments unanswered</td><td>The closing set is locked until they are answered.</td></tr>
+        <tr><td>FSE re-answers a story segment</td><td>Replaces that segment's score.</td></tr>
+        <tr><td>Training already cleared, rule says do not repeat</td><td>Shows the score they passed with; no re-test.</td></tr>
+        <tr><td>Language missing for a video</td><td>Not offered. The player shows only what was uploaded.</td></tr>
+        <tr><td>Two mandatory trainings outstanding</td><td>The gate lists both, with steps remaining for each.</td></tr>
+        <tr><td>Merchant interrupts mid-video</td><td>Position is kept; reopening resumes there.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>16. What we are not doing</h2>
 
   <ul>
     <li><strong>No content authoring.</strong> Videos are made elsewhere and uploaded.</li>
     <li><strong>No editing in the app.</strong> The FSE consumes; they do not contribute.</li>
-    <li><strong>No new app screens.</strong> Training attaches to screens that already exist. This is deliberate — the moment we start redesigning workflows to fit training, we have lost the plot.</li>
+    <li><strong>No new app screens.</strong> Training attaches to screens that already exist. The moment we redesign workflows to fit training, we have lost the plot.</li>
     <li><strong>No offline download</strong> in v1, though it is the most likely v2 ask given where FSEs work.</li>
+    <li><strong>No manager-facing reporting screen</strong> in v1. Data goes to the existing analytics stack.</li>
   </ul>
 
-  <h2>13. Open decisions</h2>
+  <h2>17. Open decisions</h2>
 
   <div class="tw">
     <table>
       <thead><tr><th>Question</th><th>Needed from</th></tr></thead>
       <tbody>
-        <tr><td><strong>Completion is currently "the video ended", not "the video was watched".</strong> With skipping allowed, an FSE can drag to the end and be recorded as complete. Measuring against the timeline is the real fix.</td><td>Frontend — sizing</td></tr>
-        <tr><td><strong>Progress is held on the device.</strong> It must move server-side before any of this is tied to payout, escalation or a compliance record.</td><td>Backend — this blocks enforcement</td></tr>
+        <tr><td><strong>Completion is “the video ended”, not “the video was watched”.</strong> With skipping allowed an FSE can drag to the end and be recorded complete. Measuring against the timeline is the real fix.</td><td>Frontend — sizing</td></tr>
+        <tr><td><strong>Progress is held on the device.</strong> It must move server-side before any of this ties to payout, escalation or a compliance record.</td><td>Backend — blocks enforcement</td></tr>
         <tr><td><strong>Which screens exist in Force App, and which widget slots the build has.</strong> Currently a placeholder.</td><td>Force App team</td></tr>
         <tr><td><strong>The named positions available on each screen.</strong> Currently a placeholder.</td><td>Frontend</td></tr>
-        <tr><td><strong>Manager content needs its own audience.</strong> Team performance and zone screens serve two audiences; team/subteam may not separate them cleanly.</td><td>Field Ops</td></tr>
+        <tr><td><strong>Manager content needs its own audience.</strong> Team performance and zone screens serve two audiences; team/subteam may not separate them.</td><td>Field Ops</td></tr>
         <tr><td><strong>No reusable content library.</strong> A video used in two trainings is uploaded twice. Fine at ten trainings, painful at a hundred.</td><td>Product — v2</td></tr>
+        <tr><td><strong>Written answers have no reporting surface.</strong> They are captured but nobody has a screen to read them on.</td><td>Product and L&amp;D</td></tr>
       </tbody>
     </table>
   </div>
 
-  <h2>14. Appendix — for the build team</h2>
+  <h2>18. Appendix — for the build team</h2>
 
   <h3>Data model, in brief</h3>
 
   <ul>
-    <li><strong>training</strong> — name, widget view, mandatory-by-placement, time limit, allow-seek default, certificate flag, pass score, paper total</li>
+    <li><strong>training</strong> — name, widget view, time limit, certificate flag, paper total, passing score, result messages</li>
     <li><strong>training_video</strong> — belongs to a training, ordered; content type (video / audio / pdf / image)</li>
     <li><strong>training_video_file</strong> — one row per language; this table alone decides what the player offers</li>
-    <li><strong>placement</strong> — training, app, screen, position, audience source and its key, plus the rules in §9</li>
-    <li><strong>assessment_question</strong> — belongs to a video or to a training; options, correct answers (one or several), weight, or free-text</li>
-    <li><strong>progress</strong> — per FSE: watched, last position, answered, attempts, score, passed</li>
+    <li><strong>placement</strong> — training, app, screen, position, audience source and its key, plus the rules in §12</li>
+    <li><strong>assessment_question</strong> — belongs to a video or a training; options, correct answers (one or several), weight, or free text</li>
+    <li><strong>progress</strong> — per FSE: watched, last position, views, answered, attempts, score, passed, carried total for stories, written answers</li>
   </ul>
 
   <h3>Events</h3>
 
-  <p>Impression, open, play, 25/50/75/100% watched, language switched, dismissed, resumed, restarted, speed changed, seek blocked, assessment started, answer submitted, passed, failed, timed out, content reopened, blocker shown.</p>
+  <p>Impression, open, play, 25/50/75/100% watched, language switched, speed changed, resumed, restarted, seek blocked, dismissed, assessment started, answer submitted, segment carried forward, passed, failed, timed out, content reopened, blocker shown, certificate downloaded.</p>
 
   <p class="end">End of document</p>
 
