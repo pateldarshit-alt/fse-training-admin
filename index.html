@@ -197,6 +197,10 @@
   .qhint.bad{color:var(--red-fg);font-weight:600}
   .kindsel{border:1px solid var(--line);border-radius:7px;padding:5px 8px;font:inherit;font-size:14px;
     background:var(--card);color:var(--ink)}
+  .sheetwrap{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;padding:24px}
+  .sheetbg{position:absolute;inset:0;background:rgba(12,18,32,.45)}
+  .sheet{position:relative;background:var(--card);border-radius:14px;padding:24px;width:100%;max-width:560px;
+    max-height:90vh;overflow-y:auto;box-shadow:0 20px 50px rgba(0,0,0,.3)}
   .ctbox{display:flex;gap:10px;align-items:center;padding:11px 13px;border-radius:9px;background:var(--wash);
     border:1px solid var(--line);font-size:14px;color:var(--faint);line-height:1.5;margin-bottom:14px}
   .ctbox.bad{background:var(--red-bg);border-color:transparent;color:var(--red-fg)}
@@ -257,6 +261,17 @@
         <label>Time limit <small>— seconds for a whole attempt, blank for none</small></label>
         <input type="number" min="10" id="f_timer" placeholder="None">
         <div id="timerNote" style="font-size:13px;color:var(--faint);line-height:1.5"></div>
+      </div>
+      <div class="form-group">
+        <label>Attempts allowed <small>— blank for unlimited</small></label>
+        <input type="number" min="1" max="10" id="f_maxTries" placeholder="3">
+      </div>
+      <div class="form-group">
+        <label>Attempts come back after <small>— hours; blank means only a reset restores them</small></label>
+        <input type="number" min="1" max="720" id="f_restore" placeholder="24">
+      </div>
+      <div class="form-group full">
+        <div id="triesNote" class="slotnote" style="text-align:left"></div>
       </div>
     </div>
   </div>
@@ -593,6 +608,11 @@ function pickToTotal(questions, target){
 }
 function normT(t){
   if(t.timer==null) t.timer='';
+  // Unlimited retries on a blocking training locks an FSE out of their job.
+  if(t.maxTries===undefined) t.maxTries=3;
+  // Without a way back, an FSE out of attempts on a blocking training is stuck
+  // until someone intervenes. A wait is the version that needs nobody.
+  if(t.restoreHours===undefined) t.restoreHours=24;
   if(typeof t.certificate!=='boolean') t.certificate=false;
   // A combined assessment belongs to My trainings page and to Stories, which
   // also keeps its per-segment checks.
@@ -683,7 +703,7 @@ let placements = SEED.placements.map(p=>normP(JSON.parse(JSON.stringify(p))));
 let T = freshT(), P = freshP();
 let editT = null, editP = null;
 
-function freshT(){ return {id:uid(),name:'',widget:'mini-banner',videos:[blankVideo(1)],timer:'',
+function freshT(){ return {id:uid(),name:'',widget:'mini-banner',videos:[blankVideo(1)],timer:'',maxTries:3,restoreHours:24,
   certificate:false,perVideo:false,
   final:{enabled:false,questions:[],pass:1,total:'',passMsg:'',failMsg:''}}; }
 function freshP(){ return {id:uid(),trainingId:'',app:'gg',screen:'',slot:'',audience:blankAudience(),
@@ -906,6 +926,9 @@ function flowT(){
   if(kinds.length>1) bits.push(`mixed content — ${kinds.join(', ').toLowerCase()}`);
   if(T.timer) bits.push(`timed at ${fmtSecs(T.timer)} for the whole attempt`);
   if(T.certificate) bits.push('and earns a downloadable certificate');
+  if(+T.maxTries) bits.push(+T.restoreHours
+    ? `pausing after ${T.maxTries} failed attempts and reopening ${+T.restoreHours>=24?`${Math.round(T.restoreHours/24)} day${Math.round(T.restoreHours/24)===1?'':'s'}`:`${T.restoreHours} hours`} later`
+    : `stopping after ${T.maxTries} failed attempts until an admin resets it`);
 
   const warns=[];
   if(T.final.enabled&&!T.final.questions.length) warns.push('The combined assessment has no questions yet.');
@@ -1051,6 +1074,15 @@ function renderT(){
   $('f_name').value=T.name; $('f_widget').value=T.widget;
   $('f_pervideo').checked=T.perVideo; $('f_final').checked=T.final.enabled;
   $('f_timer').value=T.timer||''; $('f_cert').checked=!!T.certificate;
+  $('f_maxTries').value=(T.maxTries===''||T.maxTries==null)?'':T.maxTries;
+  $('f_restore').value=(T.restoreHours===''||T.restoreHours==null)?'':T.restoreHours;
+  const tries=+T.maxTries||0, back=+T.restoreHours||0;
+  const hrs=h=>h%24===0?`${h/24} day${h/24===1?'':'s'}`:`${h} hour${h===1?'':'s'}`;
+  $('triesNote').innerHTML = !tries
+    ? '<b>Unlimited attempts.</b> On a mandatory training an FSE who cannot pass stays locked out of the app with no way forward. Set a limit unless you have a reason not to.'
+    : back
+      ? `After <b>${tries}</b> failed attempt${tries===1?'':'s'} the assessment pauses and the home-screen gate lifts, so the FSE can keep working. Attempts come back on their own <b>${hrs(back)}</b> later — nobody has to do anything.`
+      : `After <b>${tries}</b> failed attempt${tries===1?'':'s'} the assessment pauses and the gate lifts. <b>Attempts do not come back on their own</b> — the FSE stays stuck on this training until you reset it below.`;
   const qCount = T.final.enabled ? T.final.questions.length
                : T.videos.reduce((a,v)=>a+v.questions.length,0);
   $('timerNote').textContent = !T.timer
@@ -1123,7 +1155,90 @@ function structOf(t){
   }
   if(t.timer) parts.push(`<span class="badge grey">⏱ ${fmtSecs(t.timer)}</span>`);
   if(t.certificate) parts.push('<span class="badge">🎓 certificate</span>');
+  if(+t.maxTries) parts.push(`<span class="badge grey">${t.maxTries} attempts${+t.restoreHours?` · back in ${t.restoreHours}h`:' · reset only'}</span>`);
+  const rst=readResets()[t.id];
+  if(rst) parts.push(`<span class="badge">↺ reset ${new Date(rst.at).toLocaleDateString([], {day:'numeric',month:'short'})}${rst.scope==='ecodes'?` · ${rst.ecodes.length} ecodes`:' · everyone'}</span>`);
+  else parts.push('<span class="badge warn">unlimited attempts</span>');
   return parts.length?parts.join('<br>'):'<span style="color:var(--faint)">None</span>';
+}
+
+/* ── resetting attempts ───────────────────────────────────────────────────
+   Written where the app can read it, so a reset here reaches the FSE without
+   anyone else being involved. In the build this is an API call; the shape of
+   what it records is the same either way.                                  */
+const RESET_KEY = 'tv_attempt_resets';
+function readResets(){ try{ return JSON.parse(localStorage.getItem(RESET_KEY))||{}; }catch{ return {}; } }
+function writeReset(trainingId, scope, ecodes, reason){
+  const all = readResets();
+  all[trainingId] = {at: Date.now(), scope, ecodes: ecodes||[], reason: reason||'', by: 'admin'};
+  try{ localStorage.setItem(RESET_KEY, JSON.stringify(all)); }catch{}
+  return all[trainingId];
+}
+
+function resetSheet(t){
+  if(!t) return;
+  const wrap=document.createElement('div');
+  wrap.className='sheetwrap';
+  wrap.innerHTML=`
+    <div class="sheetbg" data-close></div>
+    <div class="sheet">
+      <h3 style="margin:0 0 4px;font-size:18px">Reset attempts</h3>
+      <p style="margin:0 0 16px;font-size:14px;color:var(--faint);line-height:1.55">
+        Gives failed attempts back on <b>${esc(t.name)}</b> so the assessment can be taken again.
+        Anyone who has already passed is untouched.</p>
+
+      <label class="toggle-row"><input type="radio" name="rscope" value="all" checked>
+        <span>Everyone on this training<small>Use when the content or the questions were the problem — a low pass rate is usually the paper, not the people.</small></span></label>
+      <label class="toggle-row"><input type="radio" name="rscope" value="ecodes">
+        <span>Specific ecodes<small>One per line, or comma separated.</small></span></label>
+
+      <div id="rEcodeBox" hidden style="margin:-4px 0 14px 26px">
+        <textarea id="rEcodes" rows="4" placeholder="E-48213&#10;E-51907"
+          style="width:100%;border:1px solid var(--line);border-radius:8px;padding:9px 11px;font:inherit;font-size:14px;
+          resize:vertical;background:var(--card);color:var(--ink)"></textarea>
+      </div>
+
+      <div class="form-group" style="margin-bottom:16px">
+        <label>Why <small>— recorded against the reset</small></label>
+        <input type="text" id="rReason" placeholder="e.g. Q3 was ambiguous, reworded on 11 Sep">
+      </div>
+
+      <div class="slotnote" id="rPreview" style="text-align:left;margin-bottom:16px"></div>
+
+      <div style="display:flex;gap:9px;justify-content:flex-end">
+        <button class="btn btn-ghost" type="button" data-close>Cancel</button>
+        <button class="btn btn-primary" type="button" id="rGo">Reset attempts</button>
+      </div>
+    </div>`;
+  document.body.appendChild(wrap);
+
+  const ecodesOf=()=> $('rEcodes').value.split(/[\n,]/).map(x=>x.trim()).filter(Boolean);
+  const preview=()=>{
+    const scope=wrap.querySelector('[name=rscope]:checked').value;
+    const list=ecodesOf();
+    $('rEcodeBox').hidden = scope!=='ecodes';
+    $('rPreview').innerHTML = scope==='all'
+      ? `Every FSE who has failed <b>${esc(t.name)}</b> gets their attempts back${+t.maxTries?` — ${t.maxTries} again`:''}. Those who passed keep their result.`
+      : list.length
+        ? `<b>${list.length}</b> ecode${list.length===1?'':'s'} will have their attempts restored on this training.`
+        : '<span style="color:var(--amber-fg)">Add at least one ecode.</span>';
+  };
+  wrap.querySelectorAll('[name=rscope]').forEach(r=>r.onchange=preview);
+  $('rEcodes').oninput=preview;
+  preview();
+
+  wrap.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>wrap.remove());
+  $('rGo').onclick=()=>{
+    const scope=wrap.querySelector('[name=rscope]:checked').value;
+    const list=ecodesOf();
+    if(scope==='ecodes'&&!list.length) return toast('Add at least one ecode.');
+    const r=writeReset(t.id, scope, list, $('rReason').value.trim());
+    wrap.remove();
+    toast(scope==='all'
+      ? `Attempts reset for everyone on “${t.name}”`
+      : `Attempts reset for ${list.length} ecode${list.length===1?'':'s'} on “${t.name}”`);
+    drawTLib();
+  };
 }
 
 function drawTLib(){
@@ -1142,10 +1257,12 @@ function drawTLib(){
             : '<span class="badge warn">Not placed yet</span>')}</td>
       <td style="white-space:nowrap">
         <button class="btn btn-ghost btn-sm" data-ted="${t.id}">Edit</button>
+        <button class="btn btn-ghost btn-sm" data-treset="${t.id}" style="margin-left:5px" title="Give failed attempts back">↺ Reset attempts</button>
         <button class="btn btn-ghost btn-sm" data-tdup="${t.id}" style="margin-left:5px">Duplicate</button>
         <button class="btn btn-danger btn-sm" data-tdel="${t.id}" style="margin-left:5px">Delete</button></td>
     </tr>`;}).join('');
 
+  $('tLib').querySelectorAll('[data-treset]').forEach(b=>b.onclick=()=>resetSheet(trainingById(b.dataset.treset)));
   $('tLib').querySelectorAll('[data-ted]').forEach(b=>b.onclick=()=>{
     T=JSON.parse(JSON.stringify(trainingById(b.dataset.ted))); editT=T.id;
     renderT(); window.scrollTo({top:0,behavior:'smooth'}); toast(`Editing “${T.name}”`);});
@@ -1268,6 +1385,10 @@ function validateP(P){
     warnings.push(`Skipping opens up on view ${P.skipAfter}, but the placement stops showing after ${P.maxViews} — the FSE would never reach it.`);
   if(P.blocker && +P.skipAfter > 0)
     warnings.push('Mandatory content is never skippable, so the view threshold will not apply here.');
+  if(P.blocker && t && !(+t.maxTries))
+    warnings.push('This training allows unlimited attempts and blocks the home screen — an FSE who cannot pass it has no way back into the app. Set an attempt limit on the training.');
+  if(P.blocker && t && +t.maxTries && !(+t.restoreHours))
+    warnings.push(`Attempts do not come back on their own, so an FSE who fails ${t.maxTries} times waits for an admin reset before they can finish this. Set a restore window unless that is intended.`);
   if(P.blocker && !P.hub)
     warnings.push('A homepage blocker sends the FSE to My trainings, so hub listing will be turned on when you save.');
   if(P.blocker && !trainingIsMandatory(t))
@@ -1539,6 +1660,8 @@ $('f_final').onchange=e=>{T.final.enabled=e.target.checked;
   if(T.final.enabled&&!T.final.questions.length) T.final.questions.push(blankQ()); renderT();};
 $('f_timer').oninput=e=>{T.timer=e.target.value;renderT();};
 $('f_cert').onchange=e=>{T.certificate=e.target.checked;renderT();};
+$('f_maxTries').oninput=e=>{T.maxTries=e.target.value===''?'':Math.max(1,+e.target.value);renderT();};
+$('f_restore').oninput=e=>{T.restoreHours=e.target.value===''?'':Math.max(1,+e.target.value);renderT();};
 $('addVideo').onclick=()=>{T.videos.push(blankVideo(T.videos.length+1));
   if(T.perVideo) T.videos[T.videos.length-1].questions.push(blankQ()); renderT();};
 $('addFinalText').onclick=()=>{T.final.questions.push(blankTextQ());renderT();};
