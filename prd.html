@@ -189,7 +189,7 @@
         <tr><td>Product</td><td>GG App and Force App — Field Sales Executive mobile applications</td></tr>
         <tr><td>Owner</td><td>Product</td></tr>
         <tr><td>Status</td><td>Draft for review</td></tr>
-        <tr><td>Version</td><td>3.4</td></tr>
+        <tr><td>Version</td><td>3.5</td></tr>
         <tr><td>Date</td><td>8 September 2026</td></tr>
         <tr><td>Reviewers</td><td>Design, Frontend, Backend, Field Ops, L&amp;D</td></tr>
       </tbody>
@@ -448,11 +448,56 @@
 
   <p>This is what makes the pass mark mean anything. With random papers, an instant retry lets an FSE resubmit until a favourable draw appears. Sending them back to the content, with skipping already off on mandatory trainings, makes a second attempt cost what the first did.</p>
 
-  <h3>9.6 Time limit</h3>
+  <h3>9.6 Running out of attempts</h3>
+
+  <p>Sending an FSE back to the content works until it doesn't. Someone who genuinely cannot pass a mandatory training would otherwise cycle forever — and on a blocking training, that means locked out of the app they are paid to use. So attempts have a ceiling.</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Setting</th><th>Default</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Attempts allowed</strong></td><td>3</td><td>How many failed attempts before the assessment pauses. Blank means unlimited.</td></tr>
+        <tr><td><strong>Attempts come back after</strong></td><td>24 hours</td><td>How long until attempts are restored with nobody doing anything. Blank means only an admin reset brings them back.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Both sit on the <strong>training</strong>, not the placement, so one budget covers per-video checks and the closing assessment together. Three attempts means three, not three per question set.</p>
+
+  <p>When the last attempt is used:</p>
+
+  <ul>
+    <li>The content is <strong>not</strong> reopened. Reopening it is what makes a retry cost something; with no retry left it would just be punishment.</li>
+    <li><strong>The homepage gate lifts.</strong> The point of the gate is to force attention, not to stop someone working. An FSE waiting on a restore can still do their job.</li>
+    <li>The FSE is told when they can retry — <em>"Try again Sat 14:36"</em> — and the call to action is removed rather than left there doing nothing.</li>
+  </ul>
+
+  <h3>9.7 Giving attempts back</h3>
+
+  <p>Attempts return two ways, and both are checked when the FSE next opens the app rather than by anything running on a schedule.</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Route</th><th>Who does it</th><th>When to use it</th></tr></thead>
+      <tbody>
+        <tr><td><strong>The restore window elapses</strong></td><td>Nobody</td><td>The ordinary case. Handles the FSE who was rushing between shops and will pass tomorrow.</td></tr>
+        <tr><td><strong>Admin reset — everyone on this training</strong></td><td>Admin console</td><td>The content or the paper was the problem. A low pass rate across a cohort is usually the questions, not the people.</td></tr>
+        <tr><td><strong>Admin reset — named ecodes</strong></td><td>Admin console</td><td>Individual cases: a genuine app fault mid-attempt, or an urgent compliance deadline.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>A reset carries a <strong>reason</strong>, recorded against it. Without one, "why does this cohort have four attempts" is unanswerable three months later. A reset only takes effect if it postdates the lock, so resetting a training does not pre-clear people who fail afterwards.</p>
+
+  <div class="note">
+    <p><strong>No manager tier.</strong> An earlier draft routed exhausted attempts to the FSE's manager. That was dropped: it makes every stuck FSE someone else's ticket, and field managers are the least available people in the chain. The automatic window handles the ordinary case with nobody involved, which leaves the reset button as the exception rather than the everyday path.</p>
+  </div>
+
+  <h3>9.8 Time limit</h3>
 
   <p>One limit per training, covering every question in an attempt. It shows in the header, turns amber at a quarter remaining and red at a tenth. On expiry the attempt is submitted as it stands and graded on what was answered — the result says so rather than showing a bare low score.</p>
 
-  <h3>9.7 Stories, scored as one paper</h3>
+  <h3>9.9 Stories, scored as one paper</h3>
 
   <p>Stories is the only view carrying both question types, so its scoring needs stating explicitly.</p>
 
@@ -874,7 +919,223 @@
     </table>
   </div>
 
-  <h2>18. What we are not doing</h2>
+  <h2>18. UAT — what QA should test</h2>
+
+  <p>Two questions decide whether this feature works: <strong>can an admin configure it without producing something broken</strong>, and <strong>does the right FSE see the right thing</strong>. Everything below hangs off one of those.</p>
+
+  <p>Cases are written so a tester can run them without reading the rest of this document. Where a case has a non-obvious expected result, the reason is in the row — a tester who knows why a rule exists catches the near-misses that a checklist does not.</p>
+
+  <div class="note">
+    <p><strong>Test data to set up first.</strong> Two apps (GG and Force), at least one training per widget view, one blocking training, one Stories training, one training with a certificate, one with a time limit, and audiences covering all four sources — everyone, a CleverTap segment, an org team/subteam, and an ecode upload. Several cases below assume more than one FSE account, ideally on different devices.</p>
+  </div>
+
+  <h3>18.1 Admin — building a training</h3>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>ID</th><th>Case</th><th>Expected</th></tr></thead>
+      <tbody>
+        <tr><td>ADM-01</td><td>Pick each widget view in turn</td><td>The video limit and the assessment options change with it. My trainings page allows up to 20 videos; Mini Banner, Interstitial, PiP, Bottom Sheet and Direct CTA allow 1; Accordion and Carousel allow several.</td></tr>
+        <tr><td>ADM-02</td><td>Try to add a video beyond the widget's limit</td><td>Blocked, with the limit named. The limits are not cosmetic — a Bottom Sheet holding four videos has no way to show them.</td></tr>
+        <tr><td>ADM-03</td><td>Enable a combined (end-of-training) assessment on each widget</td><td>Offered only on <strong>My trainings page</strong> and <strong>Stories</strong>. Every other view offers per-video questions only.</td></tr>
+        <tr><td>ADM-04</td><td>Add videos, then switch to a widget with a lower limit</td><td>The panel must not silently drop videos. Either block the switch or state what will be removed.</td></tr>
+        <tr><td>ADM-05</td><td>Upload each content type — video, audio, PDF, image</td><td>All four accepted; the training summary and the viewer both reflect the type.</td></tr>
+        <tr><td>ADM-06</td><td>Upload the same video in three languages, and another in one</td><td>Language options come from what was uploaded per video, not per training.</td></tr>
+        <tr><td>ADM-07</td><td>Save a training with no name / no video</td><td>Blocked with a specific message, not a generic "invalid".</td></tr>
+        <tr><td>ADM-08</td><td>Duplicate a training, then edit the copy</td><td>The original is untouched, including its placements.</td></tr>
+        <tr><td>ADM-09</td><td>Delete a training that has live placements</td><td>Must warn and name the placements. Silent deletion leaves screens pointing at nothing.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>18.2 Admin — questions and scoring</h3>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>ID</th><th>Case</th><th>Expected</th></tr></thead>
+      <tbody>
+        <tr><td>ADM-10</td><td>Add a single-answer, a multi-answer and a free-text question</td><td>All three save and appear in the list with their type visible.</td></tr>
+        <tr><td>ADM-11</td><td>Add a question with 2 options, then one with 8</td><td>Both accepted. Options are not fixed at four.</td></tr>
+        <tr><td>ADM-12</td><td>Mark <em>every</em> option correct</td><td>Rejected. A question nothing can be wrong on tests nothing.</td></tr>
+        <tr><td>ADM-13</td><td>Mark no option correct on a scored question</td><td>Rejected.</td></tr>
+        <tr><td>ADM-14</td><td>Set weights 3, 2 and 1, then set the paper total</td><td>Only <strong>reachable</strong> totals are offered. With those weights, 4 is reachable and 7 is not — offering 7 would produce a paper that can never be drawn.</td></tr>
+        <tr><td>ADM-15</td><td>Set a pass score above the paper total</td><td>Blocked. Nobody could pass it.</td></tr>
+        <tr><td>ADM-16</td><td>Set a pass score of 0</td><td>Blocked, or clearly treated as "no pass mark". Do not leave it ambiguous.</td></tr>
+        <tr><td>ADM-17</td><td>Build a paper of only free-text questions</td><td>Saves. No pass mark applies; the training reports <em>Answers recorded</em>. This previously failed to save at all.</td></tr>
+        <tr><td>ADM-18</td><td>Enter pass score as a percentage (e.g. 70)</td><td>Scores are absolute, not percentages. 70 on a 5-point paper must be rejected, not accepted and misread.</td></tr>
+        <tr><td>ADM-19</td><td>Write custom pass and fail messages, then leave them blank</td><td>Custom text appears verbatim in the app; blank falls back to the default copy.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>18.3 Admin — CSV import</h3>
+
+  <p>Full format in §14.4. Every row below should be tried in one file so the partial-import behaviour is exercised too.</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>ID</th><th>Case</th><th>Expected</th></tr></thead>
+      <tbody>
+        <tr><td>CSV-01</td><td>Import the supplied template unchanged</td><td>All rows import; the reported count matches the file.</td></tr>
+        <tr><td>CSV-02</td><td>File with a header row, columns reordered</td><td>Columns resolved by name, not position.</td></tr>
+        <tr><td>CSV-03</td><td>File with no header row</td><td>Read as the fixed shape: question, four options, correct, weight.</td></tr>
+        <tr><td>CSV-04</td><td>Rows using 2, 4 and 6 options in one file</td><td>All import. Trailing blanks are trimmed per row.</td></tr>
+        <tr><td>CSV-05</td><td>A blank option <em>between</em> two filled ones</td><td>Rejected — it almost always means a column was missed.</td></tr>
+        <tr><td>CSV-06</td><td>Multi-answer written as <span class="mono">1;3</span>, <span class="mono">1|3</span> and quoted <span class="mono">"1,3"</span></td><td>All three parse to the same two-answer question. The quoted comma is the regression case: it once parsed as a single answer <span class="mono">1</span>, importing a question with half its key missing and no error.</td></tr>
+        <tr><td>CSV-07</td><td>Answer number higher than the option count on that row</td><td>Row rejected with its row number and reason.</td></tr>
+        <tr><td>CSV-08</td><td>Partly unreadable value, e.g. <span class="mono">"1,x"</span></td><td>Rejected outright. Never import the readable half.</td></tr>
+        <tr><td>CSV-09</td><td><span class="mono">text</span> in the correct column</td><td>Imports as a free-text question; first option becomes the hint, weight ignored.</td></tr>
+        <tr><td>CSV-10</td><td>Negative, zero and non-numeric weights</td><td>Rejected. Blank means 1.</td></tr>
+        <tr><td>CSV-11</td><td>Mixed file: 5 good rows, 3 bad</td><td>5 import, 3 rejected individually, counts of both reported.</td></tr>
+        <tr><td>CSV-12</td><td>Commas and quotes inside question text</td><td>Standard CSV quoting honoured; text survives intact.</td></tr>
+        <tr><td>CSV-13</td><td>Non-English question text (Hindi, Tamil)</td><td>Imports and renders correctly in the panel and the app. Check the file is read as UTF-8.</td></tr>
+        <tr><td>CSV-14</td><td>Empty file, and a file with only a header</td><td>Clean "nothing to import" message, no crash.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>18.4 Admin — attempts, restore and reset</h3>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>ID</th><th>Case</th><th>Expected</th></tr></thead>
+      <tbody>
+        <tr><td>ATT-01</td><td>Change attempts and restore hours</td><td>The explanatory note rewrites itself to describe the actual combination, including the blank cases.</td></tr>
+        <tr><td>ATT-02</td><td>Leave attempts blank on a blocking training</td><td>Warning: an FSE who cannot pass has no way back into the app.</td></tr>
+        <tr><td>ATT-03</td><td>Set attempts, leave restore blank, on a blocking training</td><td>Warning: attempts do not come back on their own; an admin reset is the only route.</td></tr>
+        <tr><td>ATT-04</td><td>Open the reset sheet, scope <em>Everyone</em></td><td>Preview states what will happen and confirms that people who already passed keep their result.</td></tr>
+        <tr><td>ATT-05</td><td>Scope <em>Specific ecodes</em>, paste one per line, then comma separated</td><td>Both parse; the count in the preview matches.</td></tr>
+        <tr><td>ATT-06</td><td>Confirm with the ecode box empty</td><td>Blocked with a prompt, not a silent no-op.</td></tr>
+        <tr><td>ATT-07</td><td>Apply a reset, then reopen the training library</td><td>A reset badge shows the date and the scope.</td></tr>
+        <tr><td>ATT-08</td><td>Apply a reset with a reason, then check it is retrievable</td><td>Reason, scope, ecodes, who and when are all recorded. This is an audit record, not a toast.</td></tr>
+        <tr><td>ATT-09</td><td>Reset a training, then have an FSE fail it again afterwards</td><td>The old reset must <strong>not</strong> unlock them a second time. A reset only counts if it postdates the lock.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>18.5 Admin — placement, audience and rules</h3>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>ID</th><th>Case</th><th>Expected</th></tr></thead>
+      <tbody>
+        <tr><td>PLC-01</td><td>Place a training and open the screen list</td><td>Only screens that actually carry that widget are offered. A Carousel training must not be placeable on a screen with no carousel slot.</td></tr>
+        <tr><td>PLC-02</td><td>Switch app between GG and Force after choosing a screen</td><td>The screen resets rather than keeping a screen that does not exist in the other app.</td></tr>
+        <tr><td>PLC-03</td><td>Choose each named position on a screen</td><td>Positions are distinct and saved; two placements can occupy different positions on one screen.</td></tr>
+        <tr><td>PLC-04</td><td>Audience: everyone</td><td>Resolves with a plain-language description and a count where available.</td></tr>
+        <tr><td>PLC-05</td><td>Audience: CleverTap segment — valid, invalid, and while loading</td><td>Loading, error and withdrawn-segment states are all distinct and readable. An invalid segment must block save.</td></tr>
+        <tr><td>PLC-06</td><td>Audience: org team / subteam</td><td>Subteam list depends on the chosen team; changing team clears a stale subteam.</td></tr>
+        <tr><td>PLC-07</td><td>Audience: ecode upload — good file, empty file, duplicate ecodes</td><td>Count reported; duplicates collapse; empty file rejected.</td></tr>
+        <tr><td>PLC-08</td><td>Switch audience source after configuring another</td><td>Sources are alternatives. The previous source's values must not leak into the saved placement.</td></tr>
+        <tr><td>PLC-09</td><td>Set each rule: max views, expiry days, skip-after-N-views, seek allowed, once only, blocker, show in hub</td><td>Each appears in the placement summary and the library row in plain language.</td></tr>
+        <tr><td>PLC-10</td><td>Blocker on, show-in-hub off</td><td>Warned. A blocking training the FSE cannot open from the hub is a dead end.</td></tr>
+        <tr><td>PLC-11</td><td>Two placements of the same training on one screen for overlapping audiences</td><td>Either prevented or clearly surfaced. An FSE must not be shown the same training twice on one screen.</td></tr>
+        <tr><td>PLC-12</td><td>Save with a validation error showing</td><td>Save is blocked. Check the flow diagram, the library row and the save button all agree — they have drifted before.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>18.6 App visibility — does the right FSE see the right thing</h3>
+
+  <p>This is the half most likely to break in production, because it depends on data that only exists outside the panel. Test with real accounts in each audience, not by editing local state.</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>ID</th><th>Case</th><th>Expected</th></tr></thead>
+      <tbody>
+        <tr><td>VIS-01</td><td>FSE inside the audience opens the target screen</td><td>The widget appears, in the configured position, in the configured view.</td></tr>
+        <tr><td>VIS-02</td><td>FSE <em>outside</em> the audience opens the same screen</td><td>Nothing appears. No placeholder, no gap, no flash of the widget before it disappears.</td></tr>
+        <tr><td>VIS-03</td><td>FSE is added to a CleverTap segment after first opening the screen</td><td>They begin seeing it. Confirm how long propagation takes and that it is acceptable.</td></tr>
+        <tr><td>VIS-04</td><td>FSE is removed from the segment mid-training</td><td>Define and verify the behaviour: partly-done trainings should not vanish without trace.</td></tr>
+        <tr><td>VIS-05</td><td>Each of the nine widget views on its screen</td><td>Renders without overlapping the screen's own content. Check on a small phone and a large one.</td></tr>
+        <tr><td>VIS-06</td><td>Every widget, on both apps</td><td>No primary workflow is altered, obscured or made harder to reach. This is the standing constraint on the whole feature.</td></tr>
+        <tr><td>VIS-07</td><td>Max views = 3; open the screen five times</td><td>Shows three times, then stops. Count survives app restart.</td></tr>
+        <tr><td>VIS-08</td><td>Expiry set; move the device clock past it</td><td>Stops appearing. Confirm what expiry counts from — placement date or first view — and that it matches §12.</td></tr>
+        <tr><td>VIS-09</td><td>Skip-after-N-views</td><td>Not skippable before N, skippable after.</td></tr>
+        <tr><td>VIS-10</td><td>Once-only placement, already completed</td><td>Does not reappear.</td></tr>
+        <tr><td>VIS-11</td><td>Seek disabled</td><td>Scrubbing is genuinely prevented, not just hidden. Try the progress bar, keyboard and any OS media controls.</td></tr>
+        <tr><td>VIS-12</td><td>Show-in-hub off</td><td>Appears on its screen but not in My trainings.</td></tr>
+        <tr><td>VIS-13</td><td>Video with one language, FSE set to another</td><td>Only uploaded languages are offered. Confirm what a Tamil-preferring FSE sees when only English exists — this fallback is currently undefined and should be raised, not passed.</td></tr>
+        <tr><td>VIS-14</td><td>Poor network, then no network</td><td>Degrades honestly. No infinite spinner, no widget frame around a video that will never load.</td></tr>
+        <tr><td>VIS-15</td><td>Kill the app mid-video, reopen</td><td>Resumes at the saved position.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>18.7 App — assessment behaviour</h3>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>ID</th><th>Case</th><th>Expected</th></tr></thead>
+      <tbody>
+        <tr><td>ASM-01</td><td>Select a wrong answer</td><td>Nothing is marked right or wrong, and no correct answer is revealed — during the attempt or after it. Per-question feedback lets the paper be learned by elimination.</td></tr>
+        <tr><td>ASM-02</td><td>Multi-answer question: select one of two correct options</td><td>Scored by the rule in §9.3, consistently. Confirm partial selection behaviour matches the spec rather than the implementation.</td></tr>
+        <tr><td>ASM-03</td><td>Submit with a question unanswered</td><td>Blocked, or scored as zero — whichever the spec says, applied consistently for choice and free-text questions.</td></tr>
+        <tr><td>ASM-04</td><td>Fail a per-video assessment</td><td>That video reopens as unwatched; the assessment locks until it is watched again.</td></tr>
+        <tr><td>ASM-05</td><td>Fail a combined assessment</td><td>The whole set reopens.</td></tr>
+        <tr><td>ASM-06</td><td>Time limit expires mid-attempt</td><td>Submitted as it stands, graded on what was answered, and the result says so rather than showing a bare low score. Counts as an attempt.</td></tr>
+        <tr><td>ASM-07</td><td>Take the same assessment several times</td><td>Papers vary. They are drawn independently per person — what one FSE saw must never influence another's draw.</td></tr>
+        <tr><td>ASM-08</td><td>Across many attempts, watch question exposure</td><td>No question is starved and none is always present. Papers repeating occasionally is expected and not a defect.</td></tr>
+        <tr><td>ASM-09</td><td>Stories: answer a segment</td><td><em>Answers recorded</em> — never "passed" or "failed" on a segment.</td></tr>
+        <tr><td>ASM-10</td><td>Stories: re-answer a segment</td><td>Replaces that segment's score rather than adding to it.</td></tr>
+        <tr><td>ASM-11</td><td>Stories: reach the end with segments unanswered</td><td>Closing set locked, naming how many are owed.</td></tr>
+        <tr><td>ASM-12</td><td>Every widget's result screen</td><td>Wording is identical everywhere — <em>Assessment passed</em> / <em>Assessment failed</em>. No widget says "Story passed" or anything else of its own.</td></tr>
+        <tr><td>ASM-13</td><td>Pass a training carrying a certificate</td><td>Certificate available from the Completed tab and downloads successfully.</td></tr>
+        <tr><td>ASM-14</td><td>Complete a training two ways — per-video and combined</td><td>The hub card, the detail view and the Completed tab all agree it is complete. These three have disagreed before.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>18.8 App — attempts, lockout and the blocker</h3>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>ID</th><th>Case</th><th>Expected</th></tr></thead>
+      <tbody>
+        <tr><td>BLK-01</td><td>Mandatory blocking training outstanding</td><td>Home screen gated, the training named, steps remaining shown.</td></tr>
+        <tr><td>BLK-02</td><td>Two blocking trainings outstanding</td><td>Both listed with their own remaining steps.</td></tr>
+        <tr><td>BLK-03</td><td>Complete the blocking training</td><td>Gate lifts immediately, without an app restart.</td></tr>
+        <tr><td>BLK-04</td><td>Fail up to the attempt limit</td><td>Assessment pauses; content is <strong>not</strong> reopened; the gate <strong>lifts</strong> so the FSE can work.</td></tr>
+        <tr><td>BLK-05</td><td>Check the hub card and detail view while locked</td><td>Both say when the retry opens — an actual time, not "later". No call to action that does nothing when tapped.</td></tr>
+        <tr><td>BLK-06</td><td>Wait out the restore window</td><td>Attempts return with nobody doing anything, on the next app open. No background job required.</td></tr>
+        <tr><td>BLK-07</td><td>Admin resets while the FSE is locked</td><td>Attempts return next time the app is opened.</td></tr>
+        <tr><td>BLK-08</td><td>24-hour window: check the retry time wording</td><td>Must name the day when the retry is not today. A bare "at 14:36" reads as this afternoon when it is tomorrow.</td></tr>
+        <tr><td>BLK-09</td><td>Per-video checks plus a closing assessment on one training</td><td>They share one attempt budget. Three attempts means three for the training, not three each.</td></tr>
+        <tr><td>BLK-10</td><td>Unlimited attempts on a blocking training</td><td>Confirm the admin warning fires, and decide whether this configuration should be permitted at all.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>18.9 Negative and cross-cutting</h3>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>ID</th><th>Case</th><th>Expected</th></tr></thead>
+      <tbody>
+        <tr><td>NEG-01</td><td>Edit a live training's questions while an FSE is mid-attempt</td><td><strong>Known gap.</strong> There is no draft/publish separation, so edits reach devices immediately and can rescore an attempt in flight. Confirm the blast radius and raise it — do not pass it.</td></tr>
+        <tr><td>NEG-02</td><td>Reinstall the app, or clear app data</td><td><strong>Known gap.</strong> Progress, completion and the attempt counter are device-local and reset. This makes the attempt limit bypassable. Must be closed before any enforcement ties to payout.</td></tr>
+        <tr><td>NEG-03</td><td>Same FSE on two devices</td><td>Same gap as NEG-02: progress does not follow them. Record the observed behaviour for the backend ticket.</td></tr>
+        <tr><td>NEG-04</td><td>Watch at 2× speed, or with the app backgrounded</td><td>A video "ended" is currently recorded as watched. Confirm whether that is acceptable on a <em>blocking</em> training — the product position is that it is not.</td></tr>
+        <tr><td>NEG-05</td><td>Very long question text, 8 long options, long training names</td><td>No truncation that hides meaning, no overflow off-screen, no horizontal scroll on the page body.</td></tr>
+        <tr><td>NEG-06</td><td>Special characters and emoji in names and questions</td><td>Rendered, not escaped into visible markup, and not able to break the page.</td></tr>
+        <tr><td>NEG-07</td><td>Two admins editing the same training at once</td><td>Define expected behaviour. Last-write-wins silently is a defect worth naming.</td></tr>
+        <tr><td>NEG-08</td><td>Device clock set backwards or forwards</td><td>Restore windows and expiry must not be trivially defeated by changing the clock.</td></tr>
+        <tr><td>NEG-09</td><td>Accessibility pass on the widgets and the assessment</td><td>Text scales, contrast holds, controls are reachable and labelled. FSEs use these phones in bright daylight.</td></tr>
+        <tr><td>NEG-10</td><td>Low-end device, the kind actually issued to FSEs</td><td>Widgets do not stutter the host screen. Test on the real hardware profile, not a flagship.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>18.10 Exit criteria</h3>
+
+  <ul>
+    <li>Every case in 18.1–18.8 passes, on both apps.</li>
+    <li><strong>ASM-01</strong> (no answer feedback), <strong>ASM-12</strong> (identical result wording), <strong>VIS-02</strong> (no leakage outside the audience) and <strong>VIS-06</strong> (no primary workflow altered) are blocking — a failure in any of them stops the release.</li>
+    <li>The known gaps in 18.9 are <strong>documented and accepted</strong>, not silently passed. NEG-02 in particular must be closed before enforcement carries any consequence for the FSE.</li>
+    <li>The attempt and reset paths have been exercised end to end by someone other than the person who built them.</li>
+  </ul>
+
+  <h2>19. What we are not doing</h2>
 
   <ul>
     <li><strong>No content authoring.</strong> Videos are made elsewhere and uploaded.</li>
@@ -884,7 +1145,7 @@
     <li><strong>No manager-facing reporting screen</strong> in v1. Data goes to the existing analytics stack.</li>
   </ul>
 
-  <h2>19. Open decisions</h2>
+  <h2>20. Open decisions</h2>
 
   <div class="tw">
     <table>
@@ -901,17 +1162,18 @@
     </table>
   </div>
 
-  <h2>20. Appendix — for the build team</h2>
+  <h2>21. Appendix — for the build team</h2>
 
   <h3>Data model, in brief</h3>
 
   <ul>
-    <li><strong>training</strong> — name, widget view, time limit, certificate flag, paper total, passing score, result messages</li>
+    <li><strong>training</strong> — name, widget view, time limit, certificate flag, paper total, passing score, result messages, attempts allowed, restore window</li>
     <li><strong>training_video</strong> — belongs to a training, ordered; content type (video / audio / pdf / image)</li>
     <li><strong>training_video_file</strong> — one row per language; this table alone decides what the player offers</li>
     <li><strong>placement</strong> — training, app, screen, position, audience source and its key, plus the rules in §12</li>
     <li><strong>assessment_question</strong> — belongs to a video or a training; options, correct answers (one or several), weight, or free text</li>
-    <li><strong>progress</strong> — per FSE: watched, last position, views, answered, attempts, score, passed, carried total for stories, written answers</li>
+    <li><strong>progress</strong> — per FSE: watched, last position, views, answered, attempts, locked-at, score, passed, carried total for stories, written answers</li>
+    <li><strong>attempt_reset</strong> — training, scope (everyone or named ecodes), reason, who, when; only counts if it postdates the lock it is meant to clear</li>
   </ul>
 
   <h3>Events</h3>
