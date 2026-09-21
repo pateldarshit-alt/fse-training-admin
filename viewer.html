@@ -288,11 +288,12 @@ function retryWhen(t){
   const st = triesState(t);
   if(!st.locked) return '';
   if(!st.readyAt) return 'once an admin reopens it';
-  const d = new Date(st.readyAt);
-  const soon = st.readyAt - Date.now() < 86400000;
-  return soon
-    ? `at ${d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`
-    : `${d.toLocaleDateString([], {weekday:'short'})} ${d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}`;
+  const d = new Date(st.readyAt), now = new Date();
+  // A 24-hour window lands on tomorrow, not "later today" — compare calendar
+  // days rather than elapsed hours, or the default setting reads as today.
+  const sameDay = d.toDateString() === now.toDateString();
+  const time = d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  return sameDay ? `at ${time}` : `${d.toLocaleDateString([], {weekday:'short'})} ${time}`;
 }
 
 function videoDone(t, v){
